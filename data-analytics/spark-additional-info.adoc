@@ -1,0 +1,81 @@
+---
+sidebar: sidebar
+permalink: data-analytics/spark-additional-info.html
+keywords:
+summary:
+---
+
+= Where to find additional information
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+//
+// This file was created with NDAC Version 2.0 (August 17, 2020)
+//
+// 2022-08-03 14:35:46.762417
+//
+
+[.lead]
+The following references were used in this TR:
+
+* Apache Spark architecture and components
++
+http://spark.apache.org/docs/latest/cluster-overview.html[http://spark.apache.org/docs/latest/cluster-overview.html^]
+
+* Apache Spark use cases
++
+https://www.qubole.com/blog/big-data/apache-spark-use-cases/[https://www.qubole.com/blog/big-data/apache-spark-use-cases/^]
+
+* Spark NLP
++
+https://www.johnsnowlabs.com/spark-nlp/[https://www.johnsnowlabs.com/spark-nlp/^] 
+
+* BERT
++
+https://arxiv.org/abs/1810.04805[https://arxiv.org/abs/1810.04805^] 
+
+* Deep and Cross Network for Ad Click Predictions
++
+https://arxiv.org/abs/1708.05123[https://arxiv.org/abs/1708.05123^] 
+
+* FlexGroup
++
+https://www.netapp.com/pdf.html?item=/media/7337-tr4557pdf.pdf
+
+* Streaming ETL
++
+https://www.infoq.com/articles/apache-spark-streaming[https://www.infoq.com/articles/apache-spark-streaming^]
+
+* NetApp E-Series Solutions for Hadoop
++
+https://www.netapp.com/media/16420-tr-3969.pdf[https://www.netapp.com/media/16420-tr-3969.pdf^]
+
+//* Sentiment Analysis from Customer Communications with NetApp AI
+//+
+//link:../pdfs/sidebar/Sentiment_analysis_with_NetApp_AI.pdf[PDF Documentation^]
+
+* NetApp Modern Data Analytics Solutions
++
+link:index.html[Data Analytics Solutions] 
+
+* SnapMirror
++
+https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-concept.html[https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-concept.html^] 
+
+* XCP
++
+https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US[https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US^] 
+
+* BlueXP Copy and Sync
++
+https://cloud.netapp.com/cloud-sync-service[https://cloud.netapp.com/cloud-sync-service^] 
+
+* DataOps Toolkit
++
+https://github.com/NetApp/netapp-dataops-toolkit[https://github.com/NetApp/netapp-dataops-toolkit^] 
+
+
+// NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/apache-spark-where-to-find-additional-information.adoc
