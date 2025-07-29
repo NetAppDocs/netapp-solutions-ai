@@ -1,0 +1,505 @@
+section: ai
+title: "Artificial Intelligence"
+url: /ai/index.html
+entries:
+  - title: "AI Converged Infrastructures"
+    entries:
+      - title: "NVA-1173 NetApp AIPod with NVIDIA DGX Systems"
+        pdf-filename: "NVA-1173 NetApp AIPod with NVIDIA DGX Systems"
+        entries:
+          - title: "Introduction"
+            url: /infra/ai-aipod-nv-intro.html
+          - title: "Hardware Components"
+            url: /infra/ai-aipod-nv-hw.html
+          - title: "Software Components"
+            url: /infra/ai-aipod-nv-sw.html
+          - title: "Architecture"
+            url: /infra/ai-aipod-nv-architecture.html
+          - title: "Example Deployment Details"
+            url: /infra/ai-aipod-nv-deploy.html
+          - title: "Validation and Sizing Guidance"
+            url: /infra/ai-aipod-nv-validation.html
+          - title: "Conclusion and Additional Information"
+            url: /infra/ai-aipod-nv-conclusion.html
+      - title: "NVA-1172-DESIGN: NetApp AIPod with Lenovo for NVIDIA OVX"
+        pdf-filename: "NVA-1172-DESIGN: NetApp AIPod with Lenovo for NVIDIA OVX"
+        url: /infra/ai-aipod-lenovo-nva1172.html
+      - title: "NVIDIA DGX SuperPOD with NetApp EF-series"
+        pdf-filename: "NVIDIA DGX SuperPOD with NetApp EF-series"
+        url: /infra/ai-eseries-superpod.html
+      - title: "BeeGFS on NetApp with E-Series Storage"
+        pdf-filename: "BeeGFS on NetApp with E-Series Storage"
+        url: /infra/ai-eseries-beegfs.html
+      - title: "Deploying IBM Spectrum Scale with NetApp E-Series Storage"
+        pdf-filename: "Deploying IBM Spectrum Scale with NetApp E-Series Storage"
+        url: /infra/ai-eseries-spectrumscale.html
+      - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+        pdf-filename: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+        url: /infra/ai-lenovo-train-intro.html
+      - title: "NetApp AFF A800 and Fujitsu Server PRIMERGY GX2570 M5 for AI"
+        pdf-filename: "NetApp AFF A800 and Fujitsu Server PRIMERGY GX2570 M5 for AI"
+        url: /ai/tr-4815.html        
+#
+  - title: "Data Pipelines, Data Lakes and Management"
+    entries:
+      - title: "Open Source MLOps with NetApp"
+        pdf-filename: "Open Source MLOps with NetApp"
+        entries:
+          - title: "Introduction"
+            url: /software/ai-osmlops-intro.html
+          - title: "Technology Overview"
+            url: /software/ai-osmlops-concepts.html
+          - title: "Architecture"
+            url: /software/ai-osmlops-architecture.html
+          - title: "NetApp Trident Configuration"
+            entries:
+              - title: "Example Trident Backends for NetApp AIPod Deployments"
+                url: /software/ai-osmlops-trident-backend.html
+              - title: "Example Kubernetes StorageClasses for NetApp AIPod Deployments"
+                url: /software/ai-osmlops-trident-sc.html
+          - title: "Apache Airflow"
+            entries:
+              - title: "Apache Airflow Deployment"
+                url: /software/ai-osmlops-airflow-deploy.html
+              - title: "Use the NetApp DataOps Toolkit with Airflow"
+                url: /software/ai-osmlops-airflow-dotk.html
+          - title: JupyterHub
+            entries:
+              - title: "JupyterHub Deployment"
+                url: /software/ai-osmlops-jhub-deploy.html
+              - title: "Use the NetApp DataOps Toolkit with JupyterHub"
+                url: /software/ai-osmlops-jhub-dotk.html
+              - title: "Ingest Data with NetApp SnapMirror"
+                url: /software/ai-osmlops-jhub-ingest.html
+          - title: MLflow
+            entries:
+              - title: "MLflow Deployment"
+                url: /software/ai-osmlops-mlflow-deploy.html
+              - title: "Dataset-to-model Traceability with NetApp and MLflow"
+                url: /software/ai-osmlops-mlflow-trace.html
+          - title: "Kubeflow"
+            entries:
+              - title: "Kubeflow Deployment"
+                url: /software/ai-osmlops-kubeflow-deploy.html
+              - title: "Provision a Jupyter Notebook Workspace for Data Scientist or Developer Use"
+                url: /software/ai-osmlops-kubeflow-notebook.html
+              - title: "Use the NetApp DataOps Toolkit with Kubeflow"
+                url: /software/ai-osmlops-kubeflow-dotk.html
+              - title: "Example Workflow - Train an Image Recognition Model"
+                url: /software/ai-osmlops-kubeflow-train.html
+          - title: "Example Trident Operations"
+            url: /software/ai-osmlops-trident-ops.html
+          - title: "Example High-performance Jobs for AIPod Deployments"
+            entries:
+              - title: "Execute a Single-Node AI Workload"
+                url: /software/ai-osmlops-train-singlenode.html
+              - title: "Execute a Synchronous Distributed AI Workload"
+                url: /software/ai-osmlops-train-distributed.html
+#
+      - title: "Hybrid Multicloud MLOps with Domino Data Lab and NetApp"
+        pdf-filename: "Hybrid Multicloud MLOps with Domino Data Lab and NetApp"
+        entries:
+          - title: "Introduction"
+            url: /software/ai-hybrid-ddlnexus-intro.html
+          - title: "Technology Overview"
+            url: /software/ai-hybrid-ddlnexus-tech.html
+          - title: "Architecture"
+            url: /software/ai-hybrid-ddlnexus-arch.html
+          - title: "Initial Setup"
+            url: /software/ai-hybrid-ddlnexus-setup.html
+          - title: "Expose Existing NetApp Volumes to Domino"
+            url: /software/ai-hybrid-ddlnexus-vols.html
+          - title: "Access the same Data Across Different Environments"
+            url: /software/ai-hybrid-ddlnexus-data.html
+          - title: "Where to Find Additional Information"
+            url: /software/ai-hybrid-ddlnexus-addtl.html
+#
+      - title: "NVIDIA AI Enterprise with NetApp and VMware"
+        pdf-filename: "NVIDIA AI Enterprise with NetApp and VMware"
+        entries:
+          - title: "Introduction"
+            url: /software/ai-nvaie-vmw-intro.html
+          - title: "Technology Overview"
+            url: /software/ai-nvaie-vmw-tech.html
+          - title: "Architecture"
+            url: /software/ai-nvaie-vmw-arch.html
+          - title: "Initial Setup"
+            url: /software/ai-nvaie-vmw-setup.html
+          - title: "Utilize NVIDIA NGC Software"
+            entries:
+              - title: "Overview"
+                url: /ai/nvaie_ngc.html
+              - title: "Setup"
+                url: /software/ai-nvaie-vmw-ngcsetup.html
+              - title: "Example Use Case - TensorFlow Training Job"
+                url: /software/ai-nvaie-vmw-tensorflow.html
+          - title: "Where to Find Additional Information"
+            url: /software/ai-nvaie-vmw-addtl.html
+#
+      - title: "Amazon FSx for NetApp ONTAP (FSx ONTAP) for MLOps"
+        pdf-filename: "Amazon FSx for NetApp ONTAP (FSx ONTAP) for MLOps"
+        entries:
+          - title: "Overview"
+            url: /cloud/ai-mlops-fsxn-intro.html
+          - title: "Part 1 - Integrating Amazon FSx for NetApp ONTAP (FSx ONTAP) as a private S3 bucket into AWS SageMaker"
+            url: /cloud/ai-mlops-fsxn-s3.html
+          - title: "Part 2 - Leveraging Amazon FSx for NetApp ONTAP (FSx ONTAP) as a Data Source for Model Training in SageMaker"
+            url: /cloud/ai-mlops-fsxn-sagemaker.html
+          - title: "Part 3 - Building A Simplified MLOps Pipeline (CI/CT/CD)"
+            url: /cloud/ai-mlops-fsxn-cictcd.html
+#
+      - title: "NetApp StorageGRID Data Lake for Autonomous Driving Workloads"
+        pdf-filename: "NetApp StorageGRID Data Lake for Autonomous Driving Workloads"
+        url: /infra/ai-storagegrid-datalake-adas.html
+#
+      - title: "MLRun Pipeline with Iguazio"
+        pdf-filename: "MLRun Pipeline with Iguazio"
+        entries:
+          - title: "Introduction"
+            url: /ai/mlrun_introduction.html
+          - title: "Technology Overview"
+            url: /ai/mlrun_technology_overview.html
+          - title: "Software and Hardware Requirements"
+            url: /ai/mlrun_software_and_hardware_requirements.html
+          - title: "Network Device Failure Prediction Use Case Summary"
+            url: /ai/mlrun_network_device_failure_prediction_use_case_summary.html
+          - title: "Setup"
+            entries:
+              - title: "Overview"            
+                url: /ai/mlrun_setup_overview.html
+              - title: "Configuring Kubernetes Cluster"
+                url: /ai/mlrun_configuring_kubernetes_cluster.html
+              - title: "Define Persistent Volume Claim"
+                url: /ai/mlrun_define_persistent_volume_claim.html
+          - title: "Deployment"
+            entries:
+              - title: "Deploying the Application"
+                url: /ai/mlrun_deploying_the_application.html
+              - title: "Get Code from GitHub"
+                url: /ai/mlrun_get_code_from_github.html
+              - title: "Configure Working Environment"
+                url: /ai/mlrun_configure_working_environment.html
+              - title: "Deploy Grafana Dashboard"
+                url: /ai/mlrun_deploy_grafana_dashboard.html
+          - title: "Conclusion"
+            url: /ai/mlrun_conclusion.html
+          - title: "Where to Find Additional Information"
+            url: /ai/mlrun_where_to_find_additional_information.html
+#
+      - title: "NetApp DataOps Toolkit"
+        url: /software/dataops-toolkit.html
+      - title: "Data Movement with E-Series and BeeGFS for AI and Analytics Workflows"
+        pdf-filename: "Data Movement with E-Series and BeeGFS for AI and Analytics Workflows"
+        url: /ai/tr-4915.html
+      - title: "Vector Database solution with NetApp"
+        pdf-filename: "Vector Database solution with NetApp"
+        entries:
+          - title: "Overview" 
+            url: /vector-db/ai-vdb-solution-with-netapp.html
+          - title: "Introduction"
+            url: /vector-db/ai-vdb-intro.html
+          - title: "Solution Overview"
+            url: /vector-db/ai-vdb-overview.html
+          - title: "Vector Database"
+            url: /vector-db/ai-vdb-landscape.html
+          - title: "Technology requirement"
+            url: /vector-db/ai-vdb-tech.html
+          - title: "Deployment Procedure"
+            url: /vector-db/ai-vdb-deploy.html
+          - title: "Solution Verification"
+            entries:
+              - title: "Overview"
+                url: /vector-db/ai-vdb-verification.html
+              - title: "Milvus cluster setup with Kubernetes in on-premises"
+                url: /vector-db/ai-vdb-milvus-setup.html
+              - title: "Milvus with Amazon FSx ONTAP for NetApp ONTAP – file and object duality"
+                url: /vector-db/ai-vdb-milvus-fsxn.html
+              - title: "Vector database protection using NetApp SnapCenter"
+                url: /vector-db/ai-vdb-dp-snapcenter.html
+              - title: "Disaster Recovery using NetApp SnapMirror"
+                url: /vector-db/ai-vdb-dr-snapmirror.html
+              - title: "Performance validation"
+                url: /vector-db/ai-vdb-perf-validation.html
+          - title: "Vector database with Instaclustr using PostGreSQL: pgvector"
+            url: /vector-db/ai-vdb-instaclustr-pgvector.html
+          - title: "Vector Database Use Cases"
+            url: /vector-db/ai-vdb-usecases.html
+          - title: "Conclusion"
+            url: /vector-db/ai-vdb-conclusion.html
+          - title: "Appendix A: values.yaml"
+            url: /vector-db/ai-vdb-values.html
+          - title: "Appendix B: prepare_data_netapp_new_py"
+            url: /vector-db/ai-vdb-dataprep.html
+          - title: "Appendix C: verify_data_netapp.py"
+            url: /vector-db/ai-vdb-verifydata.html
+          - title: "Appendix D: docker_compose.yml"
+            url: /vector-db/ai-vdb-docker-compose.html
+         
+  - title: "Use Cases"
+    entries:
+      - title: "NetApp AIPod Mini for Enterprise RAG Inferencing with Intel"
+        pdf-filename: "NetApp AIPod Mini for RAG Inferencing"
+        entries:
+          - title: "NetApp AIPod Mini with Intel"
+            url: /infra/ai-minipod.html
+      - title: "Responsible AI and confidential inferencing - NetApp AI with Protopia Image Transformation"
+        pdf-filename: "Responsible AI and confidential inferencing - NetApp AI with Protopia Image Transformation"
+        entries:
+          - title: "Overview"
+            url: /software/ai-conf-protopia-overview.html
+          - title: "Solution areas"
+            url: /software/ai-conf-protopia-usecases.html
+          - title: "Technology overview"
+            url: /software/ai-conf-protopia-tech.html
+          - title: "Test and validation plan"
+            url: /software/ai-conf-protopia-plan.html
+          - title: "Test configuration"
+            url: /software/ai-conf-protopia-config.html
+          - title: "Test procedure"
+            url: /software/ai-conf-protopia-procedure.html
+          - title: "Inferencing accuracy comparison"
+            url: /software/ai-conf-protopia-accuracy.html
+          - title: "Obfuscation speed"
+            url: /software/ai-conf-protopia-speed.html
+          - title: "Conclusion"
+            url: /software/ai-conf-protopia-conclusion.html
+          - title: "Where to find additional information and acknowledgements"
+            url: /software/ai-conf-protopia-addtl.html
+
+      - title: "Sentiment analysis with NetApp AI"
+        pdf-filename: "Sentiment analysis with NetApp AI"
+        entries:
+          - title: "Introduction"
+            url: /ai/ai-sent-support-center-analytics.html
+          - title: "Use cases"
+            url: /ai/ai-sent-use-cases.html
+          - title: "Architecture"
+            url: /ai/ai-sent-architecture.html
+          - title: "Design considerations"
+            url: /ai/ai-sent-design-considerations.html
+          - title: "Deploying support-center sentiment analysis"
+            url: /ai/ai-sent-deploying-support-center-sentiment-analysis.html
+          - title: "Validation results"
+            url: /ai/ai-sent-validation-results.html
+          - title: "Videos and demos"
+            url: /ai/ai-sent-videos-and-demos.html
+          - title: "Conclusion"
+            url: /ai/ai-sent-conclusion.html
+          - title: "Where to find additional information"
+            url: /ai/ai-sent-where-to-find-additional-information.html
+#
+      - title: "Distributed training in Azure - Click-Through Rate Prediction"
+        pdf-filename: "Distributed training in Azure - Click-Through Rate Prediction"
+        entries:
+          - title: "Introduction"
+            url: /ai/aks-anf_introduction.html
+          - title: "Technology overview"
+            url: /ai/aks-anf_technology_overview.html
+          - title: "Software requirements"
+            url: /ai/aks-anf_software_requirements.html
+          - title: "Cloud resource requirements"
+            url: /ai/aks-anf_cloud_resource_requirements.html
+          - title: "Click-through rate prediction use case summary"
+            url: /ai/aks-anf_click-through_rate_prediction_use_case_summary.html
+          - title: "Setup"
+            entries:
+              - title: "Install and set up the AKS cluster"
+                url: /ai/aks-anf_install_and_set_up_the_aks_cluster.html
+              - title: "Create a delegated subnet for Azure NetApp Files"
+                url: /ai/aks-anf_create_a_delegated_subnet_for_azure_netapp_files.html
+              - title: "Peer AKS VNet and Azure NetApp Files VNet"
+                url: /ai/aks-anf_peer_aks_vnet_and_azure_netapp_files_vnet.html
+              - title: "Install Trident"
+                url: /ai/aks-anf_install_trident.html
+              - title: "Set up Dask with RAPIDS deployment on AKS using Helm"
+                url: /ai/aks-anf_set_up_dask_with_rapids_deployment_on_aks_using_helm.html
+              - title: "Azure NetApp Files performance tiers"
+                url: /ai/aks-anf_azure_netapp_files_performance_tiers.html
+          - title: "Click through rate prediction data processing and model training"
+            entries:
+              - title: "Libraries for data processing and model training"
+                url: /ai/aks-anf_libraries_for_data_processing_and_model_training.html
+              - title: "Load Criteo Click Logs day 15 in Pandas and train a scikit-learn random forest model"
+                url: /ai/aks-anf_load_criteo_click_logs_day_15_in_pandas_and_train_a_scikit-learn_random_forest_model.html
+              - title: "Load Day 15 in Dask and train a Dask cuML random forest model"
+                url: /ai/aks-anf_load_day_15_in_dask_and_train_a_dask_cuml_random_forest_model.html
+              - title: "Monitor Dask using native Task Streams dashboard"
+                url: /ai/aks-anf_monitor_dask_using_native_task_streams_dashboard.html
+              - title: "Training time comparison"
+                url: /ai/aks-anf_training_time_comparison.html
+              - title: "Monitor Dask and RAPIDS with Prometheus and Grafana"
+                url: /ai/aks-anf_monitor_dask_and_rapids_with_prometheus_and_grafana.html
+              - title: "Dataset and Model Versioning using NetApp DataOps Toolkit"
+                url: /ai/aks-anf_dataset_and_model_versioning_using_netapp_dataops_toolkit.html
+              - title: "Jupyter notebooks for Reference"
+                url: /ai/aks-anf_jupyter_notebooks.html
+          - title: "Conclusion"
+            url: /ai/aks-anf_conclusion.html
+          - title: "Where to find additional information"
+            url: /ai/aks-anf_where_to_find_additional_information.html
+#
+      - title: "Distributed Azure training - Lane detection"
+        pdf-filename: "Distributed Azure training - Lane detection"
+        entries:
+          - title: "Executive Summary"
+            url: /ai/runai-ld_executive_summary.html
+          - title: "Solution overview"
+            url: /ai/runai-ld_solution_overview.html
+          - title: "Lane detection – Distributed training with RUN AI"
+            url: /ai/runai-ld_lane_detection_distributed_training_with_run_ai.html
+          - title: "Conclusion"
+            url: /ai/runai-ld_conclusion.html
+          - title: "Additional information"
+            url: /ai/runai-ld_additional_information.html
+#
+      - title: "Hybrid Cloud AI Operating System with Data Caching"
+        pdf-filename: "Hybrid Cloud AI Operating System with Data Caching"
+        entries:
+          - title: "Executive Summary"
+            url: /ai/hcaios_executive_summary.html
+          - title: "Use Case Overview and Problem Statement"
+            url: /ai/hcaios_use_case_overview_and_problem_statement.html
+          - title: "Solution Overview"
+            url: /ai/hcaios_solution_overview.html
+          - title: "Concepts and Components"
+            url: /ai/hcaios_concepts_and_components.html
+          - title: "Hardware and Software Requirements"
+            url: /ai/hcaios_hardware_and_software_requirements.html
+          - title: "Solution Deployment and Validation Details"
+            entries:
+              - title: "Overview"
+                url: /ai/hcaios_solution_deployment_and_validation_details.html
+              - title: "ONTAP AI Deployment"
+                url: /ai/hcaios_ontap_ai_deployment.html
+              - title: "Kubernetes Deployment"
+                url: /ai/hcaios_kubernetes_deployment.html
+              - title: "cnvrg.io Deployment"
+                url: /ai/hcaios_cnvrg_io_deployment.html
+          - title: "Conclusion"
+            url: /ai/hcaios_conclusion.html
+          - title: "Where to Find Additional Information"
+            url: /ai/hcaios_where_to_find_additional_information.html
+#
+      - title: "Moving Data from a Big Data Environment to an AI Environment"
+        pdf-filename: "Moving Data from a Big Data Environment to an AI Environment"
+        url: /data-analytics/bda-ai-introduction.html
+#
+      - title: "AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem - Solution Design"
+        pdf-filename: "AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem - Solution Design"
+        entries:
+          - title: "Introduction"
+            url: /infra/ai-lenovo-edge-intro.html
+          - title: "Technology overview"
+            url: /infra/ai-lenovo-edge-tech.html
+          - title: "Test plan"
+            url: /infra/ai-lenovo-edge-plan.html
+          - title: "Test configuration"
+            url: /infra/ai-lenovo-edge-config.html
+          - title: "Test procedure"
+            url: /infra/ai-lenovo-edge-procedure.html
+          - title: "Test results"
+            url: /infra/ai-lenovo-edge-results.html
+          - title: "Architecture sizing options"
+            url: /infra/ai-lenovo-edge-sizing.html
+          - title: "Conclusion"
+            url: /infra/ai-lenovo-edge-conclusion.html
+#
+      - title: "Conversational AI using NVIDIA"
+        pdf-filename: "Conversational AI using NVIDIA"
+        entries:
+          - title: "Executive Summary"
+            url: /ai/cainvidia_executive_summary.html
+          - title: "Solution Overview"
+            url: /ai/cainvidia_solution_overview.html
+          - title: "Solution Technology"
+            url: /ai/cainvidia_solution_technology.html
+          - title: "Build a Virtual Assistant Using Jarvis, BlueXP Copy and Sync, and NeMo"
+            entries:
+              - title: "Overview"
+                url: /ai/cainvidia_build_a_virtual_assistant_using_jarvis_cloud_sync_and_nemo_overview.html
+              - title: "Jarvis Deployment"
+                url: /ai/cainvidia_jarvis_deployment.html
+              - title: "Customize States and Flows for Retail Use Case"
+                url: /ai/cainvidia_customize_states_and_flows_for_retail_use_case.html
+              - title: "Connect to Third-Party APIs as Fulfillment Engine"
+                url: /ai/cainvidia_connect_to_third-party_apis_as_fulfillment_engine.html
+              - title: "NetApp Retail Assistant Demonstration"
+                url: /ai/cainvidia_netapp_retail_assistant_demonstration.html
+              - title: "Use NetApp BlueXP Copy and Sync to Archive Conversation History"
+                url: /ai/cainvidia_use_netapp_cloud_sync_to_archive_conversation_history.html
+              - title: "Expand Intent Models Using NeMo Training"
+                url: /ai/cainvidia_expand_intent_models_using_nemo_training.html
+          - title: "Conclusion"
+            url: /ai/cainvidia_conclusion.html
+          - title: "Acknowledgments"
+            url: /ai/cainvidia_acknowledgments.html
+          - title: "Where to Find Additional Information"
+            url: /ai/cainvidia_where_to_find_additional_information.html
+#
+      - title: "NetApp Orchestration Solution with Run:AI"
+        pdf-filename: "NetApp Orchestration Solution with Run:AI"
+        entries:
+          - title: "Executive Summary"
+            url: /ai/osrunai_executive_summary.html
+          - title: "Solution Overview"
+            url: /ai/osrunai_solution_overview.html
+          - title: "Solution Technology"
+            url: /ai/osrunai_solution_technology_overview.html
+          - title: "Optimal Cluster and GPU Utilization with Run AI"
+            entries:
+              - title: "Overview"
+                url: /ai/osrunai_optimal_cluster_and_gpu_utilization_with_run_ai_overview.html
+              - title: "Run AI Installation"
+                url: /ai/osrunai_run_ai_installation.html
+              - title: "Run AI Dashboards and Views"
+                url: /ai/osrunai_run_ai_dashboards_and_views.html
+              - title: "Creating Projects for Data Science Teams and Allocating GPUs"
+                url: /ai/osrunai_creating_projects_for_data_science_teams_and_allocating_gpus.html
+              - title: "Submitting Jobs in Run AI CLI"
+                url: /ai/osrunai_submitting_jobs_in_run_ai_cli.html
+              - title: "Achieving High Cluster Utilization"
+                url: /ai/osrunai_achieving_high_cluster_utilization.html
+              - title: "ResNet-50 with ImageNet Dataset Benchmark Summary"
+                url: /ai/osrunai_resnet-50_with_imagenet_dataset_benchmark_summary.html
+              - title: "Fractional GPU Allocation for Less Demanding or Interactive Workloads"
+                url: /ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.html
+              - title: "Achieving High Cluster Utilization with Over-uota GPU Allocation"
+                url: /ai/osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html
+              - title: "Basic Resource Allocation Fairness"
+                url: /ai/osrunai_basic_resource_allocation_fairness.html
+              - title: "Over-Quota Fairness"
+                url: /ai/osrunai_over-quota_fairness.html
+              - title: "Saving Data to a Trident-Provisioned PersistentVolume"
+                url: /ai/osrunai_saving_data_to_a_trident-provisioned_persistentvolume.html
+          - title: "Conclusion"
+            url: /ai/osrunai_conclusion.html
+          - title: "Testing Details for Section 4.8"
+            url: /ai/osrunai_testing_details_for_section_48.html
+          - title: "Testing Details for Section 4.9"
+            url: /ai/osrunai_testing_details_for_section_49.html
+          - title: "Testing Details for Section 4.10"
+            url: /ai/osrunai_testing_details_for_section_410.html
+          - title: "Where to Find Additional Information"
+            url: /ai/osrunai_where_to_find_additional_information.html
+#
+      - title: "NetApp ONTAP AI for Autonomous Driving Workloads Solution Design"
+        pdf-filename: "NetApp ONTAP AI for Autonomous Driving Workloads Solution Design"
+        url: /ai/tr-4799.html
+      - title: "NetApp ONTAP AI Reference Architecture for Healthcare: Diagnostic Imaging"
+        pdf-filename: "NetApp ONTAP AI Reference Architecture for Healthcare: Diagnostic Imaging"
+        url: /ai/tr-4811.html
+      - title: "NetApp ONTAP AI Reference Architecture for Financial Services Workloads"
+        pdf-filename: "NetApp ONTAP AI Reference Architecture for Financial Services Workloads"
+        url: /ai/tr-4807.html
+      - title: "Generative AI and NetApp Value"
+        pdf-filename: "Generative AI and NetApp Value"
+        url: /gen-ai/ai-wp-genai.html
+      - title: "AI Deployment with NetApp E-Series and BeeGFS"
+        pdf-filename: "AI Deployment with NetApp E-Series and BeeGFS"
+        url: /ai/tr-4785.html
+      - title: "Quantum StorNext with NetApp E-Series Systems Design Guide"
+        pdf-filename: "Quantum StorNext with NetApp E-Series Systems Design Guide"
+        url: /infra/ai-eseries-nva1150-design.html
+      - title: "Quantum StorNext with NetApp E-Series Systems Deployment Guide"
+        pdf-filename: "Quantum StorNext with NetApp E-Series Systems Deployment Guide"
+        url: /infra/ai-eseries-nva1150-deploy.html
