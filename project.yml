@@ -17,11 +17,6 @@ sidebar:
       url: /index.html
     - section: ai
     - section: data-analytics
-#
-    - title: "SAP & SAP HANA"
-      url: https://docs.netapp.com/us-en/netapp-solutions-sap/
-    - title: "FlexPod Solutions"
-      url: https://docs.netapp.com/us-en/flexpod/
  #
     - title: "Video Collection"
       url: /videos.html

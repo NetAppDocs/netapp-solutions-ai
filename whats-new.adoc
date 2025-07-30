@@ -49,7 +49,7 @@ include::_include/change-log.adoc[tags=header;containers]
 --
 include::_include/change-log.adoc[tags=header;apps;ent-db]
 
-NOTE: For more information on SAP and SAP HANA updates, refer to the "Update History" content present for each of the solutions in the link:https://docs.netapp.com/us-en/netapp-solutions-sap/[SAP Solutions Repository].
+NOTE: For more information on SAP and SAP HANA updates, refer to the "Update History" content present for each of the solutions in the link:https://docs.netapp.com/us-en/netapp-solutions-sap/[SAP Solutions Repository^].
 
 --
 .Data Protection and Data Migration
