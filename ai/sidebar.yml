@@ -255,52 +255,9 @@ entries:
           - title: "Conclusion"
             url: /infra/ai-lenovo-edge-conclusion.html
 #
-      - title: "NetApp Orchestration Solution with Run:AI"
-        pdf-filename: "NetApp Orchestration Solution with Run:AI"
-        entries:
-          - title: "Optimal Cluster and GPU Utilization with Run AI"
-            entries:
-              - title: "Overview"
-                url: /ai/osrunai_optimal_cluster_and_gpu_utilization_with_run_ai_overview.html
-              - title: "Run AI Installation"
-                url: /ai/osrunai_run_ai_installation.html
-              - title: "Run AI Dashboards and Views"
-                url: /ai/osrunai_run_ai_dashboards_and_views.html
-              - title: "Creating Projects for Data Science Teams and Allocating GPUs"
-                url: /ai/osrunai_creating_projects_for_data_science_teams_and_allocating_gpus.html
-              - title: "Submitting Jobs in Run AI CLI"
-                url: /ai/osrunai_submitting_jobs_in_run_ai_cli.html
-              - title: "Achieving High Cluster Utilization"
-                url: /ai/osrunai_achieving_high_cluster_utilization.html
-              - title: "ResNet-50 with ImageNet Dataset Benchmark Summary"
-                url: /ai/osrunai_resnet-50_with_imagenet_dataset_benchmark_summary.html
-              - title: "Fractional GPU Allocation for Less Demanding or Interactive Workloads"
-                url: /ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.html
-              - title: "Achieving High Cluster Utilization with Over-uota GPU Allocation"
-                url: /ai/osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html
-              - title: "Basic Resource Allocation Fairness"
-                url: /ai/osrunai_basic_resource_allocation_fairness.html
-              - title: "Over-Quota Fairness"
-                url: /ai/osrunai_over-quota_fairness.html
-              - title: "Saving Data to a Trident-Provisioned PersistentVolume"
-                url: /ai/osrunai_saving_data_to_a_trident-provisioned_persistentvolume.html
-          - title: "Conclusion"
-            url: /ai/osrunai_conclusion.html
-          - title: "Testing Details for Section 4.8"
-            url: /ai/osrunai_testing_details_for_section_48.html
-          - title: "Testing Details for Section 4.9"
-            url: /ai/osrunai_testing_details_for_section_49.html
-          - title: "Testing Details for Section 4.10"
-            url: /ai/osrunai_testing_details_for_section_410.html
-          - title: "Where to Find Additional Information"
-            url: /ai/osrunai_where_to_find_additional_information.html
-#
       - title: "Generative AI and NetApp Value"
         pdf-filename: "Generative AI and NetApp Value"
         url: /gen-ai/ai-wp-genai.html
-      - title: "AI Deployment with NetApp E-Series and BeeGFS"
-        pdf-filename: "AI Deployment with NetApp E-Series and BeeGFS"
-        url: /ai/tr-4785.html
       - title: "Quantum StorNext with NetApp E-Series Systems Design Guide"
         pdf-filename: "Quantum StorNext with NetApp E-Series Systems Design Guide"
         url: /infra/ai-eseries-nva1150-design.html
