@@ -11,9 +11,13 @@ settings:
     zip-level: 1
     zip-filename: netapp-solutions-ai.zip
 
+product-family:
+  name: NetApp Solutions
+  repo: netapp-solutions-family
+  
 sidebar:
   entries:
-    - title: "NetApp Solutions Documentation"
+    - title: "NetApp Artifical Intelligence Documentation"
       url: /index.html
     - section: ai
     - section: data-analytics
