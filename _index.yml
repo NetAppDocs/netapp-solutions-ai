@@ -16,51 +16,17 @@ indexpage:
         - title: "Legal Notices"
           url: legal-notices.html
 #
-    - title: "Virtualization Solutions"
-      links:
-        - title: "VMware Virtualization"
-          url: vmware/index.html
-        - title: "Hyper-V Virtualization"
-          url: hyperv/index.html
-        - title: "OpenShift Virtualization"
-          url: osv/index.html
-        - title: "Proxmox Virtualization"
-          url: proxmox/index.html
-        - title: "KVM/libvirt Virtualization"
-          url: kvm/index.html
-        - title: "Virtual Machine Migration (Shift Toolkit)"
-          url: vm-migrate/shift-toolkit-overview.html
-#        - title: "Disk-level Conversion of Virtual Disks"
-#          url: vm-migrate/disk-convert-overview.html
-#
-    - title: "Cloud and Hybrid Cloud Solutions"
-      links:
-        - title: "NetApp Hybrid Multicloud with VMware"
-          url: ehc/index.html
-        - title: "NetApp Hybrid Multicloud with Red Hat"
-          url: rhhc/index.html
-        - title: "VMware Sovereign Cloud"
-          url: vmw-sc/index.html
-#
     - title: "AI and Core Infrastructure Solutions"
       links:
         - title: "Artificial Intelligence"
           url: ai/index.html
         - title: "Modern Data Analytics"
           url: data-analytics/index.html
-        - title: "Containers"
-          url: containers/index.html
-        - title: "Databases"
-          url: databases/index.html
         - title: "SAP and SAP HANA"
           url: https://docs.netapp.com/us-en/netapp-solutions-sap/index.html
 #
     - title: "Solution Automation"
       links:
-        - title: "Introduction"
-          url: automation/automation_introduction.html
-        - title: "Getting Started"
-          url: automation/getting-started.html
         - title: "Request Automation"
           url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Automation]%0d%0a%0d%0aSolution%20Name:%20%0d%0aRequest%20Title:%20%0d%0aDescription:%0d%0aSuggestions:&title=Request%20Automation%20-%20%3Crequest_title%3E
 #
