@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: whats-new.html
+permalink:   whats-new.html
 summary: Log of recent changes to the NetApp Solutions collateral
 keywords: netapp, solutions, catalog, change, log
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: cloud/ai-mlops-fsxn-cictcd.html
+permalink:   cloud/ai-mlops-fsxn-cictcd.html
 keywords: FSx ONTAP, FSx ONTAP, MLOps, NetApp ONTAP, AWS Lambda Functions, SageMaker, AWS S3
 summary: The article provides a guide to building an MLOps pipeline with AWS services, focusing on automated model retraining, deployment, and cost optimization.
 ---

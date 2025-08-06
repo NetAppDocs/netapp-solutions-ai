@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/kafka-sc-best-practice.html
+permalink:   data-analytics/kafka-sc-best-practice.html
 keywords: best practices, get size, s3 buckets, ethernet links, mtu
 summary: This page describes the best practices for improving performance in this solution.
 ---

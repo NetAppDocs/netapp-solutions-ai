@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-nvaie-vmw-intro.html
+permalink:   software/ai-nvaie-vmw-intro.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVAIE, VMware
 summary: NVIDIA AI Enterprise is an end-to-end, cloud-native suite of AI and data analytics software, optimized so every organization can succeed with AI.
 ---

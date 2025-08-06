@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-lenovo-train-arch.html
+permalink:   infra/ai-lenovo-train-arch.html
 keywords: adjustments   
 summary: The setup used for the validation can be adjusted to fit other use cases.
 ---

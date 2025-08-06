@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/dremio-lakehouse-tech-overview.html
+permalink:   data-analytics/dremio-lakehouse-tech-overview.html
 keywords: storagegrid, apache, dremio, lakehouse,
 summary: This section describes the technology used in this solution.
 ---

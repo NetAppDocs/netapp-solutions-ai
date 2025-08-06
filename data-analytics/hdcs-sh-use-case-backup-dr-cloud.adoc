@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/hdcs-sh-use-case-backup-dr-cloud.html
+permalink:   data-analytics/hdcs-sh-use-case-backup-dr-cloud.html
 keywords: cloud-based analytics, apache spark, hadoop, ebs, hdfs
 summary: This use case is based on a broadcasting customer that needs to back up cloud-based analytics data to its on-premises data center.
 ---

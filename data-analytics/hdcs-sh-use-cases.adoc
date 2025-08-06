@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/hdcs-sh-use-cases.html
+permalink:   data-analytics/hdcs-sh-use-cases.html
 keywords: summary, overview, backup, devtest, data protection
 summary: This section provides a high-level description of the data protection use cases, which constitute the focus of this paper. The remaining sections provide more details for each use case, such as the customer problem (scenario), requirements and challenges, and solutions.
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-intro.html
+permalink:   vector-db/ai-vdb-intro.html
 keywords: vector database
 summary: Introduction to vector database solution for netapp
 ---

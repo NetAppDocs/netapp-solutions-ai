@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/stgr-splunkss-conclusion.html
+permalink:   data-analytics/stgr-splunkss-conclusion.html
 keywords: conclusion, references
 summary: Splunk Enterprise is the market-leading SIEM solution driving outcomes across Security, IT, and DevOps teams. 
 ---

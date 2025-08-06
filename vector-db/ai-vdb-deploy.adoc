@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-deploy.html
+permalink:   vector-db/ai-vdb-deploy.html
 keywords: vector database, vector-database-deployment-procedure
 summary: vector-database-deployment-procedure - vector database solution for netapp
 ---

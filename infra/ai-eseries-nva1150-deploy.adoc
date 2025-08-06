@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-eseries-nva1150-deploy.html
+permalink:   infra/ai-eseries-nva1150-deploy.html
 keywords: 
 summary: 
 ---

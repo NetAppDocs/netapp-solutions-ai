@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-kubeflow-deploy.html
+permalink:   software/ai-osmlops-kubeflow-deploy.html
 keywords: Kubeflow, Prerequisites, Kubernetes, cluster
 summary: Open Source MLOps with NetApp - Kubeflow Deployment
 ---

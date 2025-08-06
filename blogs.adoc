@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: blogs.html
+permalink:   blogs.html
 summary: Read the blogs that offer practical guidance and best practices for integrating ONTAP storage with NetApp Virtualization solutions.
 keywords: netapp, solutions, blogs
 ---

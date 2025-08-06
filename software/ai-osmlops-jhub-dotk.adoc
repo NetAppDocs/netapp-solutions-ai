@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-jhub-dotk.html
+permalink:   software/ai-osmlops-jhub-dotk.html
 keywords: AI, control plane, MLOps, JupyterHub
 summary: Open Source MLOps with NetApp - Use the NetApp DataOps Toolkit with JupyterHub
 ---

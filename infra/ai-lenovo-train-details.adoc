@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-lenovo-train-details.html
+permalink:   infra/ai-lenovo-train-details.html
 keywords: data, graphs, image recognition, training, resnet, data read speed, 
 summary: This section describes the detailed test procedure results.
 ---

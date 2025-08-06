@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/bda-ai-customer-challenges.html
+permalink:   data-analytics/bda-ai-customer-challenges.html
 keywords: customer, challenge, data lake, repository, syncing, moving data
 summary: This page discusses the challenges that a customer might face when trying to access data from big-data analytics for AI operations.
 ---

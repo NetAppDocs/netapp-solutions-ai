@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-aipod-lenovo-nva1172.html
+permalink:   infra/ai-aipod-lenovo-nva1172.html
 keywords: 
 summary: 
 ---

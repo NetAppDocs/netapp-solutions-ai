@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/kafka-nfs-perf-aws.html
+permalink:   data-analytics/kafka-nfs-perf-aws.html
 keywords: AWS cloud, ha pair, high availability, openmessage benchmarking, architectural setup
 summary: "A Kafka cluster with the storage layer mounted on NetApp NFS was benchmarked for performance in the AWS cloud. The benchmarking examples are described in the following sections."
 ---

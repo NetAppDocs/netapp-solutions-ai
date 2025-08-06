@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-airflow-dotk.html
+permalink:   software/ai-osmlops-airflow-dotk.html
 keywords: Apache Airflow
 summary: Open Source MLOps with NetApp - Use the NetApp DataOps Toolkit with Airflow
 ---

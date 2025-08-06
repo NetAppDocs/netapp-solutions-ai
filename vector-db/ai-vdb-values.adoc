@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-values.html
+permalink:   vector-db/ai-vdb-values.html
 keywords: vector database
 summary: values-xml - vector database solution for netapp
 ---

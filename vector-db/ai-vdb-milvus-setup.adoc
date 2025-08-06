@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-milvus-setup.html
+permalink:   vector-db/ai-vdb-milvus-setup.html
 keywords: vector database
 summary: milvus cluster setup - vector database solution for netapp
 ---

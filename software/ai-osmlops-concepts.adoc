@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-concepts.html
+permalink:   software/ai-osmlops-concepts.html
 keywords: MLOps, Trident, ONTAP, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow, MLflow, JupyterHub
 summary: Open Source MLOps with NetApp - Technology Overview
 ---

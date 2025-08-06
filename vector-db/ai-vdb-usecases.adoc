@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-usecases.html
+permalink:   vector-db/ai-vdb-usecases.html
 keywords: vector database
 summary: use case - vector database solution for netapp
 ---

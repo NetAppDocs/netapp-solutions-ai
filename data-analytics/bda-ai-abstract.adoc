@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/bda-ai-abstract.html
+permalink:   data-analytics/bda-ai-abstract.html
 keywords:
 summary:
 ---

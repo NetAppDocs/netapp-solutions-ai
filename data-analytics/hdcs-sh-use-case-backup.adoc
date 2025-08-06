@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/hdcs-sh-use-case-backup.html
+permalink:   data-analytics/hdcs-sh-use-case-backup.html
 keywords: use case 2, Hadoop repository, dr, disaster recovery
 summary: In this scenario, the customer has a large on-premises Hadoop repository and wants to back it up for disaster recovery purposes. However, the customer's current backup solution is costly and is suffering from a long backup window of more than 24 hours.
 ---

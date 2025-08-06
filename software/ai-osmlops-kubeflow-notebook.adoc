@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-kubeflow-notebook.html
+permalink:   software/ai-osmlops-kubeflow-notebook.html
 keywords: Jupyter, Notebook, Workspace, Kubeflow
 summary: Open Source MLOps with NetApp - Provision a Jupyter Notebook Workspace for Data Scientist or Developer Use
 ---

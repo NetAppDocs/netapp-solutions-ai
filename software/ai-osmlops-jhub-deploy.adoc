@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-jhub-deploy.html
+permalink:   software/ai-osmlops-jhub-deploy.html
 keywords: AI, control plane, MLOps, JupyterHub
 summary: Open Source MLOps with NetApp - JupyterHub Deployment
 ---

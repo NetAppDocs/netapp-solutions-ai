@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/spark-python-scripts.html
+permalink:   data-analytics/spark-python-scripts.html
 keywords:
 summary:
 ---

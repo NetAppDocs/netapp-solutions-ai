@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-lenovo-train-results.html
+permalink:   infra/ai-lenovo-train-results.html
 keywords: test results, data, 
 summary: This section summarizes the results for testing in this solution.
 ---

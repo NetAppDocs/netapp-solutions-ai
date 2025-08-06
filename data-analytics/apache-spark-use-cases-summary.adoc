@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/apache-spark-use-cases-summary.html
+permalink:   data-analytics/apache-spark-use-cases-summary.html
 keywords: streaming data, machine learning, deep learning, interactive analysis, recommender system, natural language processing, 
 summary: This page describes the different areas in which this solution can be used. 
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/kafka-ontap-overview.html
+permalink:   data-analytics/kafka-ontap-overview.html
 keywords: tr4941, 4941, introduction
 summary: This document outlines performance benchmarks for the Confluent platform on NetApp ONTAP using a tiered storage benchmarking kit.
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: gen-ai/ai-wp-genai.html
+permalink:   gen-ai/ai-wp-genai.html
 keywords: NetApp AI, AI, Artificial Intelligence, Generative AI
 summary: NetApp AI capabilities that enable seamless data management and data movement across the AI pipeline for training, retraining, fine tuning, inferencing, and monitoring generative AI models. 
 ---

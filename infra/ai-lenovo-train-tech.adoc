@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-lenovo-train-tech.html
+permalink:   infra/ai-lenovo-train-tech.html
 keywords: AFF, A400, tech overview, flexgroup, thinksystem, mlperf
 summary: This section introduces the major components of this solution in greater detail.
 ---

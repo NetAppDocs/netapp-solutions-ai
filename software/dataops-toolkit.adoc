@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/dataops-toolkit.html
+permalink:   software/dataops-toolkit.html
 keywords: 
 summary: 
 ---

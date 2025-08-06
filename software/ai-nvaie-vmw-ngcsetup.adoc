@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-nvaie-vmw-ngcsetup.html
+permalink:   software/ai-nvaie-vmw-ngcsetup.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVAIE, VMware, NGC
 summary: NVIDIA AI Enterprise with NetApp and VMware - Utilize NVIDIA NGC Software - Setup
 ---

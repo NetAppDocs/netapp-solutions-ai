@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/apache-spark-conclusion.html
+permalink:   data-analytics/apache-spark-conclusion.html
 keywords: conclusion    
 summary: This section summarizes this document concerning the NetApp storage solutions for Apache Spark.
 ---

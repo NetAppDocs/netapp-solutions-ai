@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-lenovo-edge-config.html
+permalink:   infra/ai-lenovo-edge-config.html
 keywords: test, configuration, network infrastructure, storage provisioning, SE350 server
 summary: This section describes the tested configurations, the network infrastructure, the SE350 server, and the storage provisioning details.
 ---

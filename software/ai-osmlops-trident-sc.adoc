@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-trident-sc.html
+permalink:   software/ai-osmlops-trident-sc.html
 keywords: Kubernetes, StorageClasses, ONTAP, Deployment, Trident
 summary: Open Source MLOps with NetApp - Example Kubernetes StorageClasses for NetApp AIPod Deployments
 ---

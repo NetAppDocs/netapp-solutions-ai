@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/hdcs-sh-use-case-dp-multicloud.html
+permalink:   data-analytics/hdcs-sh-use-case-dp-multicloud.html
 keywords: iot, aws, nps, azure, analytics application
 summary: This use case is relevant for a cloud service partner tasked with providing multicloud connectivity for customers' big data analytics data.
 ---

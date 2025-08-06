@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-tech.html
+permalink:   vector-db/ai-vdb-tech.html
 keywords: vector database
 summary: Technology requirement - vector database solution for netapp
 ---

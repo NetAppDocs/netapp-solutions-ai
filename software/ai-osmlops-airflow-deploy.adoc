@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: software/ai-osmlops-airflow-deploy.html
+permalink:   software/ai-osmlops-airflow-deploy.html
 keywords: AI, control plane, apache, airflow
 summary: Open Source MLOps with NetApp - Apache Airflow Deployment
 ---

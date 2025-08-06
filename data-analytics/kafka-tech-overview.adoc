@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: data-analytics/kafka-tech-overview.html
+permalink:   data-analytics/kafka-tech-overview.html
 keywords: storagegrid, apache, confluent, kafka, grid manager,
 summary: This section describes the technology used in this solution.
 ---

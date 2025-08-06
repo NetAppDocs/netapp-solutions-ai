@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: vector-db/ai-vdb-instaclustr-pgvector.html
+permalink:   vector-db/ai-vdb-instaclustr-pgvector.html
 keywords: vector database
 summary: instaclustr with pgvector - vector database solution for netapp
 ---

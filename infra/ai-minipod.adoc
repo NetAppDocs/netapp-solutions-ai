@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-minipod.html
+permalink:   infra/ai-minipod.html
 keywords: netapp, aipod, RAG, ai solution, design
 summary: This paper presents a validated reference design of NetApp AIPod for Enterprise RAG with technologies and combined capabilities of Intel Xeon 6 processors and NetApp data management solutions. The solution demonstrates a downstream ChatQnA application leveraging a large language model, providing accurate, contextually relevant responses to concurrent users. The responses are retrieved from an organization's internal knowledge repository through an air-gapped RAG inferencing pipeline.
 ---

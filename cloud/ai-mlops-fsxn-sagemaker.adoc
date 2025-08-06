@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: cloud/ai-mlops-fsxn-sagemaker.html
+permalink:   cloud/ai-mlops-fsxn-sagemaker.html
 keywords: FSx ONTAP, MLOps, NetApp ONTAP, SageMaker, AWS S3, Computer Vision, PyTorch
 summary: The article is a tutorial on using Amazon FSx for NetApp ONTAP (FSx ONTAP) for training PyTorch models in SageMaker, specifically for a tire quality classification project.
 ---
