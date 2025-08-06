@@ -1,11 +1,11 @@
 indexpage:
-  title: NetApp Artificial Intelligence solutions
-  lead: "NetApp Solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
-  summary: "NetApp Solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  title: NetApp artificial intelligence solutions
+  lead: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  summary: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
   tiles:
     - title: "Introduction"
       links:
-        - title: "Learn about NetApp Solutions"
+        - title: "Learn about NetApp solutions"
           url: https://docs.netapp.com/us-en/netapp-solutions-family/intro-family.html
         - title: "Change History"
           url: /whats-new.html
