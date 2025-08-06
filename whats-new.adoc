@@ -6,7 +6,7 @@ summary: Log of recent changes to the NetApp artificial intelligence solutions c
 ---
 = What's new in NetApp artificial intelligence solutions 
 :icons: font
-:imagesdir: ../media/
+:imagesdir: ./media/
 
 [.lead]
 Learn what's new in artificial intelligence solutions.
