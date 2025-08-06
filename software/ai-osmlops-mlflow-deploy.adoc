@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-mlflow-deploy.html
+permalink: software/ai-osmlops-mlflow-deploy.html
 keywords: AI, control plane, MLOps, MLflow
 summary: Open Source MLOps with NetApp - MLflow Deployment
 ---

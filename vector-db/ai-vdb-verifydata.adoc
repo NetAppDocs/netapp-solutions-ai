@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-verifydata.html
+permalink: vector-db/ai-vdb-verifydata.html
 keywords: vector database
 summary: verify_data_netapp.py - vector database solution for netapp
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-conf-protopia-tech.html
+permalink: software/ai-conf-protopia-tech.html
 keywords: protopia, netapp ontap, overview, dataops toolkit, nvidia triton inference server, pytorch
 summary: This section provides an overview of the various technical components required to complete this solution.
 ---

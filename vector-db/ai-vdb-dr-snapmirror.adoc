@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-dr-snapmirror.html
+permalink: vector-db/ai-vdb-dr-snapmirror.html
 keywords: vector database
 summary: Disaster Recovery using NetApp SnapMirror - vector database solution for netapp
 ---

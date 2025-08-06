@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-architecture.html
+permalink: software/ai-osmlops-architecture.html
 keywords: Hardware, Software, Requirements, Trident, DeepOps, ONTAP, Ubuntu
 summary: Open Source MLOps with NetApp - Architecture
 ---

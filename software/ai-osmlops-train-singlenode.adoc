@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-train-singlenode.html
+permalink: software/ai-osmlops-train-singlenode.html
 keywords: Single-Node, AI, Kubernetes, cluster, PVC
 summary: Open Source MLOps with NetApp - Execute a Single-Node AI Workload
 ---

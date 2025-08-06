@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/hdcs-sh-use-case-devtest.html
+permalink: data-analytics/hdcs-sh-use-case-devtest.html
 keywords: devtest, hadoop, spark, analytics data, reporting
 summary: In this use case, the customer's requirement is to rapidly and efficiently build new Hadoop/Spark clusters based on an existing Hadoop cluster containing a large amount of analytics data for DevTest and reporting purposes in the same data center as well as remote locations.
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/dremio-lakehouse-use-cases.html
+permalink: data-analytics/dremio-lakehouse-use-cases.html
 keywords: customer use case details
 summary: This section covers the customer use case details of Dremio with netapp object storage .
 ---

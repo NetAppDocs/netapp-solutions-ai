@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   infra/ai-lenovo-train-intro.html
+permalink: infra/ai-lenovo-train-intro.html
 keywords: tr4810, 4810, introduction, cluster architecture, lenovo, ai
 summary: This solution focuses on both entry-level and mid-range cluster architecture using NetApp storage and Lenovo servers optimized for artificial intelligence workloads. It is meant for small- and medium-sized teams for which most compute jobs are single-node (single- or multi-GPU) or are distributed over a few computational nodes. This is not a major limitation, because most day-to-day AI training jobs are single node.
 ---

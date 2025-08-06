@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-solution-with-netapp.html
+permalink: vector-db/ai-vdb-solution-with-netapp.html
 keywords: vector database, milvus, usecases
 summary: This is abstract page for vector datbase solution with Netapp.
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-conf-protopia-procedure.html
+permalink: software/ai-conf-protopia-procedure.html
 keywords: prerequisites, scenario, jupyter lab, batch inference, kubernetes, NVIDIA Triton Inference Server
 summary: This section describes the tasks needed to complete the validation.
 ---

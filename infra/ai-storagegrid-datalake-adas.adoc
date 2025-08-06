@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   infra/ai-storagegrid-datalake-adas.html
+permalink: infra/ai-storagegrid-datalake-adas.html
 keywords: 
 summary: 
 ---

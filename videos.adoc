@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   videos.html
+permalink: videos.html
 summary: Series of videos and demos discussing the features of many of NetApp's solutions
 keywords: netapp, solutions, videos, demos
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-trident-backend.html
+permalink: software/ai-osmlops-trident-backend.html
 keywords: ONTAP, Trident, AI, Deployment,
 summary: Open Source MLOps with NetApp - Example Trident Backends for NetApp AIPod Deployments
 ---

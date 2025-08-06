@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/kafka-rebalance.html
+permalink: data-analytics/kafka-rebalance.html
 keywords: rebalance, test, self balancing, brokers
 summary: This test is based on the self-balancing clusters feature, which automates rebalancing based on cluster topology changes or uneven load.
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-mlflow-trace.html
+permalink: software/ai-osmlops-mlflow-trace.html
 keywords: AI, control plane, MLOps, MLflow
 summary: Open Source MLOps with NetApp - Dataset-to-model Traceability with NetApp and MLflow
 ---

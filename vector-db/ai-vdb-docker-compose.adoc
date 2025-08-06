@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-docker-compose.html
+permalink: vector-db/ai-vdb-docker-compose.html
 keywords: vector database
 summary: docker-compose.xml - vector database solution for netapp
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-nvaie-vmw-tech.html
+permalink: software/ai-nvaie-vmw-tech.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVAIE, VMware
 summary: NVIDIA AI Enterprise with NetApp and VMware - Technology Overview
 ---

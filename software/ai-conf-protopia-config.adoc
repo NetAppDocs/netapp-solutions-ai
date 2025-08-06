@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-conf-protopia-config.html
+permalink: software/ai-conf-protopia-config.html
 keywords: test, configuration, Kubernetes, trident, dataops, toolkit, nvidia
 summary: This section outlines the solution design validation environment.
 ---

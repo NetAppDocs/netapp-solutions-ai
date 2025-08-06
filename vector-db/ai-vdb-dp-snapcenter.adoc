@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-dp-snapcenter.html
+permalink: vector-db/ai-vdb-dp-snapcenter.html
 keywords: vector database
 summary: Vector database protection using snapcenter  - vector database solution for netapp
 ---

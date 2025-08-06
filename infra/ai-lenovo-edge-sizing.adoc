@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   infra/ai-lenovo-edge-sizing.html
+permalink: infra/ai-lenovo-edge-sizing.html
 keywords: architecture, sizing, computer server, shared storage
 summary: You can adjust the setup used for the validation to fit other use cases.
 ---

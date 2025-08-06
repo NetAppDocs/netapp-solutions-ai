@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-dataprep.html
+permalink: vector-db/ai-vdb-dataprep.html
 keywords: prepare vector database
 summary: Prepare Data to vector database solution for netapp
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   infra/ai-lenovo-edge-summary.html
+permalink: infra/ai-lenovo-edge-summary.html
 keywords:
 summary:
 ---

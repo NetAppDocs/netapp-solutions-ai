@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/confluent-kafka-introduction.html
+permalink: data-analytics/confluent-kafka-introduction.html
 keywords: tr-4912, tr4912, 4912, introduction, best practices, Kafka, confluent
 summary: This document describes the best-practice guidelines for using Kafka on a NetApp storage controller.
 ---

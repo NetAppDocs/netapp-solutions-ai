@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-landscape.html
+permalink: vector-db/ai-vdb-landscape.html
 keywords: vector database
 summary: vector database - vector database solution for netapp
 ---

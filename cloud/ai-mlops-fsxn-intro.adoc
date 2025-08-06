@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   cloud/ai-mlops-fsxn-intro.html
+permalink: cloud/ai-mlops-fsxn-intro.html
 keywords: FSx ONTAP, FSx ONTAP, AWS S3, SageMaker, MLOps, NetApp ONTAP
 summary: This is the introductory page to the FSx ONTAP MLOps section.
 ---

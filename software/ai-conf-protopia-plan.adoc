@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-conf-protopia-plan.html
+permalink: software/ai-conf-protopia-plan.html
 keywords: validation scenarios, obfuscation, batch inferencing job
 summary: This section provides an overview of the three scenarios validated in this solution.
 ---

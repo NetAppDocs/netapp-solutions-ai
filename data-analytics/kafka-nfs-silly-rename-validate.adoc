@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/kafka-nfs-silly-rename-validate.html
+permalink: data-analytics/kafka-nfs-silly-rename-validate.html
 keywords: validation setup, architecture flow, testing methodology
 summary: "For the functional validation, we showed that a Kafka cluster with an NFSv3 mount for storage fails to perform Kafka operations like partition redistribution, whereas another cluster mounted on NFSv4 with the fix can perform the same operations without any disruptions."
 ---

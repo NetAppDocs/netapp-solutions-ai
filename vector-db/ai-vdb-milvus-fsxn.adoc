@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-milvus-fsxn.html
+permalink: vector-db/ai-vdb-milvus-fsxn.html
 keywords: vector database
 summary: milvus with Amazon FSx ONTAP for NetApp ONTAP  - vector database solution for netapp
 ---

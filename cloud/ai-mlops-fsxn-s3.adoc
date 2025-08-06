@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   cloud/ai-mlops-fsxn-s3.html
+permalink: cloud/ai-mlops-fsxn-s3.html
 keywords: FSx ONTAP, MLOps, NetApp ONTAP, SageMaker, AWS S3
 summary: This post provides a guide on configuring FSx ONTAP as a private S3 bucket using AWS SageMaker.
 ---

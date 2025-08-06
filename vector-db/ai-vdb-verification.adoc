@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-verification.html
+permalink: vector-db/ai-vdb-verification.html
 keywords: Solution Overview vector database
 summary: solution verification overview - vector database solution for netapp
 ---

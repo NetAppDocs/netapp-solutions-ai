@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-hybrid-ddlnexus-setup.html
+permalink: software/ai-hybrid-ddlnexus-setup.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP
 summary: Hybrid Multicloud MLOps with Domino Data Lab and NetApp - Initial Setup
 ---

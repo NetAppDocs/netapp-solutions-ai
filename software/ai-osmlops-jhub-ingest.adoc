@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-jhub-ingest.html
+permalink: software/ai-osmlops-jhub-ingest.html
 keywords: AI, control plane, MLOps, JupyterHub
 summary: Ingest Data with NetApp SnapMirror
 ---

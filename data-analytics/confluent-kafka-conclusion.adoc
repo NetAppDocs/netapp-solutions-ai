@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/confluent-kafka-conclusion.html
+permalink: data-analytics/confluent-kafka-conclusion.html
 keywords: conclusion
 summary: This document provides best practice guidelines for using Kafka with NetApp storage, including Confluent Kafka certification tests, performance results, tuning, Kafka connectors and the self rebalancing feature.
 ---

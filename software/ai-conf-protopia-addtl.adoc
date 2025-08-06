@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-conf-protopia-addtl.html
+permalink: software/ai-conf-protopia-addtl.html
 keywords:
 summary:
 ---

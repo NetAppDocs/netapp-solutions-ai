@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-kubeflow-dotk.html
+permalink: software/ai-osmlops-kubeflow-dotk.html
 keywords: Jupyter Notebook, Kubeflow Pipeline, NetApp DataOps Toolkit
 summary: Open Source MLOps with NetApp - Use the NetApp DataOps Toolkit with Kubeflow
 ---

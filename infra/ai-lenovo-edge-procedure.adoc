@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   infra/ai-lenovo-edge-procedure.html
+permalink: infra/ai-lenovo-edge-procedure.html
 keywords: procedure, operating system, ubuntu, nvidia, docker, criteo, brats
 summary: This section describes the test procedures used to validate this solution.
 ---

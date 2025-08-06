@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/cdm-fod-data-duality.html
+permalink: data-analytics/cdm-fod-data-duality.html
 keywords: technology requirements, software, bluexp, cloud volumes ontap, sagemaker, aws, machine learning data
 summary: "Data is available in NFS and accessed from S3 from AWS SageMaker."
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   software/ai-osmlops-kubeflow-train.html
+permalink: software/ai-osmlops-kubeflow-train.html
 keywords: Jupyter Notebook, Kubeflow Pipeline, NetApp DataOps Toolkit, MNIST, Image Recognition
 summary: Open Source MLOps with NetApp - Example Workflow - Train an Image Recognition Model Using Kubeflow and the NetApp DataOps Toolkit
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/hdcs-sh-data-fabric.html
+permalink: data-analytics/hdcs-sh-data-fabric.html
 keywords: architecture, data fabric, use cases, nfs, big data
 summary: The data fabric powered by NetApp simplifies and integrates data management across cloud and on-premises environments to accelerate digital transformation. The data fabric powered by NetApp delivers consistent and integrated data management services and applications (building blocks) for data visibility and insights, data access and control, and data protection and security.
 ---

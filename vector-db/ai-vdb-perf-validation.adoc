@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   vector-db/ai-vdb-perf-validation.html
+permalink: vector-db/ai-vdb-perf-validation.html
 keywords: vector database
 summary: Vector Database Performance Validation  - vector database solution for netapp
 ---

@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/kafka-nfs-perf-aff.html
+permalink: data-analytics/kafka-nfs-perf-aff.html
 keywords: storage configuration, client tuning, kafka broker tuning, workload ganerator, steady state, performance, extreme performance
 summary: "On-premises, we used the NetApp AFF A900 storage controller with ONTAP 9.12.1RC1 to validate performance and scaling of a Kafka cluster. We used the same testbed as in our previous tiered storage best practices with ONTAP and AFF."
 ---

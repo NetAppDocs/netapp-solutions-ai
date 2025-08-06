@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink:   data-analytics/apache-spark-solution-technology.html
+permalink: data-analytics/apache-spark-solution-technology.html
 keywords: standalone, apache mesos, hadoop yarn, resilient distributed dataset, rdd, dataframe, hadoop distributed file system, hdfs
 summary: This section describes the nature and components of Apache Spark and how they contribute to this solution.
 ---
