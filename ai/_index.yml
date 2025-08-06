@@ -6,9 +6,9 @@ indexpage:
     - title: "Getting Started"
       links:
         - title: "Videos and Demos"
-          url: /../videos.html#ai
+          url: ../videos.html
         - title: "Blogs"
-          url: /../blogs.html#ai
+          url: ../blogs.html
 #
     - title: "Converged Infrastructures for AI Workloads with NVIDIA"
       links:
