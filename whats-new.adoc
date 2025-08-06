@@ -1,66 +1,23 @@
 ---
 sidebar: sidebar
 permalink: whats-new.html
-summary: Log of recent changes to the NetApp Solutions collateral
-keywords: netapp, solutions, catalog, change, log
+keywords: netapp, solutions, ai, what's new, updates, change log
+summary: Log of recent changes to the NetApp artificial intelligence solutions collateral. 
 ---
-
-= NetApp Solutions Change Log
-:hardbreaks:
-:nofooter:
+= What's new in NetApp artificial intelligence solutions 
 :icons: font
-:linkattrs:
 :imagesdir: ./media/
 
 [.lead]
-Recent changes to the NetApp Solutions collateral.  The most recent changes are listed first.
+Learn what's new in artificial intelligence solutions.
 
-[role="tabbed-block"]
-====
-.All Changes
---
-include::_include/change-log.adoc[**;*]
---
-.AI / Data Analytics
---
-include::_include/change-log.adoc[tags=header;aiml]
---
-.Hybrid Multicloud
---
-include::_include/change-log.adoc[tags=header;hmc]
---
-.VMware Sovereign Cloud
---
-include::_include/change-log.adoc[tags=header;vmw-sc]
---
-.Hybrid Multicloud with Red Hat OpenShift
---
-include::_include/change-log.adoc[tags=header;rhhc]
---
-.Virtualization
---
-include::_include/change-log.adoc[tags=header;vmware;vdi;hyperv]
---
-.Containers
---
-include::_include/change-log.adoc[tags=header;containers]
---
-.Enterprise Apps and DB
---
-include::_include/change-log.adoc[tags=header;apps;ent-db]
+== 18 August 2025
+The NetApp Solutions site is now the link:https://docs.netapp.com/us-en/netapp-solutions-family/index.html[NetApp solutions family^], which includes the following sites:
 
-NOTE: For more information on SAP and SAP HANA updates, refer to the "Update History" content present for each of the solutions in the link:https://docs.netapp.com/us-en/netapp-solutions-sap/[SAP Solutions Repository^].
-
---
-.Data Protection and Data Migration
---
-include::_include/change-log.adoc[tags=header;dp-dm]
---
-.Solution Automation
---
-include::_include/change-log.adoc[tags=header;automation]
---
-====
-
-
-// NetApp Solutions restructuring (jul 2025) - renamed from /change-log-display.adoc
+* NetApp artificial intelligence solutions
+* link:https://docs.netapp.com/us-en/netapp-solutions-containers/index.html[NetApp container solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-dataops/index.html[NetApp data management solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-databases/index.html[NetApp database solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-cloud/index.html[NetApp public and hybrid cloud solutions^] 
+* link:https://docs.netapp.com/us-en/netapp-solutions-sap/index.html[NetApp solutions for SAP^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-virtualization/index.html[NetApp virtualization solutions^]

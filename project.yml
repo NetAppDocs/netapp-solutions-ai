@@ -1,5 +1,5 @@
 settings:
-  name: "NetApp Artificial Intelligence solutions"
+  name: "NetApp artificial intelligence solutions"
   internal:
     pdf_enabled: true
     lipi_enabled: true
@@ -12,12 +12,12 @@ settings:
     zip-filename: netapp-solutions-ai.zip
 
 product-family:
-  name: NetApp Solutions
+  name: NetApp solutions
   repo: netapp-solutions-family
   
 sidebar:
   entries:
-    - title: "Artificial Intelligence solutions"
+    - title: "Artificial intelligence solutions"
       url: /index.html
     - section: ai
     - section: data-analytics
