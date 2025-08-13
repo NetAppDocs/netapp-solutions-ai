@@ -60,7 +60,7 @@ entries:
                 url: /software/ai-osmlops-airflow-deploy.html
               - title: "Use the NetApp DataOps Toolkit with Airflow"
                 url: /software/ai-osmlops-airflow-dotk.html
-          - title: JupyterHub
+          - title: "JupyterHub"
             entries:
               - title: "JupyterHub deployment"
                 url: /software/ai-osmlops-jhub-deploy.html
@@ -68,7 +68,7 @@ entries:
                 url: /software/ai-osmlops-jhub-dotk.html
               - title: "Ingest data with NetApp SnapMirror"
                 url: /software/ai-osmlops-jhub-ingest.html
-          - title: MLflow
+          - title: "MLflow"
             entries:
               - title: "MLflow deployment"
                 url: /software/ai-osmlops-mlflow-deploy.html
@@ -237,7 +237,8 @@ entries:
       - title: "Solution design for AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem"
         pdf-filename: "AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem - Solution Design"
         entries:
-      - title: "Introduction"
+          - title: "Introduction"
+            url: /infra/ai-lenovo-edge-intro.html
           - title: "Conclusion"
             url: /infra/ai-lenovo-edge-conclusion.html
 #

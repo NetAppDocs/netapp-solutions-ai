@@ -78,7 +78,7 @@ entries:
         url: /data-analytics/spark-python-scripts.html
       - title: "Conclusion"
         url: /data-analytics/apache-spark-conclusion.html
-      - title: Where to find additional information
+      - title: "Where to find additional information"
         url: /data-analytics/spark-additional-info.html
 #
   - title: "Big Data Analytics Data to Artificial Intelligence"
@@ -96,7 +96,7 @@ entries:
         url: /data-analytics/bda-ai-gpfs-to-netapp-ontap-nfs.html
       - title: "HDFS and MapR-FS to ONTAP NFS"
         url: /data-analytics/bda-ai-hdfs-maprfs-to-nfs.html
-      - title: B"usiness benefits"
+      - title: "Business benefits"
         url: /data-analytics/bda-ai-business-benefits.html
       - title: "GPFS to NFS - Detailed steps"
         url: /data-analytics/bda-ai-gpfs-to-nfs.html
