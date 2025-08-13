@@ -41,7 +41,7 @@ indexpage:
           url: /infra/ai-aipod-lenovo-nva1172.html
         - title: "IBM Spectrum Scale with E-Series storage"
           url: /infra/ai-eseries-spectrumscale.html
-        - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+        - title: "NetApp ONTAP and Lenovo ThinkSystem SR670"
           url: /infra/ai-lenovo-train-intro.html
 #
     - title: "AI use cases and applications"
