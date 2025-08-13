@@ -33,27 +33,27 @@ indexpage:
     - title: "Cloud data management and AI"
       links:
         - title: "Cloud Data Management with NetApp File-Object Duality and AWS SageMaker"
-          url: cdm-fod-solution-overview.html
+          url: /data-analytics/cdm-fod-solution-overview.html
         - title: "Big Data Analytics Data to Artificial Intelligence"
-          url: bda-ai-introduction.html
+          url: /data-analytics/bda-ai-introduction.html
         - title: "Amazon FSx for NetApp ONTAP for MLOps"
-          url: ../cloud/ai-mlops-fsxn-intro.html
+          url: /cloud/ai-mlops-fsxn-intro.html
         - title: "Apache Spark hybrid cloud solution"
-          url: spark-hybrid-cloud.html
+          url: /data-analytics/spark-hybrid-cloud.html
 
     - title: "Modern data lake and analytics platforms"
       links:
         - title: "NetApp and Dremio's next generation hybrid iceberg lakehouse solution"
-          url: dremio-lakehouse-introduction.html
+          url: /data-analytics/dremio-lakehouse-introduction.html
         - title: "NetApp StorageGRID with Splunk SmartStore"
-          url: stgr-splunkss-introduction.html
+          url: /data-analytics/stgr-splunkss-introduction.html
         - title: "NetApp E-Series E5700 and Splunk Enterprise"
-          url: tr-4623.html
+          url: /data-analytics/tr-4623.html
 
     - title: "Additional resources"
       links:
         - title: "Different solutions for different analytics strategies"
-          url: sb-4154.html
+          url: /data-analytics/sb-4154.html
         - title: "Blog: Apache Spark Plays in the NetApp Data Analytics Playground"
           url: https://www.netapp.com/blog/apache-spark-data-analytics/
         - title: "Blog: Use XCP for Data Migration from a Data Lake and HPC to ONTAP NFS"
