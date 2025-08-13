@@ -14,9 +14,9 @@ keywords: netapp, solutions, blogs
 [.lead]
 Read the AI/ML blogs that highlight industry trends, innovations, and real-world impact, as well as developer resources, community insights, and practical tools for working with NetApp AI solutions.
 
-== Trends, innovations, and real-world impact in AI and analytics
-* link:++https://www.netapp.com/blog/#t=Blogs&sort=%40publish_date_mktg%20descending&layout=card&f:@facet_language_mktg=[English]&f:@facet_soultion_mktg=[AI,Analytics,artificial-intelligence]++[AI blogs on NetApp.com]
+.AI trends and industry insights
+Explore industry trends, innovations, and real-world AI impact across various sectors. link:++https://www.netapp.com/blog/#t=Blogs&sort=%40publish_date_mktg%20descending&layout=card&f:@facet_language_mktg=[English]&f:@facet_soultion_mktg=[AI,Analytics,artificial-intelligence]++[Read AI blogs on NetApp.com^]
 
-== Developer resources, community, and practical tools for AI/ML
-* link:https://netapp.io/category/ai-ml/[AI blogs on the Pub]
+.Developer resources and community
+Technical insights, practical tools, and community-driven content for AI/ML practitioners. link:https://netapp.io/category/ai-ml/[Read AI blogs on the Pub^]
 
