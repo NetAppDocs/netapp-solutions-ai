@@ -7,53 +7,53 @@ indexpage:
     - title: "Apache Kafka solutions"
       links:
         - title: "Apache Kafka workloads with NetApp NFS storage"
-          url: /data-analytics/kafka-nfs-introduction.html
+          url: data-analytics/kafka-nfs-introduction.html
         - title: "Confluent Kafka with NetApp ONTAP storage controllers"
-          url: /data-analytics/kafka-ontap-overview.html
+          url: data-analytics/kafka-ontap-overview.html
         - title: "Best practices for Confluent Kafka"
-          url: /data-analytics/confluent-kafka-introduction.html
+          url: data-analytics/confluent-kafka-introduction.html
         - title: "Kafka performance validation with AWS"
-          url: /data-analytics/kafka-nfs-perf-aws-fsxn.html
+          url: data-analytics/kafka-nfs-perf-aws-fsxn.html
         - title: "Why NetApp NFS for Kafka workloads?"
-          url: /data-analytics/kafka-nfs-why-netapp.html
+          url: data-analytics/kafka-nfs-why-netapp.html
 
     - title: "Apache Spark and Hadoop solutions"
       links:
         - title: "NetApp storage solutions for Apache Spark"
-          url: /data-analytics/apache-spark-solution-overview.html
+          url: data-analytics/apache-spark-solution-overview.html
         - title: "Deploy Apache Spark workload with NetApp storage"
-          url: /data-analytics/nva-1157-deploy.html
+          url: data-analytics/nva-1157-deploy.html
         - title: "NetApp hybrid cloud data solutions for Spark and Hadoop"
-          url: /data-analytics/hdcs-sh-solution-overview.html
+          url: data-analytics/hdcs-sh-solution-overview.html
         - title: "Use cases and architectures"
-          url: /data-analytics/spark-ai-use-cases.html
+          url: data-analytics/spark-ai-use-cases.html
         - title: "Apache Spark testing results"
-          url: /data-analytics/apache-spark-testing-results.html
+          url: data-analytics/apache-spark-testing-results.html
 
     - title: "Cloud data management and AI"
       links:
         - title: "Cloud Data Management with NetApp File-Object Duality and AWS SageMaker"
-          url: /data-analytics/cdm-fod-solution-overview.html
+          url: data-analytics/cdm-fod-solution-overview.html
         - title: "Big Data Analytics Data to Artificial Intelligence"
-          url: /data-analytics/bda-ai-introduction.html
+          url: data-analytics/bda-ai-introduction.html
         - title: "Amazon FSx for NetApp ONTAP for MLOps"
           url: /cloud/ai-mlops-fsxn-intro.html
         - title: "Apache Spark hybrid cloud solution"
-          url: /data-analytics/spark-hybrid-cloud.html
+          url: data-analytics/spark-hybrid-cloud.html
 
     - title: "Modern data lake and analytics platforms"
       links:
         - title: "NetApp and Dremio's next generation hybrid iceberg lakehouse solution"
-          url: /data-analytics/dremio-lakehouse-introduction.html
+          url: data-analytics/dremio-lakehouse-introduction.html
         - title: "NetApp StorageGRID with Splunk SmartStore"
-          url: /data-analytics/stgr-splunkss-introduction.html
+          url: data-analytics/stgr-splunkss-introduction.html
         - title: "NetApp E-Series E5700 and Splunk Enterprise"
-          url: /data-analytics/tr-4623.html
+          url: data-analytics/tr-4623.html
 
     - title: "Additional resources"
       links:
         - title: "Different solutions for different analytics strategies"
-          url: /data-analytics/sb-4154.html
+          url: data-analytics/sb-4154.html
         - title: "Blog: Apache Spark Plays in the NetApp Data Analytics Playground"
           url: https://www.netapp.com/blog/apache-spark-data-analytics/
         - title: "Blog: Use XCP for Data Migration from a Data Lake and HPC to ONTAP NFS"
