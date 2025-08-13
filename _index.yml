@@ -3,6 +3,7 @@ indexpage:
   lead: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
   summary: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
   tiles:
+  
     - title: "Get started"
       links:
         - title: "What's new"

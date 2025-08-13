@@ -3,16 +3,17 @@ indexpage:
   lead: "NetApp Modern Data Analytics Solutions are a set of strategic and technology capabilities that demonstrate the capabilities of NetApp storage across the AI space."
   summary: "NetApp Modern Data Analytics Solutions are a set of strategic and technology capabilities that demonstrate the capabilities of NetApp storage across the AI space."
   tiles:
-    - title: "Get Started"
+  
+    - title: "Get started"
       links:
-        - title: "Apache Spark Workload with NetApp Storage Solution"
+        - title: "Apache Spark workload with NetApp storage solution"
           url: https://www.netapp.com/pdf.html?item=/media/26877-nva-1157-deploy.pdf
         - title: "Modern Data Analytics Solution Brief"
           url: https://www.netapp.com/pdf.html?item=/media/58015-sb-4154.pdf
 #
-    - title: "Best Practices"
+    - title: "Best practices"
       links:
-        - title: "Best Practices for Confluent Kafka"
+        - title: "Best practices for Confluent Kafka"
           url: confluent-kafka-introduction.html
         - title: "NetApp E-Series E5700 and Splunk Enterprise"
           url: https://www.netapp.com/pdf.html?item=/media/16851-tr-4623pdf.pdf
