@@ -47,13 +47,13 @@ indexpage:
     - title: "AI use cases and applications"
       links:
         - title: "NetApp AIPod Mini for enterprise RAG inferencing"
-          url: /ai/infra/ai-minipod.html
+          url: /infra/ai-minipod.html
         - title: "AI inferencing at the edge"
-          url: /ai/infra/ai-lenovo-edge-intro.html
+          url: /infra/ai-lenovo-edge-intro.html
         - title: "Vector database solutions"
-          url: /ai/vector-db/ai-vdb-solution-with-netapp.html
+          url: /vector-db/ai-vdb-solution-with-netapp.html
         - title: "Autonomous driving workloads"
-          url: /ai/infra/ai-storagegrid-datalake-adas.html
+          url: /infra/ai-storagegrid-datalake-adas.html
         - title: "BeeGFS on NetApp with E-Series storage"
           url: /infra/ai-eseries-beegfs.html
         - title: "Design and deploy Quantum StorNext with E-Series"
@@ -62,11 +62,11 @@ indexpage:
     - title: "MLOps and data management"
       links:
         - title: "Open source MLOps with NetApp"
-          url: /ai/software/ai-osmlops-intro.html
+          url: /software/ai-osmlops-intro.html
         - title: "Hybrid multicloud MLOps with Domino Data Lab"
-          url: /ai/software/ai-hybrid-ddlnexus-intro.html
+          url: /software/ai-hybrid-ddlnexus-intro.html
         - title: "Amazon FSx for NetApp ONTAP for MLOps"
-          url: /ai/cloud/ai-mlops-fsxn-intro.html
+          url: /cloud/ai-mlops-fsxn-intro.html
         - title: "NetApp DataOps Toolkit"
           url: /software/dataops-toolkit.html
 #
