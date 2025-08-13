@@ -19,12 +19,12 @@ indexpage:
         - title: "NetApp EF600 with Splunk Enterprise"
           url: https://www.netapp.com/pdf.html?item=/media/72003-tr-4930.pdf
 #
-    - title: "Use Cases"
+    - title: "Use cases"
       links:
         - title: "Hybrid Cloud Solutions - Spark and Hadoop Use Cases"
           url: hdcs-sh-solution-overview.html
 #
-    - title: "Additional Resources"
+    - title: "Additional resources"
       links:
         - title: "Blog: Apache Spark Plays in the NetApp Data Analytics Playground"
           url: https://www.netapp.com/blog/apache-spark-data-analytics/
