@@ -1,36 +1,62 @@
 indexpage:
-  title: NetApp Modern Data Analytics Solutions
-  lead: "NetApp Modern Data Analytics Solutions are a set of strategic and technology capabilities that demonstrate the capabilities of NetApp storage across the AI space."
-  summary: "NetApp Modern Data Analytics Solutions are a set of strategic and technology capabilities that demonstrate the capabilities of NetApp storage across the AI space."
+  title: NetApp modern data analytics solutions
+  lead: "Transform your data analytics infrastructure with NetApp's proven solutions for big data workloads, including Apache Spark, Hadoop, Kafka, and modern data lake architectures that scale from edge to cloud."
+  summary: "NetApp modern data analytics solutions are a set of strategic and technology capabilities that demonstrate the capabilities of NetApp storage across the AI space."
   tiles:
-  
-    - title: "Get started"
+
+    - title: "Apache Kafka solutions"
       links:
-        - title: "Apache Spark workload with NetApp storage solution"
-          url: https://www.netapp.com/pdf.html?item=/media/26877-nva-1157-deploy.pdf
-        - title: "Modern Data Analytics Solution Brief"
-          url: https://www.netapp.com/pdf.html?item=/media/58015-sb-4154.pdf
-#
-    - title: "Best practices"
-      links:
+        - title: "Apache Kafka workloads with NetApp NFS storage"
+          url: /data-analytics/kafka-nfs-introduction.html
+        - title: "Confluent Kafka with NetApp ONTAP storage controllers"
+          url: /data-analytics/kafka-ontap-overview.html
         - title: "Best practices for Confluent Kafka"
-          url: confluent-kafka-introduction.html
-        - title: "NetApp E-Series E5700 and Splunk Enterprise"
-          url: https://www.netapp.com/pdf.html?item=/media/16851-tr-4623pdf.pdf
-        - title: "NetApp EF600 with Splunk Enterprise"
-          url: https://www.netapp.com/pdf.html?item=/media/72003-tr-4930.pdf
-#
-    - title: "Use cases"
+          url: /data-analytics/confluent-kafka-introduction.html
+        - title: "Kafka performance validation with AWS"
+          url: /data-analytics/kafka-nfs-perf-aws-fsxn.html
+        - title: "Why NetApp NFS for Kafka workloads?"
+          url: /data-analytics/kafka-nfs-why-netapp.html
+
+    - title: "Apache Spark and Hadoop solutions"
       links:
-        - title: "Hybrid Cloud Solutions - Spark and Hadoop Use Cases"
-          url: hdcs-sh-solution-overview.html
-#
+        - title: "NetApp storage solutions for Apache Spark"
+          url: /data-analytics/apache-spark-solution-overview.html
+        - title: "Deploy Apache Spark workload with NetApp storage"
+          url: /data-analytics/nva-1157-deploy.html
+        - title: "NetApp hybrid cloud data solutions for Spark and Hadoop"
+          url: /data-analytics/hdcs-sh-solution-overview.html
+        - title: "Use cases and architectures"
+          url: /data-analytics/spark-ai-use-cases.html
+        - title: "Apache Spark testing results"
+          url: /data-analytics/apache-spark-testing-results.html
+
+    - title: "Cloud data management and AI"
+      links:
+        - title: "Cloud Data Management with NetApp File-Object Duality and AWS SageMaker"
+          url: cdm-fod-solution-overview.html
+        - title: "Big Data Analytics Data to Artificial Intelligence"
+          url: bda-ai-introduction.html
+        - title: "Amazon FSx for NetApp ONTAP for MLOps"
+          url: ../cloud/ai-mlops-fsxn-intro.html
+        - title: "Apache Spark hybrid cloud solution"
+          url: spark-hybrid-cloud.html
+
+    - title: "Modern data lake and analytics platforms"
+      links:
+        - title: "NetApp and Dremio's next generation hybrid iceberg lakehouse solution"
+          url: dremio-lakehouse-introduction.html
+        - title: "NetApp StorageGRID with Splunk SmartStore"
+          url: stgr-splunkss-introduction.html
+        - title: "NetApp E-Series E5700 and Splunk Enterprise"
+          url: tr-4623.html
+
     - title: "Additional resources"
       links:
+        - title: "Different solutions for different analytics strategies"
+          url: sb-4154.html
         - title: "Blog: Apache Spark Plays in the NetApp Data Analytics Playground"
           url: https://www.netapp.com/blog/apache-spark-data-analytics/
         - title: "Blog: Use XCP for Data Migration from a Data Lake and HPC to ONTAP NFS"
           url: https://www.netapp.com/blog/data-migration-xcp/
         - title: "NetApp TV: Big Data Analytics Playlist"
           url: https://youtube.com/playlist?list=PLdXI3bZJEw7l8oFkYC_umsBaBX3hqK3Oq
-#

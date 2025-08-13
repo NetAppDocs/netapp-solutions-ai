@@ -1,7 +1,7 @@
 indexpage:
   title: NetApp artificial intelligence solutions
-  lead: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
-  summary: "NetApp solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  lead: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  summary: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
   tiles:
   
     - title: "Get started"
@@ -13,58 +13,84 @@ indexpage:
         - title: "Videos and demos"
           url: /videos/ai-ml-videos.html
 #
-    - title: "AI and core infrastructure solutions"
+    - title: "Core platform solutions"
       links:
         - title: "Artificial Intelligence"
-          url: ai/index.html
+          url: /ai/index.html
         - title: "Modern Data Analytics"
-          url: data-analytics/index.html
+          url: /data-analytics/index.html
         - title: "SAP and SAP HANA"
           url: https://docs.netapp.com/us-en/netapp-solutions-sap/index.html
+#
+    - title: "Generative AI and emerging technologies"
+      links:
+        - title: "Generative AI and NetApp value"
+          url: /gen-ai/ai-wp-genai.html
+        - title: "Responsible AI and confidential inferencing"
+          url: /software/ai-conf-protopia-overview.html
+        - title: "NVIDIA AI Enterprise with NetApp and VMware"
+          url: /software/ai-nvaie-vmw-intro.html
+#
+    - title: "AI infrastructure and converged systems"
+      links:
+        - title: "NetApp AIPod with NVIDIA DGX systems"
+          url: /infra/ai-aipod-nv-intro.html
+        - title: "NVIDIA DGX SuperPOD with EF-Series"
+          url: /infra/ai-eseries-superpod.html
+        - title: "NetApp AIPod with Lenovo for NVIDIA OVX"
+          url: /infra/ai-aipod-lenovo-nva1172.html
+        - title: "IBM Spectrum Scale with E-Series storage"
+          url: /infra/ai-eseries-spectrumscale.html
+        - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+          url: /infra/ai-lenovo-train-intro.html
 #
     - title: "AI use cases and applications"
       links:
         - title: "NetApp AIPod Mini for enterprise RAG inferencing"
-          url: ai/infra/ai-minipod.html
+          url: /ai/infra/ai-minipod.html
         - title: "AI inferencing at the edge"
-          url: ai/infra/ai-lenovo-edge-intro.html
+          url: /ai/infra/ai-lenovo-edge-intro.html
         - title: "Vector database solutions"
-          url: ai/vector-db/ai-vdb-solution-with-netapp.html
+          url: /ai/vector-db/ai-vdb-solution-with-netapp.html
         - title: "Autonomous driving workloads"
-          url: ai/infra/ai-storagegrid-datalake-adas.html
+          url: /ai/infra/ai-storagegrid-datalake-adas.html
+        - title: "BeeGFS on NetApp with E-Series storage"
+          url: /infra/ai-eseries-beegfs.html
+        - title: "Design and deploy Quantum StorNext with E-Series"
+          url: /infra/ai-eseries-nva1150-design.html
 #
-    - title: "MLOps and orchestration"
+    - title: "MLOps and data management"
       links:
         - title: "Open source MLOps with NetApp"
-          url: ai/software/ai-osmlops-intro.html
+          url: /ai/software/ai-osmlops-intro.html
         - title: "Hybrid multicloud MLOps with Domino Data Lab"
-          url: ai/software/ai-hybrid-ddlnexus-intro.html
-        - title: "NetApp DataOps Toolkit"
-          url: https://github.com/NetApp/netapp-dataops-toolkit
+          url: /ai/software/ai-hybrid-ddlnexus-intro.html
         - title: "Amazon FSx for NetApp ONTAP for MLOps"
-          url: ai/cloud/ai-mlops-fsxn-intro.html
+          url: /ai/cloud/ai-mlops-fsxn-intro.html
+        - title: "NetApp DataOps Toolkit"
+          url: /software/dataops-toolkit.html
 #
     - title: "Big data and analytics platforms"
       links:
         - title: "Apache Kafka workloads with NetApp NFS"
-          url: data-analytics/kafka-nfs-introduction.html
+          url: /data-analytics/kafka-nfs-introduction.html
         - title: "Apache Spark solutions"
-          url: data-analytics/apache-spark-solution-overview.html
+          url: /data-analytics/apache-spark-solution-overview.html
         - title: "Confluent Kafka best practices"
-          url: data-analytics/confluent-kafka-introduction.html
+          url: /data-analytics/confluent-kafka-introduction.html
         - title: "Hybrid cloud data solutions"
-          url: data-analytics/hdcs-sh-solution-overview.html
+          url: /data-analytics/hdcs-sh-solution-overview.html
 #
-    - title: "Cloud and hybrid solutions for analytics and AI workloads"
+    - title: "Cloud and hybrid AI solutions"
       links:
         - title: "Cloud data management with file-object duality"
-          url: data-analytics/cdm-fod-solution-overview.html
+          url: /data-analytics/cdm-fod-solution-overview.html
         - title: "NetApp StorageGRID with Splunk SmartStore"
-          url: data-analytics/stgr-splunkss-introduction.html
+          url: /data-analytics/stgr-splunkss-introduction.html
         - title: "Dremio hybrid iceberg lakehouse"
-          url: data-analytics/dremio-lakehouse-introduction.html
-        - title: "Big data analytics to AI"
-          url: data-analytics/bda-ai-introduction.html
+          url: /data-analytics/dremio-lakehouse-introduction.html
+        - title: "Big data analytics to AI migration"
+          url: /data-analytics/bda-ai-introduction.html
 #
     - title: "Solution requests and feedback"
       links:
