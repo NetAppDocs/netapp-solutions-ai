@@ -1,0 +1,24 @@
+---
+sidebar: sidebar
+permalink: videos/ai-ml-videos.html
+keywords: video, demonstration, deployment
+summary:
+---
+= Watch videos on AI solutions with NetApp
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+
+[.lead]
+Discover how NetApp empowers AI and machine learning initiatives. These curated video playlists showcase NetApp AI solutions and MLOps workflows, highlighting deployment strategies, automation, and data management for advanced analytics.
+
+== NetApp AI solutions
+* link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7nSrRhuolRPYqvSlGLuTOAO[NetApp AI solutions^]
+
+== Machine Learning Operations (MLOps)
+* link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7n1sWK-QGq4QMI1VBJS-ZZW[MLOps^]
+
+// video::e87773e3-dc53-4195-83ed-b0d50100a788[panopto, title="DevOps Acceleration with DataOps Toolkit and Trident Protect Cloud Bursting", width=360]

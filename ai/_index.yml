@@ -1,60 +1,61 @@
 indexpage:
-  title: NetApp Artifical Intelligence Solutions
+  title: NetApp artificial intelligence solutions
   lead: "NetApp Artificial Intelligence Solutions are a set of strategic and technical solutions that demonstrate the capabilities of NetApp storage across the AI/ML space."
   summary: "NetApp Artificial Intelligence Solutions are a set of strategic and technical solutions that demonstrate the capabilities of NetApp storage across the AI/ML space."
   tiles:
-    - title: "Getting Started"
-      links:
-        - title: "Videos and Demos"
-          url: ../videos.html
-        - title: "Blogs"
-          url: ../blogs.html
-#
-    - title: "Converged Infrastructures for AI Workloads with NVIDIA"
-      links:
-        - title: "NetApp AIPod with NVIDIA DGX Systems"
-          url: ../infra/ai-aipod-nv-intro.html
-        - title: "NetApp AIPod with NVIDIA DGX SuperPOD"
-          url: ../infra/ai-eseries-superpod.html
-        - title: "NVA-1172-DESIGN: NetApp AIPod with Lenovo for NVIDIA OVX"
-          url: ../infra/ai-aipod-lenovo-nva1172.html
-#
-    - title: "Converged Infrastructures for AI Workloads with Other Vendors"
-      links:
-        - title: "IBM Spectrum Scale with NetApp E-Series Storage"
-          url: ../infra/ai-eseries-spectrumscale.html
-        - title: "AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem"
-          url: ../infra/ai-lenovo-edge-intro.html
-        - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
-          url: ../infra/ai-lenovo-train-intro.html
-        - title: "NetApp AIPod Mini for Enterprise RAG Inferencing"
-          url: ../infra/ai-minipod.html
-#
-    - title: "Data Lakes and Data Pipelines"
-      links:
-        - title: "Amazon FSx for NetApp ONTAP (FSx ONTAP) for MLOps"
-          url: ../cloud/ai-mlops-fsxn-intro.html
-        - title: "StorageGRID Data Lake for Autonomous Driving Workloads"
-          url: ../infra/ai-storagegrid-datalake-adas.html
-        - title: "Vector Database solution with NetApp"
-          url: ../vector-db/ai-vdb-solution-with-netapp.html
-#
-    - title: "Orchestration and Management"
-      links:
-        - title: "NetApp DataOps Toolkit"
-          url: https://github.com/NetApp/netapp-dataops-toolkit
-        - title: "Hybrid Multicloud MLOps with Domino Data Lab and NetApp"
-          url: ../software/ai-hybrid-ddlnexus-intro.html
-        - title: "NVIDIA AI Enterprise with NetApp and VMware"
-          url: ../software/ai-nvaie-vmw-intro.html
-        - title: "Open Source MLOps with NetApp"
-          url: ../software/ai-osmlops-intro.html
-#
-    - title: "SuperPOD: A NetApp and NVIDIA Solution"
-      links:
-        - title: "BeeGFS on NetApp (Design Guide)"
-          url: https://www.netapp.com/pdf.html?item=/media/71123-nva-1164-design.pdf
-        - title: "BeeGFS on NetApp (Deployment Guide)"
-          url: https://www.netapp.com/pdf.html?item=/media/71124-nva-1164-deploy.pdf
-        - title: "NVIDIA DGX SuperPOD with NetApp (Design Guide)"
-          url: https://www.netapp.com/pdf.html?item=/media/72718-nva-1167-DESIGN.pdf
+tiles:
+  - title: "Get started"
+    links:
+      - title: "Videos and demos"
+        url: ../videos.html
+      - title: "Blogs"
+        url: ../blogs.html
+
+  - title: "Converged infrastructures for AI workloads with NVIDIA"
+    links:
+      - title: "NetApp AIPod with NVIDIA DGX systems"
+        url: ../infra/ai-aipod-nv-intro.html
+      - title: "NetApp AIPod with NVIDIA DGX SuperPOD"
+        url: ../infra/ai-eseries-superpod.html
+      - title: "NVA-1172-DESIGN: NetApp AIPod with Lenovo for NVIDIA OVX"
+        url: ../infra/ai-aipod-lenovo-nva1172.html
+
+  - title: "Converged infrastructures for AI workloads with other vendors"
+    links:
+      - title: "IBM Spectrum Scale with NetApp E-Series storage"
+        url: ../infra/ai-eseries-spectrumscale.html
+      - title: "AI inferencing at the edge - NetApp with Lenovo ThinkSystem"
+        url: ../infra/ai-lenovo-edge-intro.html
+      - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+        url: ../infra/ai-lenovo-train-intro.html
+      - title: "NetApp AIPod Mini for enterprise RAG inferencing"
+        url: ../infra/ai-minipod.html
+
+  - title: "Data lakes and data pipelines"
+    links:
+      - title: "Amazon FSx for NetApp ONTAP (FSx ONTAP) for MLOps"
+        url: ../cloud/ai-mlops-fsxn-intro.html
+      - title: "StorageGRID data lake for autonomous driving workloads"
+        url: ../infra/ai-storagegrid-datalake-adas.html
+      - title: "Vector database solution with NetApp"
+        url: ../vector-db/ai-vdb-solution-with-netapp.html
+
+  - title: "Orchestration and management"
+    links:
+      - title: "NetApp DataOps Toolkit"
+        url: https://github.com/NetApp/netapp-dataops-toolkit
+      - title: "Hybrid multicloud MLOps with Domino Data Lab and NetApp"
+        url: ../software/ai-hybrid-ddlnexus-intro.html
+      - title: "NVIDIA AI Enterprise with NetApp and VMware"
+        url: ../software/ai-nvaie-vmw-intro.html
+      - title: "Open source MLOps with NetApp"
+        url: ../software/ai-osmlops-intro.html
+
+  - title: "SuperPOD: A NetApp and NVIDIA solution"
+    links:
+      - title: "BeeGFS on NetApp design guide"
+        url: https://www.netapp.com/pdf.html?item=/media/71123-nva-1164-design.pdf
+      - title: "BeeGFS on NetApp deployment guide"
+        url: https://www.netapp.com/pdf.html?item=/media/71124-nva-1164-deploy.pdf
+      - title: "NVIDIA DGX SuperPOD with NetApp design guide"
+        url: https://www.netapp.com/pdf.html?item=/media/72718-nva-1167-DESIGN.pdf
