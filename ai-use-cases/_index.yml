@@ -10,14 +10,14 @@ indexpage:
           url: /infra/ai-minipod.html
         - title: "Generative AI and NetApp value"
           url: /gen-ai/ai-wp-genai.html
-        - title: "Edge AI inferencing with NetApp and Lenovo - Introduction"
+        - title: "Edge AI inferencing with NetApp and Lenovo"
           url: /infra/ai-lenovo-edge-intro.html
         - title: "Big data analytics to AI migration"
           url: /data-analytics/bda-ai-introduction.html
 #
     - title: "Responsible AI"
       links:
-        - title: "Responsible AI with Protopia image transformation - Overview"
+        - title: "Responsible AI with Protopia image transformation"
           url: /software/ai-conf-protopia-overview.html
         - title: "Solution areas"
           url: /software/ai-conf-protopia-usecases.html

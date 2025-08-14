@@ -1,5 +1,6 @@
 section: ai-use-cases
 title: "AI use cases"
+url: /ai-use-cases/index.html
 entries:
   - title: "NetApp AIPod Mini for enterprise RAG"
     pdf-filename: "NetApp AIPod Mini for RAG Inferencing"

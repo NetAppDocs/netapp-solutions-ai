@@ -1,5 +1,6 @@
 section: ai-data-pipelines
 title: "MLOps and data management"
+url: /ai-data-pipelines/index.html
 entries:
   - title: "Open Source MLOps with NetApp"
     pdf-filename: "Open Source MLOps with NetApp"

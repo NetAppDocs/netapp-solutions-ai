@@ -1,5 +1,6 @@
 section: ai-infrastructures
 title: "AI converged infrastructures"
+url: /ai-infrastructures/index.html
 entries:
   - title: "NetApp AIPod with NVIDIA DGX systems"
     pdf-filename: "NVA-1173 NetApp AIPod with NVIDIA DGX Systems"
