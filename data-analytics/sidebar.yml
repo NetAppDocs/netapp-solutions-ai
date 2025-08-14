@@ -1,5 +1,5 @@
 section: data-analytics
-title: "Modern Data Analytics"
+title: "Modern data analytics"
 url: /data-analytics/index.html
 entries:
 #
@@ -46,7 +46,7 @@ entries:
         url: /data-analytics/kafka-sc-solution.html
       - title: "Technology overview"
         url: /data-analytics/kafka-sc-technology-overview.html
-      - title: "Confluent Performance validation"
+      - title: "Confluent performance validation"
         url: /data-analytics/kafka-sc-confluent-perf.html
       - title: "Performance tests with produce-consume workload generator"
         url: /data-analytics/kafka-sc-performance.html
@@ -55,7 +55,7 @@ entries:
       - title: "Conclusion"
         url: /data-analytics/kafka-sc-conclusion.html
 #
-  - title: "NetApp Storage Solutions for Apache Spark"
+  - title: "NetApp storage solutions for Apache Spark"
     pdf-filename: "NetApp Storage Solutions for Apache Spark"
     entries:
       - title: "Solution overview"
@@ -78,7 +78,7 @@ entries:
         url: /data-analytics/spark-python-scripts.html
       - title: "Conclusion"
         url: /data-analytics/apache-spark-conclusion.html
-      - title: Where to find additional information
+      - title: "Where to find additional information"
         url: /data-analytics/spark-additional-info.html
 #
   - title: "Big Data Analytics Data to Artificial Intelligence"
@@ -96,13 +96,13 @@ entries:
         url: /data-analytics/bda-ai-gpfs-to-netapp-ontap-nfs.html
       - title: "HDFS and MapR-FS to ONTAP NFS"
         url: /data-analytics/bda-ai-hdfs-maprfs-to-nfs.html
-      - title: B"usiness benefits"
+      - title: "Business benefits"
         url: /data-analytics/bda-ai-business-benefits.html
       - title: "GPFS to NFS - Detailed steps"
         url: /data-analytics/bda-ai-gpfs-to-nfs.html
       - title: "MapR-FS to ONTAP NFS"
         url: /data-analytics/bda-ai-mapr-fs-to-ontap-nfs.html
-      - title: "Where to find additional information"
+      - title: "Additional information"
         url: /data-analytics/bda-ai-additional-info.html
 #
   - title: "Best practices for Confluent Kafka"
@@ -153,25 +153,25 @@ entries:
       - title: "Conclusion"
         url: /data-analytics/hdcs-sh-conclusion.html
 #
-  - title: "NetApp and Dremio's Next Generation Hybrid Iceberg Lakehouse Solution"
+  - title: "NetApp and Dremio's next generation hybrid iceberg lakehouse solution"
     pdf-filename: "NetApp and Dremio's Next Generation Hybrid Iceberg Lakehouse Solution"
     entries:
       - title: "Introduction"
         url: /data-analytics/dremio-lakehouse-introduction.html
-      - title: "Solution Overview"
+      - title: "Solution overview"
         url: /data-analytics/dremio-lakehouse-solution.html
-      - title: "Technology Requirements"
+      - title: "Technology requirements"
         url: /data-analytics/dremio-lakehouse-tech-overview.html
-      - title: "Deployment Procedure"
+      - title: "Deployment procedure"
         url: /data-analytics/dremio-lakehouse-deployment.html
-      - title: "Solution Verification Overview"
+      - title: "Solution verification overview"
         url: /data-analytics/dremio-lakehouse-verification.html
       - title: "Customer use cases"
         url: /data-analytics/dremio-lakehouse-use-cases.html
       - title: "Conclusion"
         url: /data-analytics/dremio-lakehouse-conclusion.html
 #        
-  - title: "Different Solutions for Different Analytics Strategies Solution Brief"
+  - title: "Different solutions for different analytics strategies"
     pdf-filename: "Different Solutions for Different Analytics Strategies Solution Brief"
     url: /data-analytics/sb-4154.html
   - title: "NetApp StorageGRID with Splunk SmartStore"
@@ -179,15 +179,15 @@ entries:
     entries:
       - title: "Introduction"
         url: /data-analytics/stgr-splunkss-introduction.html
-      - title: "Solution Overview"
+      - title: "Solution overview"
         url: /data-analytics/stgr-splunkss-solution-overview.html
       - title: "Benefits of this solution"
         url: /data-analytics/stgr-splunkss-solution-benefits.html
-      - title: "Splunk Architecture"
+      - title: "Splunk architecture"
         url: /data-analytics/stgr-splunkss-arch.html
       - title: "StorageGRID Features for Splunk SmartStore"
         url: /data-analytics/stgr-splunkss-storagegrid-feat.html
-      - title: "Tiering and Cost Savings"
+      - title: "Tiering and cost savings"
         url: /data-analytics/stgr-splunkss-tiering-savings.html
       - title: "Single Site SmartStore Performance"
         url: /data-analytics/stgr-splunkss-single-site-perf.html
@@ -197,6 +197,6 @@ entries:
   - title: "NetApp E-Series E5700 and Splunk Enterprise"
     pdf-filename: "NetApp E-Series E5700 and Splunk Enterprise"
     url: /data-analytics/tr-4623.html
-  - title: "Apache Spark Workload with NetApp Storage Solution (Deployment Guide)"
+  - title: "Deploy Apache Spark workload with NetApp storage"
     pdf-filename: "Apache Spark Workload with NetApp Storage Solution (Deployment Guide)"
     url: /data-analytics/nva-1157-deploy.html

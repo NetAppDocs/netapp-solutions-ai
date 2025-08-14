@@ -19,14 +19,16 @@ sidebar:
   entries:
     - title: "Artificial intelligence solutions"
       url: /index.html
-    - section: ai
+    - title: "What's new"
+      url: /whats-new.html
+    - section: ai-infrastructures
+    - section: ai-data-pipelines
+    - section: ai-use-cases
     - section: data-analytics
  #
-    - title: "Video Collection"
-      url: /videos.html
+    - title: "Videos"
+      url: /videos/ai-ml-videos.html
     - title: "Blogs"
       url: /blogs.html
-    - title: "Change Log"
-      url: /whats-new.html
     - title: "Legal notices"
       url: /legal-notices.html
