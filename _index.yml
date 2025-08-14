@@ -1,7 +1,7 @@
 indexpage:
   title: NetApp artificial intelligence solutions
-  lead: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
-  summary: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  lead: "NetApp provides comprehensive AI solutions that combine enterprise-grade data management, validated reference architectures, and strategic partnerships to accelerate your AI initiatives and support critical business outcomes. From infrastructure deployment to MLOps automation, our solutions scale seamlessly across edge, data center, and hybrid cloud environments."
+  summary: "NetApp provides comprehensive AI solutions that combine enterprise-grade data management, validated reference architectures, and strategic partnerships to accelerate your AI initiatives and support critical business outcomes. From infrastructure deployment to MLOps automation, our solutions scale seamlessly across edge, data center, and hybrid cloud environments."
   tiles:
   
     - title: "Get started"
@@ -12,15 +12,8 @@ indexpage:
           url: /blogs.html
         - title: "Videos and demos"
           url: /videos/ai-ml-videos.html
-#
-    - title: "Core platform solutions"
-      links:
-        - title: "Artificial Intelligence"
-          url: /ai/index.html
-        - title: "Modern Data Analytics"
+        - title: "Modern data analytics solutions"
           url: /data-analytics/index.html
-        - title: "SAP and SAP HANA"
-          url: https://docs.netapp.com/us-en/netapp-solutions-sap/index.html
 #
     - title: "Generative AI and emerging technologies"
       links:
@@ -78,10 +71,12 @@ indexpage:
           url: /data-analytics/apache-spark-solution-overview.html
         - title: "Confluent Kafka best practices"
           url: /data-analytics/confluent-kafka-introduction.html
-        - title: "Hybrid cloud data solutions"
-          url: /data-analytics/hdcs-sh-solution-overview.html
+        - title: "Confluent Kafka with NetApp ONTAP storage"
+          url: /data-analytics/kafka-ontap-overview.html
+        - title: "Deploy Apache Spark workload with NetApp storage"
+          url: /data-analytics/nva-1157-deploy.html
 #
-    - title: "Cloud and hybrid AI solutions"
+    - title: "Cloud data analytics and hybrid AI solutions"
       links:
         - title: "Cloud data management with file-object duality"
           url: /data-analytics/cdm-fod-solution-overview.html
@@ -89,6 +84,8 @@ indexpage:
           url: /data-analytics/stgr-splunkss-introduction.html
         - title: "Dremio hybrid iceberg lakehouse"
           url: /data-analytics/dremio-lakehouse-introduction.html
+        - title: "Hybrid cloud data solutions"
+          url: /data-analytics/hdcs-sh-solution-overview.html
         - title: "Big data analytics to AI migration"
           url: /data-analytics/bda-ai-introduction.html
 #

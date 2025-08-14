@@ -21,7 +21,9 @@ sidebar:
       url: /index.html
     - title: "What's new"
       url: /whats-new.html
-    - section: ai
+    - section: ai-infrastructures
+    - section: ai-data-pipelines
+    - section: ai-use-cases
     - section: data-analytics
  #
     - title: "Videos"
