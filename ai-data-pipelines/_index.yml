@@ -7,69 +7,69 @@ indexpage:
     - title: "Open source MLOps platforms"
       links:
         - title: "Open source MLOps with NetApp"
-          url: /software/ai-osmlops-intro.html
+          url: ../software/ai-osmlops-intro.html
         - title: "NetApp Trident configuration for AIPod"
-          url: /software/ai-osmlops-trident-backend.html
+          url: ../software/ai-osmlops-trident-backend.html
         - title: "Apache Airflow deployment and integration"
-          url: /software/ai-osmlops-airflow-deploy.html
+          url: ../software/ai-osmlops-airflow-deploy.html
         - title: "JupyterHub deployment and data operations"
-          url: /software/ai-osmlops-jhub-deploy.html
+          url: ../software/ai-osmlops-jhub-deploy.html
         - title: "MLflow deployment and traceability"
-          url: /software/ai-osmlops-mlflow-deploy.html
+          url: ../software/ai-osmlops-mlflow-deploy.html
 #
     - title: "Advanced MLOps workflows"
       links:
         - title: "Kubeflow deployment and notebooks"
-          url: /software/ai-osmlops-kubeflow-deploy.html
+          url: ../software/ai-osmlops-kubeflow-deploy.html
         - title: "Train image recognition models with Kubeflow"
-          url: /software/ai-osmlops-kubeflow-train.html
+          url: ../software/ai-osmlops-kubeflow-train.html
         - title: "Single-node AI workload execution"
-          url: /software/ai-osmlops-train-singlenode.html
+          url: ../software/ai-osmlops-train-singlenode.html
         - title: "Distributed AI workload execution"
-          url: /software/ai-osmlops-train-distributed.html
+          url: ../software/ai-osmlops-train-distributed.html
         - title: "Data ingestion with SnapMirror"
-          url: /software/ai-osmlops-jhub-ingest.html
+          url: ../software/ai-osmlops-jhub-ingest.html
 #
     - title: "Enterprise MLOps solutions"
       links:
         - title: "Hybrid MLOps with Domino Data Lab"
-          url: /software/ai-hybrid-ddlnexus-intro.html
+          url: ../software/ai-hybrid-ddlnexus-intro.html
         - title: "Cross-environment data access with Domino"
-          url: /software/ai-hybrid-ddlnexus-data.html
+          url: ../software/ai-hybrid-ddlnexus-data.html
         - title: "NVIDIA AI Enterprise with NetApp and VMware"
-          url: /software/ai-nvaie-vmw-intro.html
+          url: ../software/ai-nvaie-vmw-intro.html
         - title: "NVIDIA NGC software integration"
-          url: /software/ai-nvaie-vmw-ngcsetup.html
+          url: ../software/ai-nvaie-vmw-ngcsetup.html
 #
     - title: "Cloud MLOps and AWS integration"
       links:
         - title: "Amazon FSx for ONTAP MLOps"
-          url: /cloud/ai-mlops-fsxn-intro.html
+          url: ../cloud/ai-mlops-fsxn-intro.html
         - title: "Integrate FSx ONTAP as private S3 in SageMaker"
-          url: /cloud/ai-mlops-fsxn-s3.html
+          url: ../cloud/ai-mlops-fsxn-s3.html
         - title: "FSx ONTAP for SageMaker model training"
-          url: /cloud/ai-mlops-fsxn-sagemaker.html
+          url: ../cloud/ai-mlops-fsxn-sagemaker.html
         - title: "Build simplified MLOps pipeline with FSx"
-          url: /cloud/ai-mlops-fsxn-cictcd.html
+          url: ../cloud/ai-mlops-fsxn-cictcd.html
 #
     - title: "Vector databases and AI applications"
       links:
         - title: "Vector database solution with NetApp"
-          url: /vector-db/ai-vdb-solution-with-netapp.html
+          url: ../vector-db/ai-vdb-solution-with-netapp.html
         - title: "Milvus cluster setup with Kubernetes"
-          url: /vector-db/ai-vdb-milvus-setup.html
+          url: ../vector-db/ai-vdb-milvus-setup.html
         - title: "Vector database protection with SnapCenter"
-          url: /vector-db/ai-vdb-dp-snapcenter.html
+          url: ../vector-db/ai-vdb-dp-snapcenter.html
         - title: "Vector database performance validation"
-          url: /vector-db/ai-vdb-perf-validation.html
+          url: ../vector-db/ai-vdb-perf-validation.html
         - title: "Vector database use cases"
-          url: /vector-db/ai-vdb-usecases.html
+          url: ../vector-db/ai-vdb-usecases.html
 #
     - title: "Data management tools and storage"
       links:
         - title: "NetApp DataOps Toolkit"
-          url: /software/dataops-toolkit.html
+          url: ../software/dataops-toolkit.html
         - title: "StorageGRID data lake for autonomous driving"
-          url: /infra/ai-storagegrid-datalake-adas.html
+          url: ../infra/ai-storagegrid-datalake-adas.html
         - title: "Disaster recovery with SnapMirror"
-          url: /vector-db/ai-vdb-dr-snapmirror.html
+          url: ../vector-db/ai-vdb-dr-snapmirror.html

@@ -1,7 +1,7 @@
 indexpage:
   title: NetApp artificial intelligence solutions
-  lead: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
-  summary: "NetApp AI solutions are a set of strategic and technology capabilities that emphasize the NetApp portfolio of products and services to support our customers' most critical business needs."
+  lead: "NetApp provides comprehensive AI solutions that combine enterprise-grade data management, validated reference architectures, and strategic partnerships to accelerate your AI initiatives and support critical business outcomes. From infrastructure deployment to MLOps automation, our solutions scale seamlessly across edge, data center, and hybrid cloud environments."
+  summary: "NetApp provides comprehensive AI solutions that combine enterprise-grade data management, validated reference architectures, and strategic partnerships to accelerate your AI initiatives and support critical business outcomes. From infrastructure deployment to MLOps automation, our solutions scale seamlessly across edge, data center, and hybrid cloud environments."
   tiles:
 
     - title: "Get started"
@@ -22,7 +22,7 @@ indexpage:
         - title: "NetApp AIPod with Lenovo for NVIDIA OVX"
           url: /infra/ai-aipod-lenovo-nva1172.html
         - title: "BeeGFS parallel file system with E-Series"
-          url: ../infra/ai-eseries-beegfs.html
+          url: /infra/ai-eseries-beegfs.html
 #
     - title: "AI use cases and applications"
       links:
