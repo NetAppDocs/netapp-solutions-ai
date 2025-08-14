@@ -1,0 +1,52 @@
+section: ai-use-cases
+title: "AI use cases"
+url: /ai-use-cases/index.html
+entries:
+  - title: "NetApp AIPod Mini for enterprise RAG"
+    pdf-filename: "NetApp AIPod Mini for RAG Inferencing"
+    url: /infra/ai-minipod.html
+  - title: "Responsible AI with Protopia image transformation"
+    pdf-filename: "Responsible AI and confidential inferencing - NetApp AI with Protopia Image Transformation"
+    entries:
+      - title: "Overview"
+        url: /software/ai-conf-protopia-overview.html
+      - title: "Solution areas"
+        url: /software/ai-conf-protopia-usecases.html
+      - title: "Technology overview"
+        url: /software/ai-conf-protopia-tech.html
+      - title: "Test and validation plan"
+        url: /software/ai-conf-protopia-plan.html
+      - title: "Test configuration"
+        url: /software/ai-conf-protopia-config.html
+      - title: "Test procedure"
+        url: /software/ai-conf-protopia-procedure.html
+      - title: "Inferencing accuracy comparison"
+        url: /software/ai-conf-protopia-accuracy.html
+      - title: "Obfuscation speed"
+        url: /software/ai-conf-protopia-speed.html
+      - title: "Conclusion"
+        url: /software/ai-conf-protopia-conclusion.html
+      - title: "Additional information"
+        url: /software/ai-conf-protopia-addtl.html
+#
+  - title: "Big data analytics to AI migration"
+    pdf-filename: "Moving Data from a Big Data Environment to an AI Environment"
+    url: /data-analytics/bda-ai-introduction.html
+#
+  - title: "Edge AI inferencing with NetApp and Lenovo"
+    pdf-filename: "AI Inferencing at the Edge - NetApp with Lenovo ThinkSystem - Solution Design"
+    entries:
+      - title: "Introduction"
+        url: /infra/ai-lenovo-edge-intro.html
+      - title: "Conclusion"
+        url: /infra/ai-lenovo-edge-conclusion.html
+#
+  - title: "Generative AI and NetApp value"
+    pdf-filename: "Generative AI and NetApp Value"
+    url: /gen-ai/ai-wp-genai.html
+  - title: "Design Quantum StorNext with E-Series systems"
+    pdf-filename: "Quantum StorNext with NetApp E-Series systems design guide"
+    url: /infra/ai-eseries-nva1150-design.html
+  - title: "Deploy Quantum StorNext with E-Series systems"
+    pdf-filename: "Quantum StorNext with NetApp E-Series systems deployment guide"
+    url: /infra/ai-eseries-nva1150-deploy.html
