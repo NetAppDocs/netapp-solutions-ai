@@ -37,7 +37,7 @@ indexpage:
         - title: "Big Data Analytics Data to Artificial Intelligence"
           url: bda-ai-introduction.html
         - title: "Amazon FSx for NetApp ONTAP for MLOps"
-          url: /cloud/ai-mlops-fsxn-intro.html
+          url: ../cloud/ai-mlops-fsxn-intro.html
         - title: "Apache Spark hybrid cloud solution"
           url: spark-hybrid-cloud.html
 

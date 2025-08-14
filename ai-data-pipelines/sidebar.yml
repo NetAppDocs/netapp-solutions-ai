@@ -94,7 +94,7 @@ entries:
       - title: "Additional information"
         url: /software/ai-nvaie-vmw-addtl.html
 #
-  - title: "Amazon FSx for NetApp ONTAP for MLOps"
+  - title: "FSx ONTAP for MLOps"
     pdf-filename: "Amazon FSx for NetApp ONTAP (FSx ONTAP) for MLOps"
     entries:
       - title: "Overview"
