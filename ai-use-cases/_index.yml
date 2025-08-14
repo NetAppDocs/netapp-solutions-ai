@@ -1,0 +1,32 @@
+indexpage:
+  title: NetApp AI use cases and applications
+  lead: "Explore real-world AI implementations with NetApp solutions, from enterprise RAG systems and edge inferencing to responsible AI practices and data migration strategies. These use cases demonstrate how NetApp enables organizations to deploy AI applications across diverse environments while maintaining security, performance, and scalability."
+  summary: "Explore real-world AI implementations with NetApp solutions, from enterprise RAG systems and edge inferencing to responsible AI practices and data migration strategies. These use cases demonstrate how NetApp enables AI applications across diverse environments while maintaining security, performance, and scalability."
+  tiles:
+  
+    - title: "Enterprise AI applications and use cases"
+      links:
+        - title: "NetApp AIPod Mini for enterprise RAG"
+          url: /infra/ai-minipod.html
+        - title: "Generative AI and NetApp value"
+          url: /gen-ai/ai-wp-genai.html
+        - title: "Edge AI inferencing with NetApp and Lenovo - Introduction"
+          url: /infra/ai-lenovo-edge-intro.html
+        - title: "Big data analytics to AI migration"
+          url: /data-analytics/bda-ai-introduction.html
+#
+    - title: "Responsible AI"
+      links:
+        - title: "Responsible AI with Protopia image transformation - Overview"
+          url: /software/ai-conf-protopia-overview.html
+        - title: "Solution areas"
+          url: /software/ai-conf-protopia-usecases.html
+        - title: "Technology overview"
+          url: /software/ai-conf-protopia-tech.html
+#
+    - title: "AI storage and infrastructure solutions"
+      links:
+        - title: "Design Quantum StorNext with E-Series systems"
+          url: /infra/ai-eseries-nva1150-design.html
+        - title: "Deploy Quantum StorNext with E-Series systems"
+          url: /infra/ai-eseries-nva1150-deploy.html

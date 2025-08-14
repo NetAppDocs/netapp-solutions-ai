@@ -1,50 +1,30 @@
 indexpage:
-  title: NetApp AI infrastructure and MLOps solutions
-  lead: "Deploy enterprise-ready AI infrastructure and streamline MLOps workflows with NetApp's validated reference architectures, converged systems, and data management platforms optimized for AI/ML workloads."
-  summary: "Deploy enterprise-ready AI infrastructure and streamline MLOps workflows with NetApp's validated reference architectures, converged systems, and data management platforms optimized for AI/ML workloads."
+  title: NetApp AI infrastructure and converged systems
+  lead: "Deploy enterprise-ready AI infrastructure with NetApp's validated reference architectures and converged systems. From NetApp AIPod solutions to high-performance storage platforms, our designs deliver the performance, scalability, and reliability needed for demanding AI/ML workloads."
+  summary: "Deploy enterprise-ready AI infrastructure with NetApp's validated reference architectures and converged systems. From NetApp AIPod solutions to high-performance storage platforms, our designs deliver the performance, scalability, and reliability needed for demanding AI/ML workloads."
   tiles:
    
-    - title: "AI converged infrastructures"
+    - title: "NetApp AIPod reference architectures"
       links:
         - title: "NetApp AIPod with NVIDIA DGX systems"
           url: ../infra/ai-aipod-nv-intro.html
         - title: "NetApp AIPod with Lenovo for NVIDIA OVX"
           url: ../infra/ai-aipod-lenovo-nva1172.html
-        - title: "NVIDIA DGX SuperPOD with EF-Series"
+        - title: "AIPod architecture"
+          url: ../infra/ai-aipod-nv-architecture.html
+        - title: "AIPod deployment details"
+          url: ../infra/ai-aipod-nv-deploy.html
+        - title: "AIPod validation and sizing guidance"
+          url: ../infra/ai-aipod-nv-validation.html
+#
+    - title: "High-performance storage for AI workloads"
+      links:
+        - title: "NVIDIA DGX SuperPOD with EF-Series storage"
           url: ../infra/ai-eseries-superpod.html
-        - title: "BeeGFS on NetApp with E-Series storage"
+        - title: "BeeGFS parallel file system with E-Series"
           url: ../infra/ai-eseries-beegfs.html
-        - title: "Deploy IBM Spectrum Scale with E-Series storage"
+        - title: "IBM Spectrum Scale with E-Series storage"
           url: ../infra/ai-eseries-spectrumscale.html
-        - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+        - title: "NetApp ONTAP with Lenovo ThinkSystem"
           url: ../infra/ai-lenovo-train-intro.html
 
-    - title: "MLOps and data management"
-      links:
-        - title: "Open source MLOps with NetApp"
-          url: ../software/ai-osmlops-intro.html
-        - title: "Hybrid MLOps with Domino Data Lab and NetApp"
-          url: ../software/ai-hybrid-ddlnexus-intro.html
-        - title: "NVIDIA AI Enterprise with NetApp and VMware"
-          url: ../software/ai-nvaie-vmw-intro.html
-        - title: "Amazon FSx for NetApp ONTAP for MLOps"
-          url: ../cloud/ai-mlops-fsxn-intro.html
-        - title: "StorageGRID data lake for autonomous driving"
-          url: ../infra/ai-storagegrid-datalake-adas.html
-        - title: "Vector database solution with NetApp"
-          url: ../vector-db/ai-vdb-solution-with-netapp.html
-        - title: "NetApp DataOps toolkit"
-          url: ../software/dataops-toolkit.html
-
-    - title: "AI use cases"
-      links:
-        - title: "NetApp AIPod Mini for enterprise RAG"
-          url: ../infra/ai-minipod.html
-        - title: "Responsible AI with Protopia image transformation"
-          url: ../software/ai-conf-protopia-overview.html
-        - title: "Big data analytics to AI migration"
-          url: ../data-analytics/bda-ai-introduction.html
-        - title: "Edge AI inferencing with NetApp and Lenovo"
-          url: ../infra/ai-lenovo-edge-intro.html
-        - title: "Generative AI and NetApp value"
-          url: ../gen-ai/ai-wp-genai.html

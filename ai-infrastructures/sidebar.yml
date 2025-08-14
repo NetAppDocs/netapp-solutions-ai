@@ -30,6 +30,6 @@ entries:
   - title: "Deploy IBM Spectrum Scale with E-Series storage"
     pdf-filename: "Deploy IBM Spectrum Scale with E-Series storage"
     url: /infra/ai-eseries-spectrumscale.html
-  - title: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
+  - title: "ONTAP and Lenovo ThinkSystem for AI"
     pdf-filename: "NetApp ONTAP and Lenovo ThinkSystem SR670 for AI"
     url: /infra/ai-lenovo-train-intro.html
