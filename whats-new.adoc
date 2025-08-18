@@ -1,0 +1,23 @@
+---
+sidebar: sidebar
+permalink: whats-new.html
+keywords: netapp, solutions, ai, what's new, updates, change log
+summary: Log of recent changes to the NetApp artificial intelligence solutions collateral. 
+---
+= What's new in NetApp artificial intelligence solutions 
+:icons: font
+:imagesdir: ./media/
+
+[.lead]
+Learn what's new in artificial intelligence solutions.
+
+== 18 August 2025
+The NetApp Solutions site is now the link:https://docs.netapp.com/us-en/netapp-solutions-family/index.html[NetApp solutions family^], which includes the following sites:
+
+* NetApp artificial intelligence solutions
+* link:https://docs.netapp.com/us-en/netapp-solutions-containers/index.html[NetApp container solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-dataops/index.html[NetApp data management solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-databases/index.html[NetApp database solutions^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-cloud/index.html[NetApp public and hybrid cloud solutions^] 
+* link:https://docs.netapp.com/us-en/netapp-solutions-sap/index.html[NetApp solutions for SAP^]
+* link:https://docs.netapp.com/us-en/netapp-solutions-virtualization/index.html[NetApp virtualization solutions^]
