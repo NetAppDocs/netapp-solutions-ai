@@ -26,7 +26,7 @@ NVIDIA DGX SuperPOD™ offers a turnkey AI data center solution for organization
 
 Figure 1) NVIDIA DGX SuperPOD with NetApp AFF A90 storage systems.
 
-<Figure1>
+image:ai-superpod-a90-005.png[600,600]
 
 DGX SuperPOD provides the following benefits:
 
@@ -123,7 +123,7 @@ The AFF A90 storage system is connected to the storage fabric leaf switches usin
 
 Figure 2) Storage network cabling.
 
-<Figure2>
+image:ai-superpod-a90-006.png[600,600]
 
 ==== Cabling the storage system to the DGX SuperPOD in-band network 
 
@@ -132,7 +132,7 @@ file shares and Base Command Manager cluster artifacts. For use on the in-band n
 
 Figure 3) In-band and OOB network cabling.
 
-<Figure3>
+image:ai-superpod-a90-007.png[600,600]
 
 ==== Configure ONTAP for DGX SuperPOD
 
