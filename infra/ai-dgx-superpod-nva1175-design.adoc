@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/dgx-superpod.html
+permalink: infra/ai-dgx-superpod-nva1175-design.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA SuperPOD, NVIDIA DGX
 summary: NVIDIA DGX SuperPOD with NetApp AFF A90
 ---
