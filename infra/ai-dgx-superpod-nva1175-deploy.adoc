@@ -682,12 +682,12 @@ Figures 4-6 show example rack elevations for 1-4 SU.
 
 Figure 4) Rack elevations for 1 SU and 2 SU.
 
-<Figure 4>
+image:ai-superpod-a90-008.png[600,600]
 
 Figure 5) Rack elevations for 3 SU.
 
-<Figure 5 place holder>
+image:ai-superpod-a90-009.png[600,600]
 
 Figure 6) Rack elevations for 4 SU.
 
-<Figure 6 place holder>
+image:ai-superpod-a90-010.png[600,600]
