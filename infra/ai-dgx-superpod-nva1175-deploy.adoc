@@ -601,8 +601,6 @@ BaseCommand Software+++]
 Spectrum SN5600 Ethernet switches+++]
 * https://docs.nvidia.com/dgx-superpod/release-notes/latest/10-24-11.html[+++NVIDIA
 DGX SuperPOD release notes+++]
-* https://www.netapp.com/support-and-training/documentation/[+++NetApp
-Documentation+++]
 * https://docs.netapp.com/us-en/ontap-systems/a70-90/install-overview.html[+++NetApp
 AFF A90 installation+++]
 * https://docs.netapp.com/us-en/netapp-solutions/ai/index.html[+++NetApp
