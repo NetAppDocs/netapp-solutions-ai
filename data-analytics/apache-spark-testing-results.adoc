@@ -434,3 +434,4 @@ test AUC 0.6337
 In a manner similar to previous use cases, we compared the Spark workflow runtime with data residing in different locations. The following figure shows a comparison of the deep learning CTR prediction for a Spark workflows runtime.
 
 image:apache-spark-013.png[Comparison of the deep learning CTR prediction for a Spark workflows runtime.]
+

@@ -162,3 +162,4 @@ Generative AI can produce effective results only when the model is trained on re
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/wp-genai.adoc
+

@@ -55,3 +55,4 @@ Each server is physically connected to both the IB switches and Ethernet switche
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aipod_nv_architecture.adoc
+

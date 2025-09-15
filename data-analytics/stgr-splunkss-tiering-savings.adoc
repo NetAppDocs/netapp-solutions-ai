@@ -25,3 +25,4 @@ The industry-leading combination of Splunk SmartStore with NetApp StorageGRID de
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/stgr-splunkss-tiering-cost-savings.adoc
+

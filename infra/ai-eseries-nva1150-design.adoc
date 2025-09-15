@@ -23,3 +23,4 @@ link:https://www.netapp.com/pdf.html?item=/media/19426-nva-1150-design.pdf[NVA-1
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/nva-1150-design.adoc
+

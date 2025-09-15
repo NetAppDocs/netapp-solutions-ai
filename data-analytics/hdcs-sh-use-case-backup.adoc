@@ -144,3 +144,4 @@ The benefits of solution C include:
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-use-case-1-backing-up-hadoop-data.adoc
+

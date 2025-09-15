@@ -25,3 +25,4 @@ image:ddlnexus-001.png["Figure showing input/output dialog or representing writt
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ddlnexus_introduction.adoc
+

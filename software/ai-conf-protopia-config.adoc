@@ -36,3 +36,4 @@ The following table outlines the solution design validation environment.
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-test-configuration.adoc
+

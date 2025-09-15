@@ -301,3 +301,4 @@ This is the example of using the deployed endpoint to do the inference.
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/mlops_fsxn_sagemaker_integration_training.adoc
+

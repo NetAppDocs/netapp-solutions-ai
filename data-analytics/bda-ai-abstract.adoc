@@ -20,3 +20,4 @@ summary:
 
 [.lead]
 This document describes how to move data from big-data analytics and high-performance computing (HPC) systems so that it can be used in artificial intelligence (AI) workflows. AI typically processes NFS data through NFS exports. However, you might have your AI data in a big-data-analytics and high-performance-computing (HPC) platform. This could be the Hadoop Distributed File System (HDFS), a binary large object (Blob), S3 storage,  or IBM's General Parallel File System (GPFS). In this document, we describe how to move data from a big-data analytics platform and GPFS to NFS using Hadoop-native commands, the NetApp In-Place Analytics Module (NIPAM), and NetApp XCP. This document also discusses the business benefits of moving data from big data and HPC to AI.
+

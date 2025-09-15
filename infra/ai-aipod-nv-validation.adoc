@@ -53,3 +53,4 @@ image:aipod-nv-a90-sizing.png["Figure showing input/output dialog or representin
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aipod_nv_validation_sizing.adoc
+

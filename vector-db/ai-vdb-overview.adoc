@@ -29,3 +29,4 @@ This solution showcases the distinctive benefits and capabilities that NetApp br
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-solution-overview.adoc
+

@@ -174,3 +174,4 @@ image:aicp-007.png["Figure showing input/output dialog or representing written c
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_concepts_and_components.adoc
+

@@ -73,3 +73,4 @@ https://www.instaclustr.com/services/consulting/
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-where-to-find-additional-information.adoc
+
