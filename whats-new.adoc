@@ -21,3 +21,4 @@ The NetApp Solutions site is now the link:https://docs.netapp.com/us-en/netapp-s
 * link:https://docs.netapp.com/us-en/netapp-solutions-cloud/index.html[NetApp public and hybrid cloud solutions^] 
 * link:https://docs.netapp.com/us-en/netapp-solutions-sap/index.html[NetApp solutions for SAP^]
 * link:https://docs.netapp.com/us-en/netapp-solutions-virtualization/index.html[NetApp virtualization solutions^]
+

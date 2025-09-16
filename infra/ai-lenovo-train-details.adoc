@@ -68,3 +68,4 @@ Based on our validation, one independent training model with a NetApp data runti
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/a400-thinksystem-test-procedure-and-detailed-results.adoc
+

@@ -34,3 +34,4 @@ However, if you require more storage capacity or faster networking speeds, you s
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-edge-architecture-sizing-options.adoc
+

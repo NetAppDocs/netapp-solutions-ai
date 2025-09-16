@@ -28,3 +28,4 @@ This page describes the best practices for improving performance in this solutio
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-sc-performance-best-practice-guidelines.adoc
+

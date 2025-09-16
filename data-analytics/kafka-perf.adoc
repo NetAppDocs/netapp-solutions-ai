@@ -31,3 +31,4 @@ image:confluent-kafka-010.png["Figure showing input/output dialog or representin
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-performance-tests-with-scalability.adoc
+

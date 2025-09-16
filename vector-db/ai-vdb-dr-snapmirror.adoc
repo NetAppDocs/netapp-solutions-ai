@@ -33,3 +33,4 @@ NetApp Hybrid solution in a vector database scenario can bring about more advant
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-disaster-recovery-using-netapp-snapmirror.adoc
+

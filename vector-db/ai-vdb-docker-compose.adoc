@@ -87,3 +87,4 @@ networks:
 ....
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-docker-compose-xml.adoc
+

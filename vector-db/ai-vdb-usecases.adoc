@@ -61,3 +61,4 @@ The use case can be divided into four primary sections.
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-use-cases.adoc
+

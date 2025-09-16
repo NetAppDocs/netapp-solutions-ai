@@ -29,3 +29,4 @@ Moving data from big data analytics to AI provides the following benefits:
 * Storage efficiency and enterprise management capability for unified NFS data by using ONTAP data management software
 * Zero cost for data movement with the Hadoop method for data transfer
 
+

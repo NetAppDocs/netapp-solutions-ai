@@ -67,3 +67,4 @@ $ python ./nvidia-examples/cnn/resnet.py --layers 50 -b 64 -i 200 -u batch --pre
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/nvaie_ngc_tensorflow.adoc
+

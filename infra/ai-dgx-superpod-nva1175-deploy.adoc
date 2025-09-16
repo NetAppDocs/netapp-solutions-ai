@@ -690,3 +690,4 @@ image:ai-superpod-a90-009.png[600,600]
 Figure 6) Rack elevations for 4 SU.
 
 image:ai-superpod-a90-010.png[600,600]
+

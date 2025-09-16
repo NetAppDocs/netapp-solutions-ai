@@ -43,3 +43,4 @@ For the best performance, NetApp typically recommends using multiple network int
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/apache-spark-hybrid-cloud-solution.adoc
+

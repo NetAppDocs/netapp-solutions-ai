@@ -53,3 +53,4 @@ image:confluent-kafka-002.png["Figure showing input/output dialog or representin
 The following figure depicts how NetApp StorageGRID fits in as Confluent Kafka's object storage tier.
 
 image:confluent-kafka-003.png["Figure showing input/output dialog or representing written content"]
+

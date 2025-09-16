@@ -250,3 +250,4 @@ image:kafka-nfs-024.png["Screenshot"]
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-why-netapp-nfs-for-kafka-workloads.adoc
+

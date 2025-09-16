@@ -39,3 +39,4 @@ The Reference Architecture focus on the following:
 . link:ai-vdb-docker-compose.html[Appendix D: docker-compose.yml]
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-solution-with-netapp.adoc
+

@@ -29,3 +29,4 @@ The fundamental idea is to separate data storage from data processing, which mak
 Loaded with industry-leading innovations, NetApp ONTAP data management software provides Confluent with many advantages anywhere the data lives.
 
 This document outlines performance benchmarks for the Confluent platform on NetApp ONTAP using a tiered storage benchmarking kit.
+

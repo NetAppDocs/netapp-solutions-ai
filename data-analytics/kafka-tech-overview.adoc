@@ -137,3 +137,4 @@ Out of the box, Confluent Platform also includes Schema Registry, REST Proxy, a 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-technology-overview.adoc
+

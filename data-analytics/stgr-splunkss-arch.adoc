@@ -402,3 +402,4 @@ This table lists the Splunk configuration for a multisite configuration (site B)
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/stgr-splunkss-splunk-architecture.adoc
+

@@ -32,3 +32,4 @@ With the above changes to the NFS client and server, Kafka can safely reap all t
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-netapp-solution-for-silly-rename-issue-in-nfs-to-kafka-workload.adoc
+

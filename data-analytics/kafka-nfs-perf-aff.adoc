@@ -189,3 +189,4 @@ The following table explains the anticipated producer throughput for the A900 wi
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-performance-overview-and-validation-with-aff-on-premises.adoc
+

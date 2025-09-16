@@ -76,3 +76,4 @@ To configure the NFS client, complete the following steps:
 . Validate the list of GPFS files in the NFS mounted folder.
 . Move the data from GPFS exported NFS to NetApp NFS by using XCP.
 . Validate the GPFS files on the NFS client.
+

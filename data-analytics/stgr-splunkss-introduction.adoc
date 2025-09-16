@@ -63,3 +63,4 @@ Splunk SmartStore delivers significant value to organizations, including the fol
 * Lowering storage cost by moving warm data to cost-optimized S3 object storage
 * Scaling seamlessly by decoupling storage and compute
 * Simplifying business continuity by leveraging resilient cloud-native storage
+

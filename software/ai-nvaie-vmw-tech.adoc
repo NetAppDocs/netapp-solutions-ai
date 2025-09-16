@@ -72,3 +72,4 @@ The NetApp DataOps Toolkit is a Python-based tool that simplifies the management
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/nvaie_technology_overview.adoc
+

@@ -129,3 +129,4 @@ The same procedure applicable for NAS and StorageGRID Object storage.
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/dremio-lakehouse-solution-verification.adoc
+

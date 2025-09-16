@@ -49,3 +49,4 @@ For the best performance, NetApp typically recommends using multiple network int
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-use-case-4-data-protection-and-multicloud-connectivity.adoc
+

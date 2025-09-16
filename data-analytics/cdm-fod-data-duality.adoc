@@ -840,3 +840,4 @@ INFO:sagemaker:Deleting endpoint with name: blazingtext-2023-02-16-20-41-33
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/cdm-fod-data-duality-for-data-scientists-and-other-applications.adoc
+

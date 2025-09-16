@@ -34,3 +34,4 @@ https://www.nvidia.com/en-us/data-center/products/ai-enterprise/[https://www.nvi
 * Roney Daniel, Technical Marketing Engineer, NetApp
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/nvaie_additional_information.adoc
+

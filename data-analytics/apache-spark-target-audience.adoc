@@ -28,3 +28,4 @@ The world of analytics and data science touches multiple disciplines in IT and b
 * Business users want to have access to analytics, AI, ML, and DL applications.
 
 In this technical report, we describe how NetApp AFF, E-Series, StorageGRID, NFS direct access, Apache Spark, Horovod, and Keras help each of these roles bring value to business.
+

@@ -105,3 +105,4 @@ Driven by powerful AI algorithms,  https://bluexp.netapp.com/netapp-cloud-data-s
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-technology-overview.adoc
+

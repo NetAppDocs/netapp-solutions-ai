@@ -141,3 +141,4 @@ image:aicp-010.png["Figure showing input/output dialog or representing written c
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_apache_airflow_deployment.adoc
+

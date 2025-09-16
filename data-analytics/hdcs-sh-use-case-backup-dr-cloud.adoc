@@ -51,3 +51,4 @@ image:hdcs-sh-010.png["Figure showing input/output dialog or representing writte
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-use-case-2-backup-and-disaster-recovery-from-the-cloud-to-on-premises.adoc
+

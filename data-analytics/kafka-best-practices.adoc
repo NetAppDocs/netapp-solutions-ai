@@ -45,3 +45,4 @@ For example, the command `confluent-tier-state` sets ACLs on the internal topic 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-best-practice-guidelines.adoc
+
