@@ -51,3 +51,4 @@ https://www.netapp.com/support-and-training/documentation/
 |===
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-conclusion.adoc
+

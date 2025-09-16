@@ -46,3 +46,4 @@ For additional use cases for edge computing and AI inferencing across other indu
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-solution-areas.adoc
+

@@ -174,3 +174,4 @@ It's also worth noting that storage does not play a critical role during the que
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-performance-validation.adoc
+

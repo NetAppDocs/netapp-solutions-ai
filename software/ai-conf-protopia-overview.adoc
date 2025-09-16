@@ -59,3 +59,4 @@ Protopia obfuscation software runs seamlessly on top of the NetApp DataOps Toolk
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-overview.adoc
+

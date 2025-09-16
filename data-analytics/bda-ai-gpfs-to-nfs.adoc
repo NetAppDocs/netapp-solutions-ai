@@ -839,3 +839,4 @@ drwxrwxrwx   7 nobody      nobody              4.0K Nov 11 12:14 catalog
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/bda-ai-gpfs-to-nfs-detailed-steps.adoc
+

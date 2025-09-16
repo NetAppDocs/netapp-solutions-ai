@@ -470,3 +470,4 @@ https://github.com/opea-project/Enterprise-RAG/tree/main/deployment/playbooks[OP
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-minipod.adoc
+

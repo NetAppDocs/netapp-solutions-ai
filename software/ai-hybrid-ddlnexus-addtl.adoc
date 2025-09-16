@@ -43,3 +43,4 @@ link:https://www.netapp.com/artificial-intelligence/[https://www.netapp.com/arti
 * Brian Young, Global Alliance Director, Technology Alliance Partners, NetApp
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ddlnexus_additional_information.adoc
+

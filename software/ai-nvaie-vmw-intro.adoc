@@ -23,3 +23,4 @@ image:nvaie-001.png["Figure showing input/output dialog or representing written 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/nvaie_introduction.adoc
+

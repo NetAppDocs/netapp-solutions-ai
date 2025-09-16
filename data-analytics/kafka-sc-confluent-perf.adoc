@@ -103,3 +103,4 @@ For verification details, see the https://docs.confluent.io/platform/current/kaf
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-sc-confluent-performance-validation.adoc
+

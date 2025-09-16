@@ -51,3 +51,4 @@ A data lake is a storage repository for large datasets in native form that can b
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/apache-spark-netapp-spark-solutions-overview.adoc
+

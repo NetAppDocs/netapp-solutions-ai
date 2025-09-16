@@ -47,3 +47,4 @@ Next, you must deploy a Domino Data Plane in your on-premises data center. You m
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ddlnexus_initial_setup.adoc
+

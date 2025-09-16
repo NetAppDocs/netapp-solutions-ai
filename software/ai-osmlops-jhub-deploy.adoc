@@ -144,3 +144,4 @@ proxy-public   NodePort   10.51.248.230   104.196.41.97   80:30000/TCP   1m
 To use JupyterHub, enter the external IP for the proxy-public service in to a browser. 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_jupyterhub_deployment.adoc
+

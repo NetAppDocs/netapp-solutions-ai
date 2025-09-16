@@ -33,3 +33,4 @@ The NetApp and Protopia solution provides a flexible, scale-out architecture tha
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-conclusion.adoc
+

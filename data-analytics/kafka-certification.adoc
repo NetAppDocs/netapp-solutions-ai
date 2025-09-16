@@ -84,3 +84,4 @@ This test checked the deletion performance of an object store under a heavy topi
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-confluent-kafka-certification.adoc
+

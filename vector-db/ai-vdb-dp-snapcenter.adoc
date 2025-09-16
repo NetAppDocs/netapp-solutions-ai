@@ -250,3 +250,4 @@ Furthermore, we simulated a scenario where an unnecessary or inappropriate colle
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-protection-using-snapcenter.adoc
+

@@ -354,3 +354,4 @@ image:kafka-nfs-031.png["This graph shows the performance in latency, IOPS, and 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-performance-overview-and-validation-in-aws.adoc
+

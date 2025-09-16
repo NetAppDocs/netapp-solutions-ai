@@ -302,3 +302,4 @@ Filesystem                   Size  Used Avail Use% Mounted on
 root@hadoopmaster:~#
 ....
 
+

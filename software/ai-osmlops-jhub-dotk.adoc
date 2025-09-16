@@ -74,3 +74,4 @@ Now, JupyterHub users can use the NetApp DataOps Toolkit to create volume snapsh
 image:aicp-jhub-dotk-nb.png["Figure showing input/output dialog or representing written content"]
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_example_jupyterhub_workflows_overview.adoc
+

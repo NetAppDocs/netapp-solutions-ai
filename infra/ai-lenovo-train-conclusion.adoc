@@ -63,3 +63,4 @@ https://developer.nvidia.com/nvidia-system-management-interface[https://develope
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/a400-thinksystem-conclusion.adoc
+

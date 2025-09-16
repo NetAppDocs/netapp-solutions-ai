@@ -28,3 +28,4 @@ Refer to the https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_d
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_example_notebooks_and_pipelines.adoc
+

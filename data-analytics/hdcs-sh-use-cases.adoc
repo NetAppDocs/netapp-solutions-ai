@@ -43,3 +43,4 @@ One of the largest financial services and investment banks used the NetApp netwo
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-overview-of-hadoop-data-protection-use-cases.adoc
+

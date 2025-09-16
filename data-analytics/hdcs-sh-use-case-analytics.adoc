@@ -43,3 +43,4 @@ By using ONTAP with NFS, the compute server CPUs were almost fully utilized for 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-use-case-5-accelerate-analytic-workloads.adoc
+

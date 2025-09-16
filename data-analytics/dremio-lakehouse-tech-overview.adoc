@@ -64,3 +64,4 @@ a|* 5 node Dremio cluster
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/dremio-lakehouse-technology-overview.adoc
+

@@ -242,3 +242,4 @@ image:aws-fsxn-ec2-fsxn-comparition.png["This image shows the performance compar
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-performance-overview-and-validation-in-aws-FSxN.adoc
+
