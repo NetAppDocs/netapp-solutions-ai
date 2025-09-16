@@ -93,3 +93,4 @@ image:apache-spark-010.png[Architectures used for validation.]
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/apache-spark-major-ai-ml-and-dl-use-cases-and-architectures.adoc
+

@@ -79,3 +79,4 @@ https://github.com/NetApp/netapp-dataops-toolkit[https://github.com/NetApp/netap
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/apache-spark-where-to-find-additional-information.adoc
+

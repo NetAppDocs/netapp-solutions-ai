@@ -51,3 +51,4 @@ The following list describes common patterns for deploying these tools independe
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_introduction.adoc
+

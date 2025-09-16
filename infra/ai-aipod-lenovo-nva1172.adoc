@@ -28,3 +28,4 @@ link:https://www.netapp.com/pdf.html?item=/media/111933-lenovoaipod-nva-1172-des
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aipod_lenovo_NVA1172.adoc
+

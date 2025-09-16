@@ -123,3 +123,4 @@ image:kafka-nfs-007.png["This screenshot shows the log output for a successful c
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/kafka-nfs-functional-validation-silly-rename-fix.adoc
+

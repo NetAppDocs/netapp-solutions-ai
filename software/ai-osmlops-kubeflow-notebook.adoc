@@ -25,3 +25,4 @@ image:aicp-009.png["Figure showing input/output dialog or representing written c
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_provision_a_jupyter_notebook_workspace_for_data_scientist_or_developer_use.adoc
+

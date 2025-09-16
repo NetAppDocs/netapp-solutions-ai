@@ -50,3 +50,4 @@ With Dremio, NetApp achieved significant cost reductions by minimizing compute c
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/dremio-lakehouse-customer-usecases.adoc
+

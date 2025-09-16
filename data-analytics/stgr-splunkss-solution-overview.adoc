@@ -41,3 +41,4 @@ With SmartStore, you can reduce the indexer storage footprint to a minimum and c
 
 Splunk SmartStore with StorageGRID enables customers to incrementally scale the environment with high-performance and cost-effective remote storage while providing a high degree of elasticity to the overall solution. This allows customers to add any components (hot storage and/or warm S3 storage) in any given quantity at any given time, whether they need more indexers, change data retention, or to increase the ingest rate without any disruption.
 
+

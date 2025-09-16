@@ -59,3 +59,4 @@ The hardware and software configurations outlined below were utilized for the ma
 |===
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/vector-database-technology-requirement.adoc
+

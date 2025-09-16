@@ -28,3 +28,4 @@ In self-balancing clusters, partition rebalances are fully automated to optimize
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-confluent-kafka-rebalance.adoc
+

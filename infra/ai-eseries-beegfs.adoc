@@ -21,3 +21,4 @@ link:https://docs.netapp.com/us-en/beegfs/index.html[BeeGFS on NetApp with E-Ser
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai_beegfs_eseries.adoc
+

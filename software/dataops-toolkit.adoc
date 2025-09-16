@@ -24,3 +24,4 @@ The NetApp DataOps Toolkit is a Python-based tool that simplifies the management
 link:https://github.com/NetApp/netapp-dataops-toolkit[NetApp DataOps Toolkit^] 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/dataops-toolkit.adoc
+

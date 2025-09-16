@@ -28,3 +28,4 @@ image:hdcs-sh-004.png["Figure showing input/output dialog or representing writte
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/hdcs-sh-hadoop-data-protection-and-netapp.adoc
+

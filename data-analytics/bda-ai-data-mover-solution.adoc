@@ -30,3 +30,4 @@ The `hadoop distcp` command uses the MapReduce program to copy the data. NIPAM w
 [NOTE]
 NIPAM is not supported or certified with MapR.
 
+

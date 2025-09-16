@@ -51,3 +51,4 @@ This NetApp and Lenovo solution offers the following key benefits:
  
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/a400-thinksystem-introduction.adoc
+

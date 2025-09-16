@@ -198,3 +198,4 @@ image:stgr-splunkss-018.png["Figure showing input/output dialog or representing 
 * Add-remove indexers and setup-teardown cluster on-demand.
 * Storage tier is no longer tied to hardware.
 
+

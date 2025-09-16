@@ -32,3 +32,4 @@ To learn more about the information that is described in this document, review t
 * https://docs.splunk.com/Documentation/Splunk/8.0.6/Deploy/Distributedoverview[Splunk Enterprise Distributed Deployment Manual^]
 
 * https://docs.splunk.com/Documentation/Splunk/8.0.6/Indexer/Aboutindexesandindexers[Splunk Enterprise Managing Indexers and Clusters of Indexers^]
+

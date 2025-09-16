@@ -22,3 +22,4 @@ Comprehensive video playlist covering AI infrastructure, converged systems, and 
 Video series on MLOps workflows, data pipelines, and operational best practices. link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7n1sWK-QGq4QMI1VBJS-ZZW[Watch the MLOps playlist^]
 
 // video::e87773e3-dc53-4195-83ed-b0d50100a788[panopto, title="DevOps Acceleration with DataOps Toolkit and Trident Protect Cloud Bursting", width=360]
+

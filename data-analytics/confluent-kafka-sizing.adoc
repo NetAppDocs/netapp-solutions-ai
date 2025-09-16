@@ -113,3 +113,4 @@ After you have determined your environmental variables, select Size my Cluster. 
 
 Use reverse mode for platform teams without a use case in mind. Use partitions mode to calculate how many partitions a single topic requires. See https://eventsizer.io for sizing based on the reverse and partitions modes.
 
+

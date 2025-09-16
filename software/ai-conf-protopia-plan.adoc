@@ -28,3 +28,4 @@ For this solution design, the following three scenarios were validated:
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-test-and-validation-plan.adoc
+

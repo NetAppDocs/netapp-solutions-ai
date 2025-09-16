@@ -43,3 +43,4 @@ The hybrid-use-case customer can use BlueXP Copy and Sync to migrate on-premises
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/bda-ai-data-mover-solution-for-ai.adoc
+

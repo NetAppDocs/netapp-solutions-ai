@@ -30,3 +30,4 @@ This document describes the key components of the AIPod reference architecture, 
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aipod_nv_intro.adoc
+

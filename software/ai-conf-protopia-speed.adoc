@@ -26,3 +26,4 @@ We used PyTorch running on a single NVIDIA V100 GPU to apply the obfuscation, an
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-protopia-obfuscation-speed.adoc
+

@@ -31,3 +31,4 @@ Based on your storage capacity needs, you can increase the share storage (NFS vo
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/a400-thinksystem-architecture-adjustments.adoc
+
