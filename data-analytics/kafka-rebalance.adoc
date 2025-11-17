@@ -26,6 +26,6 @@ In our lab, we tested the Confluent self-balancing clusters feature, which autom
 
 In self-balancing clusters, partition rebalances are fully automated to optimize Kafka's throughput, accelerate broker scaling, and reduce the operational burden of running a large cluster. At steady-state, self-balancing clusters monitor the skew of data across the brokers and continuously reassigns partitions to optimize cluster performance. When scaling the platform up or down, self-balancing clusters automatically recognize the presence of new brokers or the removal of old brokers and trigger a subsequent partition reassignment. This enables you to easily add and decommission brokers, making your Kafka clusters fundamentally more elastic. These benefits come without any need for manual intervention, complex math, or the risk of human error that partition reassignments typically entail. As a result, data rebalances are completed in far less time, and you are free to focus on higher-value event-streaming projects rather than needing to constantly supervise your clusters.
 
-
+Instaclustr also supports self-rebalancing features and has been implemented for multiple customers. 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-confluent-kafka-rebalance.adoc
 
