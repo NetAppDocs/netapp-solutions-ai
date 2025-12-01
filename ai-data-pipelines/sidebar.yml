@@ -73,6 +73,10 @@ entries:
         url: /software/ai-hybrid-ddlnexus-data.html
       - title: "Additional information"
         url: /software/ai-hybrid-ddlnexus-addtl.html
+
+  - title: "NetApp + Union.ai: Hybrid AI Training"
+    pdf-filename: "Hybrid AI Training with Union.ai"
+    url: /software/ai-hybrid-union.html
 #
   - title: "NVIDIA AI Enterprise with NetApp and VMware"
     pdf-filename: "NVIDIA AI Enterprise with NetApp and VMware"

@@ -1,10 +1,18 @@
+---
+sidebar: sidebar
+permalink: software/ai-hybrid-union.html
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, Union.ai, Hybrid AI training 
+summary: Hybrid AI training environment using Union.ai and NetApp FlexCache.
+---
 = NetApp + Union.ai: Hybrid AI Training Technical Guide
+
 
 :hardbreaks:
 :nofooter: 
 :icons: font
 :linkattrs:
 :imagesdir: ../media/
+
 
 [.lead]
 
