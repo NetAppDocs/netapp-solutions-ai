@@ -60,7 +60,7 @@ Admin access to ONTAP and Kubernetes clusters.
 
 Figure 1) Union.ai control plane with NetApp Storage.
 
-<Figure1>
+image::ai-hybrid-union-001.png["Hybrid data pipeline"]
 
 * Union.ai Control Plane: Orchestrates workflows, manages data movement,
 and integrates with NetApp APIs.
