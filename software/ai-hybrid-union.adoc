@@ -274,7 +274,7 @@ for NetApp ONTAP+++]
 
 You now have a validated hybrid AI training environment using Union.ai and NetApp FlexCache. Training jobs can run in the cloud while accessing on-premises data securely and efficiently—without replicating entire datasets or compromising governance.
 
-=== *Union.ai Companion Guide*
+=== *Union.ai - Companion Guide*
 
 ==== *Step 1: Choose Deployment Model*
 
