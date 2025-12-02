@@ -2,9 +2,9 @@
 sidebar: sidebar
 permalink: software/ai-hybrid-union.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, Union.ai, Hybrid AI training 
-summary: Hybrid AI training environment using Union.ai and NetApp FlexCache.
+summary: Deploy a hybrid AI training environment using Union.ai orchestration with NetApp FlexCache to enable cloud-based GPU training workloads to access on-premises data efficiently and securely.
 ---
-= NetApp + Union.ai: Hybrid AI Training Technical Guide
+= Deploy hybrid AI training with Union.ai and NetApp FlexCache
 
 
 :hardbreaks:
@@ -15,8 +15,7 @@ summary: Hybrid AI training environment using Union.ai and NetApp FlexCache.
 
 
 [.lead]
-
-This paper presents a validated hybrid AI training environment using Union.ai and NetApp FlexCache. The integration of Union.ai’s orchestration platform with NetApp FlexCache and Kubernetes-native storage provisioning via Trident provides allows cloud-based AI training jobs to access on-premises data without requiring that massive data to be relocated or replicated. Together with NetApp FlexCache and Trident, Union which is built top of the proven Flyte foundation enables a hybrid AI training model that is not just technically feasible, but operationally elegant.
+Learn how to deploy a hybrid AI training environment using Union.ai orchestration with NetApp FlexCache and Trident for Kubernetes storage provisioning.
 
 David Espejo, Union.ai 
 Sathish Thyagarajan, NetApp
@@ -66,9 +65,9 @@ Admin access to ONTAP and Kubernetes clusters.
 
 == Reference Architecture 
 
-Figure 1) Union.ai control plane with NetApp Storage.
+The following figure shows the Union.ai control plane integrated with NetApp storage for hybrid AI training.
 
-image::ai-hybrid-union-001.png["Hybrid data pipeline"]
+image::ai-hybrid-union-001.png["Hybrid AI training architecture with Union.ai and NetApp"]
 
 * Union.ai Control Plane: Orchestrates workflows, manages data movement,
 and integrates with NetApp APIs.
@@ -291,11 +290,10 @@ https://docs.union.ai/platform/latest/deployment/self-hosted/[+++Self-Hosted
 Guide+++]
 * Deploy via Helm:
 
-helm repo add unionai https://unionai.github.io/helm-charts/
+helm repo add unionai https://unionai.github.io/helm-charts/
 
 helm install union unionai/union -n union-system -f values.yaml
 
-
 
 ==== *Step 2: Install Union Operator*
 
