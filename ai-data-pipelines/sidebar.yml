@@ -74,7 +74,7 @@ entries:
       - title: "Additional information"
         url: /software/ai-hybrid-ddlnexus-addtl.html
 
-  - title: "NetApp + Union.ai: Hybrid AI Training"
+  - title: "Hybrid AI training with NetApp and Union.ai"
     pdf-filename: "Hybrid AI Training with Union.ai"
     url: /software/ai-hybrid-union.html
 #
