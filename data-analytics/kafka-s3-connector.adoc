@@ -327,7 +327,7 @@ root@stlrx2540m1-108:~#
 
 == Instaclustr Kafka Connect Connectors
 
-Instaclustr supports Kafka Connect Connectors and their details - link:https://github.com/instaclustr/kafka-connect-connectors[More details]. Instacliustr provides additional connectors link:https://www.instaclustr.com/support/documentation/kafka-connect/bundled-kafka-connect-plugins/[their details]
+Instaclustr supports Kafka Connect Connectors and their details - link:https://github.com/instaclustr/kafka-connect-connectors[More details]. Instaclustr provides additional connectors link:https://www.instaclustr.com/support/documentation/kafka-connect/bundled-kafka-connect-plugins/[their details]
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/confluent-kafka-kafka-s3-connector.adoc
 
