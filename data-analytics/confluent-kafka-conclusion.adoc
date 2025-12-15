@@ -71,3 +71,10 @@ https://www.confluent.io/blog/self-balancing-kafka-clusters-in-confluent-platfor
 +
 https://www.confluent.io/blog/confluent-platform-6-0-delivers-the-most-powerful-event-streaming-platform-to-date/[https://www.confluent.io/blog/confluent-platform-6-0-delivers-the-most-powerful-event-streaming-platform-to-date/^]
 
+* Sample Instaclustr customers and their usecase details
++
+https://www.instaclustr.com/blog/netapp-and-pegasystems-open-source-support-package/, https://www.instaclustr.com/wp-content/uploads/Insta_Case_Study_Pegasystems_1_21sep25.pdf
++
+https://www.instaclustr.com/resources/customer-case-study-pubnub/
++
+https://www.instaclustr.com/resources/customer-case-study-tesouro/
