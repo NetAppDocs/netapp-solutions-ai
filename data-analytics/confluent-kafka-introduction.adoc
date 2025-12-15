@@ -34,6 +34,8 @@ This document describes the best-practice guidelines for using Confluent Tiered 
 
 Confluent has become the default real-time streaming platform for many applications, especially for big data, analytics, and streaming workloads. Tiered Storage enables users to separate compute from storage in the Confluent platform. It makes storing data more cost effective, enables you to store virtually infinite amounts of data and scale workloads up (or down) on-demand, and makes administrative tasks like data and tenant rebalancing easier. S3 compatible storage systems can take advantage of all these capabilities to democratize data with all events in one place, eliminating the need for complex data engineering. For more info on why you should use tiered storage for Kafka, check link:https://docs.confluent.io/platform/current/kafka/tiered-storage.html#netapp-object-storage[this article by Confluent^].
 
+NetApp instaclustr also supports Kafka with tiered storage from 3.8.1. Please check more details here link:https://www.instaclustr.com/support/documentation/kafka-add-ons/using-kafka-tiered-storage/[instaclust using kafka tiered storage]
+
 == Why NetApp StorageGRID for tiered storage?
 
 StorageGRID is an industry-leading object storage platform by NetApp. StorageGRID is a software-defined, object-based storage solution that supports industry-standard object APIs, including the Amazon Simple Storage Service (S3) API. StorageGRID stores and manages unstructured data at scale to provide secure, durable object storage. Content is placed in the right location, at the right time, and on the right storage tier, optimizing workflows and reducing costs for globally distributed rich media.
