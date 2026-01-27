@@ -463,10 +463,10 @@ NetApp AFF storage:
 |===
 
 == Detailed Deployment Steps
-For detailed deployment instructions, refer to the link:NETAPP-SOLUTIONS-AI-INTERNAL/infra/ai-aipod-mini-deployment-steps.adoc[NetApp AIpod Mini for ERAG - Deplopyment Steps]
+For detailed deployment instructions, refer to the link:ai-aipod-mini-deployment-steps.adoc[NetApp AIPod Mini for ERAG - Deployment Steps]
 
 == FAQs
-Refer to the link:NETAPP-SOLUTIONS-AI-INTERNAL/infra/ai-aipod-mini-FAQs.adoc[NetApp AIPod Mini - FAQs]
+Refer to the link:ai-aipod-mini-FAQs.adoc[NetApp AIPod Mini - FAQs]
 
 == Where to find additional information
 To learn more about the information that is described in this document, review the following documents and/or websites:
