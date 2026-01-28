@@ -122,7 +122,9 @@ ansible all -i inventory<cluster-name>/inventory.ini -m ping
 ----
 Note: If you do not have passwordless sudo set up on your nodes, then you will need to add --ask-become-pass to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
 
-=== 6. Edit 'config.yaml' file
+=== 6. Edit `config.yaml` file
+Prepare the deployment by editing `inventory/,cluster-name./config.yaml` to reflect your environment specifics.
+
 [source,cli]
 ----
 vi inventory/<cluster-name>/config.yaml 
@@ -155,12 +157,14 @@ kubeconfig: "<repository path>/deployment/inventory/<cluster-name>/artifacts/adm
 ----
 
 === 7. Deploy the K8s cluster (with Trident)
+Execute ansible-playbook playbooks/infrastructure.yaml with the configure and install tags to deploy the cluster and Trident CSI.
+
 [source,cli]
 ----
 ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inventory/<cluster-name>/inventory.ini -e @inventory/<cluster-name>/config.yaml
 ----
 Note: 
-- If you do not have passwordless sudo set up on your nodes, then you will need to add '--ask-become-pass' to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
+- If you do not have passwordless sudo set up on your nodes, then you will need to add `--ask-become-pass` to this command. When using `--ask-become-pass`, it is critical that the ssh user have the SAME password on each node.
 - Refer to the https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md[NetApp Trident CSI Integration for Enterprise RAG^] for details. 
 Refer to the https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html[Trident installation documentation^] for further details.
 
@@ -169,9 +173,11 @@ Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/d
 
 === 9. Install kubectl 
 Refer to the https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/[Install Kubectl] if it is not already installed.
-Retrieve the kubeconfig file from '<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf'.
+Retrieve the kubeconfig file from `<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf`.
 
 === 10. Install MetalLB in Kubernetes cluster
+Install Metallb using helm on your Kubernetes cluster.
+
 [source,cli]
 ----
 helm repo add metallb https://metallb.github.io/metallb
@@ -180,6 +186,8 @@ helm -n metallb-system install metallb metallb/metallb --create-namespace
 Refer to the https://metallb.io/installation/[MetalLb Installation] for details.
 
 === 11. Configure MetalLB 
+MetalLB was configured in Layer 2 mode, and the required IPAddressPool and L2Advertisement resources were created in accordance with the documented configuration guidelines.
+
 [source,cli]
 ----
 vi metallb-ipaddrpool-l2adv.yaml
@@ -208,17 +216,17 @@ metadata:
 ----
 
 Note: 
-- Use 'metallb-system' as namespace for MetalLB IPAddressPool and L2Advertisement.
+- Use `metallb-system` as namespace for MetalLB IPAddressPool and L2Advertisement.
 - The IP address pool may include any unused IPs within the same subnet as the Kubernetes nodes. Only a single IP address is required for ERAG.
 - Refer to the https://metallb.io/configuration/#layer-2-configuration[MetalLB Layer2 configuration] for details.
 
-=== 12. Update config.yaml with FQDN, volume access mode, ingress, and S3 details."
-Modify the config.yaml file located at `inventory/<cluster-name>/config.yaml` to define the deployment FQDN, set the volume access modes, configure ingress exposure, and integrate ONTAP S3 as the Enterprise RAG data backend.
+=== 12. Update config.yaml with FQDN, volume access mode, ingress, and S3 details.
+Modify the config.yaml file located at `inventory/<cluster-name>/config.yaml` to define the deployment FQDN, set the volume access modes, configure ingress exposure, and integrate ONTAP S3.
 
-Edit `inventory/<cluster-name>/config.yaml` and apply the following configuration changes:
+Edit `config.yaml` and apply the following configuration changes:
 
 - FQDN: Specify the fully qualified domain name used to access the deployment.
-- Volume access mode: Under the gmc.pvc section, set 'accessMode: ReadWriteMany' to support concurrent access to model volumes across multiple pods.
+- Volume access mode: Under the gmc.pvc section, set `accessMode: ReadWriteMany` to support concurrent access to model volumes across multiple pods.
 Ingress configuration: Configure the ingress service_type as LoadBalancer to enable external access to the application.
 - S3 storage details: Set storageType to s3compatible and configure ONTAP S3 parameters, including region, access credentials, internal and external endpoints.
 - SSL certificate verification: Set edpInternalCertVerify and edpExternalCertVerify to false only when ONTAP S3 is configured with self-signed certificates. If certificates are issued by a publicly trusted CA, these parameters should remain enabled.
@@ -227,7 +235,6 @@ Ingress configuration: Configure the ingress service_type as LoadBalancer to ena
 [source,cli]
 ----
 vi inventory/<cluster-name>/config.yaml
-
 …
 FQDN: "<FQDN>" # Provide the FQDN for the deployment
 …
@@ -269,7 +276,7 @@ Note:
 - By default, the Intel® AI for Enterprise RAG application ingests data from all existing buckets in your SVM. If you have multiple buckets in your SVM, you can modify the `bucketNameRegexFilter` field so that data is ingested only from certain buckets.
 - Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/deployment/README.md[Intel® AI for Enterprise RAG deployment^] documentation for details.
 
-=== 13. Configure Schedule synchronization settings
+=== 13. Configure scheduled synchronization settings
 When installing the OPEA for Intel® AI for Enterprise RAG application, enable `scheduledSync` so that the application automatically ingests new or updated files from your S3 buckets.
 
 When `scheduledSync` is enabled, the application automatically checks your source S3 buckets for new or updated files. Any new or updated files that are found as part of this synchronization process are automatically ingested and added to the RAG knowledge base. The application checks your source buckets based on a preset time interval. The default time interval is 60 seconds, meaning that the application checks for changes every 60 seconds. You might want to change this interval to suit your specific needs.

@@ -215,11 +215,12 @@ After Ubuntu is installed, install the NFS utilities on every server. To install
  apt-get update && apt-get install nfs-common
 ----
 
-== Deploy Enterprise RAG 2.0
-All pre-requisites, infrastructure preparation, configuration parameters and deployment procedures are documented in a separate deployment guide. 
-
+==== Deploy Enterprise RAG 2.0
 Refer to the following document for complete, step-by-step deployment workflow: 
 link:ai-aipod-mini-deployment-steps.adoc[NetApp AIPod Mini for ERAG - Deployment Steps]
+All pre-requisites, infrastructure preparation, configuration parameters and deployment procedures are documented in above deployment guide. 
+
+
 
 
 ==== Access OPEA for Intel® AI for Enterprise RAG UI
@@ -280,7 +281,7 @@ _Note: The sizing guidance presented above is based on performance validation an
 Enterprise RAG systems and LLMs are technologies that work together to help organizations provide accurate and context-aware responses. These responses involve information retrieval based on a vast collection of private and internal enterprise data. By using RAG, APIs, vector embeddings, and high-performance storage systems to query document repositories that contain company data, the data is processed faster and securely. The NetApp AIPod Mini combines NetApp's intelligent data infrastructure with ONTAP data management capabilities and Intel Xeon 6 processors, Intel® AI for Enterprise RAG, and the OPEA software stack to help deploy high-performance RAG applications and put organizations on the path to AI leadership. 
 
 == Acknowledgment
-This document is the work of Sathish Thyagarajan, Michael Ogelsby and Arpita Mahajan members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Shreejan Mistry, and Ned Fiori—and other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio—for their continued support and help during the validation of this solution. 
+This document is the work of Sathish Thyagarajan, Michael Ogelsby and Arpita Mahajan, members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Shreejan Mistry, and Ned Fiori—and other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio—for their continued support and help during the validation of this solution. 
 
 == Bill of Materials
 The following was the BOM used for the functional validation of this solution and can be used for reference. Any server or networking component (or even existing network with preferably 100GbE bandwidth) that aligns with the following configuration could be used.
