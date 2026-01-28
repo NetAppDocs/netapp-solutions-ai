@@ -25,7 +25,7 @@ Sathish Thyagarajan, Michael Oglesby, Arpita Mahajan NetApp
 -   The deployment user has sufficient permissions to create namespace and install Helm charts.
 -   The Xeon servers run Ubuntu 22.04.
 -   The same username is configured across all Xeon servers.
--	DNS Administrative access is available. 
+-	  DNS Administrative access is available. 
 -   ONTAP 9.16 deployed with a SVM configured for S3 access.
 -   S3 bucket is created and configured.
 
@@ -159,7 +159,10 @@ kubeconfig: "<repository path>/deployment/inventory/<cluster-name>/artifacts/adm
 ----
 ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inventory/<cluster-name>/inventory.ini -e @inventory/<cluster-name>/config.yaml
 ----
-Note: If you do not have passwordless sudo set up on your nodes, then you will need to add --ask-become-pass to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
+Note: 
+- If you do not have passwordless sudo set up on your nodes, then you will need to add '--ask-become-pass' to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
+- Refer to the https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md[NetApp Trident CSI Integration for Enterprise RAG^] for details. 
+Refer to the https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html[Trident installation documentation^] for further details.
 
 === 8. Change the number of iwatch open descriptors 
 Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/docs/application_deployment_guide.md#change-number-of-iwatch-open-descriptors[iwatch open descriptors^] for details.
@@ -177,24 +180,61 @@ helm -n metallb-system install metallb metallb/metallb --create-namespace
 Refer to the https://metallb.io/installation/[MetalLb Installation] for details.
 
 === 11. Configure MetalLB 
-Refer to the https://metallb.io/configuration/#layer-2-configuration[MetalLB Layer2 configuration] for details.
 [source,cli]
 ----
 vi metallb-ipaddrpool-l2adv.yaml
 kubectl apply -f metallb-ipaddrpool-l2adv.yaml
 ----
+
+==== Sample Snippet:
+[source,cli]
+----
+vi metallb-ipaddrpool-l2adv.yaml 
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: erag
+  namespace: metallb-system
+spec:
+  addresses:
+  - <IPAddressPool>
+
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: metallb-l2adv
+  namespace: metallb-system
+----
+
 Note: 
 - Use 'metallb-system' as namespace for MetalLB IPAddressPool and L2Advertisement.
 - The IP address pool may include any unused IPs within the same subnet as the Kubernetes nodes. Only a single IP address is required for ERAG.
+- Refer to the https://metallb.io/configuration/#layer-2-configuration[MetalLB Layer2 configuration] for details.
 
-=== 12. Update config.yaml file with volume access modes and SSL certificate verification
+=== 12. Update config.yaml with FQDN, volume access mode, ingress, and S3 details."
+Modify the config.yaml file located at `inventory/<cluster-name>/config.yaml` to define the deployment FQDN, set the volume access modes, configure ingress exposure, and integrate ONTAP S3 as the Enterprise RAG data backend.
+
+Edit `inventory/<cluster-name>/config.yaml` and apply the following configuration changes:
+
+- FQDN: Specify the fully qualified domain name used to access the deployment.
+- Volume access mode: Under the gmc.pvc section, set 'accessMode: ReadWriteMany' to support concurrent access to model volumes across multiple pods.
+Ingress configuration: Configure the ingress service_type as LoadBalancer to enable external access to the application.
+- S3 storage details: Set storageType to s3compatible and configure ONTAP S3 parameters, including region, access credentials, internal and external endpoints.
+- SSL certificate verification: Set edpInternalCertVerify and edpExternalCertVerify to false only when ONTAP S3 is configured with self-signed certificates. If certificates are issued by a publicly trusted CA, these parameters should remain enabled.
+
+==== Sample Snippet:
 [source,cli]
 ----
 vi inventory/<cluster-name>/config.yaml
+
+…
+FQDN: "<FQDN>" # Provide the FQDN for the deployment
+…
 gmc:
   enabled: true
   pvc:
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteMany # AccessMode
     models:
       modelLlm:
         name: model-volume-llm
@@ -205,23 +245,37 @@ gmc:
       modelReranker:
         name: model-volume-reranker
         storage: 10Gi
+…
+ingress:
+  …
+  service_type: LoadBalancer
+  …
 edp:
   …
   storageType: s3compatible
   …
   s3compatible:
     region: "us-east-1"
-    accessKeyId: "<redacted>"
-    secretAccessKey: "<redacted>"
+    accessKeyId: "<your_access_key>"
+    secretAccessKey: "<your_secret_key>"
     internalUrl: "https://<IP-address>"
     externalUrl: "https://<IP-address>"
-    bucketNameRegexFilter: "^erag.*"
+    bucketNameRegexFilter: ".*"
     edpExternalCertVerify: false
     edpInternalCertVerify: false
   …
 ----
+Note: 
+- By default, the Intel® AI for Enterprise RAG application ingests data from all existing buckets in your SVM. If you have multiple buckets in your SVM, you can modify the `bucketNameRegexFilter` field so that data is ingested only from certain buckets.
+- Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/deployment/README.md[Intel® AI for Enterprise RAG deployment^] documentation for details.
 
-=== 13. Configure Schedule sync settings
+=== 13. Configure Schedule synchronization settings
+When installing the OPEA for Intel® AI for Enterprise RAG application, enable `scheduledSync` so that the application automatically ingests new or updated files from your S3 buckets.
+
+When `scheduledSync` is enabled, the application automatically checks your source S3 buckets for new or updated files. Any new or updated files that are found as part of this synchronization process are automatically ingested and added to the RAG knowledge base. The application checks your source buckets based on a preset time interval. The default time interval is 60 seconds, meaning that the application checks for changes every 60 seconds. You might want to change this interval to suit your specific needs.
+
+To enable `scheduledSync` and set the synchronization interval, set the following values in `deployment/components/edp/values.yaml`:
+
 [source,cli]
 ----
 vi components/edp/values.yaml
@@ -253,9 +307,12 @@ kubectl -n ingress-nginx get svc ingress-nginx-controller
 ----
 Create DNS entry pointing to this IP address for the FQDN that you used in Step 12.
 
+Note: 
+- FQDN used for the DNS entry MUST match the FQDN from the config file.
+
 === 16. Access Enterprise RAG UI 
 Access Enterprise RAG UI by navigating to that FQDN in your browser.
-Note: Retrieve default UI credentials from cat ansible-logs/default_credentials.txt
+Note: You can retrieve default UI credentials from cat ansible-logs/default_credentials.txt
 
 == Troubleshooting Guide
 

@@ -214,95 +214,13 @@ After Ubuntu is installed, install the NFS utilities on every server. To install
 ----
  apt-get update && apt-get install nfs-common
 ----
-==== Install Kubernetes with Trident CSI driver
-Install Kubernetes on your servers using Infrastructure playbook. Refer to the https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md[NetApp Trident CSI Integration for Enterprise RAG^] for details. 
-Refer to the https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html[Trident installation documentation^] for further details.
 
-==== Install and Configure MetalLB in your Kubernetes Cluster
-Install MetalLB using helm in your Kubernetes Cluster. Refer to the https://metallb.io/installation/[MetalLB Installation^] for details.
-Configure MetalLB with Layer2 configuration. Refer to https://metallb.io/configuration/#layer-2-configuration[MetalLB configuration^] for details.
+== Deploy Enterprise RAG 2.0
+All pre-requisites, infrastructure preparation, configuration parameters and deployment procedures are documented in a separate deployment guide. 
 
-=== Enable use of ONTAP S3
-When installing OPEA for Intel® AI for Enterprise RAG, edit your main configuration file to enable use of ONTAP S3 as your source data repository.
+Refer to the following document for complete, step-by-step deployment workflow: 
+link:ai-aipod-mini-deployment-steps.adoc[NetApp AIPod Mini for ERAG - Deployment Steps]
 
-To enable use of ONTAP S3, set the following values within the `edp` section.
-
-Note:	By default, the Intel® AI for Enterprise RAG application ingests data from all existing buckets in your SVM. If you have multiple buckets in your SVM, you can modify the `bucketNameRegexFilter` field so that data is ingested only from certain buckets.
-[source,cli]
-----
-vi inventory/<cluster-name>/config.yaml
-edp:
-  enabled: true
-  namespace: edp
-  dpGuard:
-    enabled: false
-  storageType: s3compatible
-  s3compatible:
-    region: "us-east-1"
-    accessKeyId: "<your_access_key>"
-    secretAccessKey: "<your_secret_key>"
-    internalUrl: "https://<your_ONTAP_S3_interface>"
-    externalUrl: "https://<your_ONTAP_S3_interface>"
-    bucketNameRegexFilter: ".*"
-----
-=== Configure scheduled synchronization settings
-When installing the OPEA for Intel® AI for Enterprise RAG application, enable `scheduledSync` so that the application automatically ingests new or updated files from your S3 buckets.
-
-When `scheduledSync` is enabled, the application automatically checks your source S3 buckets for new or updated files. Any new or updated files that are found as part of this synchronization process are automatically ingested and added to the RAG knowledge base. The application checks your source buckets based on a preset time interval. The default time interval is 60 seconds, meaning that the application checks for changes every 60 seconds. You might want to change this interval to suit your specific needs.
-
-To enable `scheduledSync` and set the synchronization interval, set the following values in `deployment/components/edp/values.yaml:`
-[source,cli]
-----
-celery:
-  config:
-    scheduledSync:
-      enabled: true
-      syncPeriodSeconds: "60"
-----
-=== Change volume access modes
-In `inventory/<cluster-name>/config.yaml`, for the volume in the `pvc` list, change the `accessMode` to `ReadWriteMany`.
-[source,cli]
-----
-gmc:
-  enabled: true
-  pvc:
-    accessMode: ReadWriteMany
-    models:
-      modelLlm:
-        name: model-volume-llm
-        storage: 100Gi
-      modelEmbedding:
-        name: model-volume-embedding
-        storage: 20Gi
-      modelReranker:
-        name: model-volume-reranker
-        storage: 10Gi
-----
-
-==== OPEA for Intel® AI for Enterprise RAG
-Install OPEA for Intel® AI for Enterprise RAG in your Kubernetes cluster. Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/deployment/README.md[Intel® AI for Enterprise RAG deployment^] documentation for details. Be sure to take note of the required configuration file modifications that are described later in this paper. You must make these modifications before executing the installation playbook in order for the Intel® AI for Enterprise RAG application to work correctly with your ONTAP storage system.
-
-=== (Optional) Disable SSL certificate verification
-If you used a self-signed certificate when enabling S3 access for your SVM, you must disable SSL certificate verification. If you used a certificate that is signed by a publicly trusted CA, you can skip this step.
-
-To disable SSL certificate verification, set the following values in `inventory/<cluster-name>/config.yaml`
-
-[source,cli]
-----
-edp:
-  …
-  storageType: s3compatible
-  …
-  s3compatible:
-    region: "us-east-1"
-    accessKeyId: "<redacted>"
-    secretAccessKey: "<redacted>"
-    internalUrl: "https://<IP-address>"
-    externalUrl: "https://<IP-address>"
-    bucketNameRegexFilter: "^erag.*"
-    edpExternalCertVerify: false
-    edpInternalCertVerify: false
-----
 
 ==== Access OPEA for Intel® AI for Enterprise RAG UI
 Access the OPEA for Intel® AI for Enterprise RAG UI. Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/deployment/README.md#interact-with-the-deployed-pipeline[Intel® AI for Enterprise RAG deployment documentation^] for details.
@@ -463,10 +381,8 @@ NetApp AFF storage:
 |23
 |===
 
-== Detailed Deployment Steps
-For detailed deployment instructions, refer to the link:ai-aipod-mini-deployment-steps.adoc[NetApp AIPod Mini for ERAG - Deployment Steps]
 
-== FAQs
+== Infra Readiness Checklist
 Refer to the link:ai-aipod-mini-infra-readiness.adoc[NetApp AIPod Mini - Infra Readiness]
 
 == Where to find additional information
