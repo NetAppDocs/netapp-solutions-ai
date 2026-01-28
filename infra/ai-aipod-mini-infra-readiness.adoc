@@ -1,0 +1,59 @@
+---
+sidebar: sidebar
+permalink: infra/ai-minipod.html
+keywords: netapp, aipod, RAG, ai solution, design, infrastructure, FAQs
+summary: This document outlines a comprehensive infrastructure readiness checklist for NetApp AIPod Mini for Enterprise RAG, serving as a pre-deployment reference.
+---
+
+= NetApp AIPod Mini for ERAG - FAQs
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+
+This document outlines a comprehensive infrastructure readiness checklist for NetApp AIPod Mini for Enterprise RAG, serving as a pre-deployment reference.
+
+== Business & Use Case Readiness
+* [ ] Is the solution aligned to line-of-business outcomes (e.g., productivity, customer service, legal, healthcare, manufacturing, public sector)?
+* [ ] Have you estimated Time to First Token (TTFT) and latency needs for your LLM workloads?
+* [ ] Do you know the expected concurrency/user load (e.g., 32 concurrent users per 2-worker node for RAG)?
+* [ ] Have you identified the primary AI/GenAI workloads (RAG, inferencing, fine-tuning, departmental LLMs, vector DB integration)?
+* [ ] Are you evaluating CPU-based AI options (OPEA, Intel Xeon) versus GPU alternatives for cost/performance balance?
+
+== Technical & Infrastructure Requirements
+* [ ] Is your data pipeline ready (data prep, ETL, secure ingest into vector DB)?
+* [ ] Do you require high availability, redundancy, or DR capabilities?
+* [ ] Are you leveraging Ubuntu Linux / Kubernetes / Red Hat OpenShift AI stack support?
+* [ ] Have you validated network performance (25–100GbE depending on workload)?
+* [ ] Is storage provisioned with NetApp ONTAP + Trident CSI driver for Kubernetes persistence?
+* [ ] Minimum 3 compute nodes (2 worker, 1 control plane) sized correctly?
+
+== Software & Ecosystem Alignment
+* [ ] Are your containerized apps compatible with Kubernetes & Helm charts provided?
+* [ ] Which vector database(s) (e.g., Milvus, pgvector) are planned for deployment?
+* [ ] Do you need OPEA (Open Platform for Enterprise AI) pre-integration for retrieval-augmented generation (RAG)?
+* [ ] Are you leveraging hybrid-cloud options (Cloud Volumes ONTAP, FSxN, Anthos, Azure Arc)?
+* [ ] Do you need partner ISV integrations (ESRI, healthcare PACS, financial/legal ISVs)?
+
+== Data Governance & Security
+* [ ] Have you enabled role-based access control (RBAC) in Kubernetes?
+* [ ] Is there a data protection & backup plan (SnapMirror, SnapCenter, ransomware protection)?
+* [ ] Have you mapped data compliance needs (HIPAA, GDPR, FedRAMP, CJIS)?
+* [ ] Do you require private AI deployment (air-gapped, on-premises, secure enclave)?
+
+== Operational & Support Considerations
+* [ ] Are admins trained/enabled on Kubernetes, Trident CSI, and OPEA stack deployment?
+* [ ] Do you need support for multi-tenancy (departments, SLED agencies, business units)?
+* [ ] Is there a plan for monitoring & observability (ONTAP System Manager, Cloud Insights, Prometheus/Grafana)?
+* [ ] Who will own day-2 operations (customer IT, partner, managed service provider)?
+
+== Commercial & GTM Alignment
+* [ ] Is there a phased roadmap (departmental → enterprise-wide AI expansion)?
+* [ ] Do you have a multi-year pro forma projection (TCO, ARR, margin uplift)?
+* [ ] Are licensing uplift scenarios clear (vector DB, ISV software, AI ops tools)?
+* [ ] Have you explored partner incentives (distributor margin, OEM/Intel co-funding)?
+* [ ] Is the purchase aligned to budget cycles (CapEx vs OpEx, consumption models)?
+* [ ] Do you have a services partner (Arrow, WWT, Presidio, etc.) for sizing & deployment?
