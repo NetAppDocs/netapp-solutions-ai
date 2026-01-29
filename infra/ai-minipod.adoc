@@ -275,13 +275,14 @@ As part of our validation effort, we conducted performance testing in coordinati
 |"Concurrent users" refers to prompt requests that are submitting queries at the same time.
 |===
 
-_Note: The sizing guidance presented above is based on performance validation and test results gathered by using Intel Xeon 6 processors with 96 cores. For customers with similar I/O tokens and model size requirements we recommend using servers with Xeon 6 processors with 96 cores._
+_Note: The sizing guidance presented above is based on performance validation and test results gathered by using Intel Xeon 6 processors with 96 cores. For customers with similar I/O tokens and model size requirements we recommend using servers with Xeon 6 processors with 96 cores.
+For further details on sizing guide, refer to link:https://community.intel.com/t5/Blogs/Tech-Innovation/Artificial-Intelligence-AI/Scaling-Intel-AI-for-Enterprise-RAG-Performance-64-Core-vs-96/post/1723234[Intel® AI for Enterprise RAG Sizing Guide]
 
 == Conclusion
 Enterprise RAG systems and LLMs are technologies that work together to help organizations provide accurate and context-aware responses. These responses involve information retrieval based on a vast collection of private and internal enterprise data. By using RAG, APIs, vector embeddings, and high-performance storage systems to query document repositories that contain company data, the data is processed faster and securely. The NetApp AIPod Mini combines NetApp's intelligent data infrastructure with ONTAP data management capabilities and Intel Xeon 6 processors, Intel® AI for Enterprise RAG, and the OPEA software stack to help deploy high-performance RAG applications and put organizations on the path to AI leadership. 
 
 == Acknowledgment
-This document is the work of Sathish Thyagarajan, Michael Ogelsby and Arpita Mahajan, members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Shreejan Mistry, and Ned Fiori—and other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio—for their continued support and help during the validation of this solution. 
+This document is the work of Sathish Thyagarajan, Michael Ogelsby and Arpita Mahajan, members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Shreejan Mistry,Anna Alberska and Ned Fiori—and other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio—for their continued support and help during the validation of this solution. 
 
 == Bill of Materials
 The following was the BOM used for the functional validation of this solution and can be used for reference. Any server or networking component (or even existing network with preferably 100GbE bandwidth) that aligns with the following configuration could be used.
@@ -294,8 +295,8 @@ For the App server:
 |Hyper SuperServer SYS-222HA-TN /2U
 |2
 
-|P4X-GNR6980P-SRPL2-UCC 
-|Intel Xeon 6980P 2P 2G 504M 500W SGX512 
+|P4X-GNR6972P-SRPL2-UC 
+|Intel® Xeon® 6972P Processor 96-Core 2.40GHz 480MB Cache (500W) 
 |4
 
 |RAM

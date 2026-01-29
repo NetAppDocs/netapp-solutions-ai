@@ -300,11 +300,14 @@ celery:
 ----
 
 === 14. Deploy Enterprise RAG 2.0/2.0.1
+Before installation, validate the infrastructure readiness by following the procedures outlined in the link:https://github.com/opea-project/Enterprise-RAG/blob/main/docs/application_deployment_guide.md[Intel® AI for Enterprise RAG Application Deployment Guide]. This step ensures that the underlying infrastructure is configured correctly and meets all prerequisites required for a successful Enterprise RAG Application installation.
+
+Run the Installation using: 
 [source,cli]
 ----
 ansible-playbook -u $USER playbooks/application.yaml --tags configure,install -e @inventory/<cluster-name>/config.yaml
 ----
-Note: If you do not have passwordless sudo set up on your deploy node (the laptop or jump host where you are running the ansible-playbook command), then you will need to add --ask-become-pass to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
+Note: If you do not have passwordless sudo set up on your deploy node (the laptop or jump host where you are running the ansible-playbook command), then you will need to add `--ask-become-pass` to this command. When using `--ask-become-pass`, it is critical that the ssh user have the SAME password on each node.
 
 === 15. Create a DNS entry 
 Create a DNS Entry for the Enterprise RAG web dashboard in your DNS server. To proceed, retrieve external IP address assigned to Enterprise RAG's ingress LoadBalancer:
@@ -320,6 +323,7 @@ Note:
 === 16. Access Enterprise RAG UI 
 Access Enterprise RAG UI by navigating to that FQDN in your browser.
 Note: You can retrieve default UI credentials from cat ansible-logs/default_credentials.txt
+
 
 == Troubleshooting Guide
 
