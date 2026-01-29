@@ -5,7 +5,7 @@ keywords: netapp, aipod, RAG, ai solution, design, infrastructure, FAQs
 summary: This document outlines a comprehensive infrastructure readiness checklist for NetApp AIPod Mini for Enterprise RAG, serving as a pre-deployment reference.
 ---
 
-= NetApp AIPod Mini for ERAG - FAQs
+= NetApp AIPod Mini for ERAG - Infra Readiness Checklist
 :hardbreaks:
 :nofooter: 
 :icons: font

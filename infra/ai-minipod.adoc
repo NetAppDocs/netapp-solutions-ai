@@ -217,7 +217,7 @@ After Ubuntu is installed, install the NFS utilities on every server. To install
 
 ==== Deploy Enterprise RAG 2.0
 Refer to the following document for complete, step-by-step deployment workflow: 
-include::ai-aipod-mini-deployment-steps.adoc[leveloffset=+1]
+xref:ai-aipod-mini-deployment-steps.html[NetApp AIPod Mini for ERAG - Deployment Steps]
 All pre-requisites, infrastructure preparation, configuration parameters and deployment procedures are documented in above deployment guide. 
 
 
