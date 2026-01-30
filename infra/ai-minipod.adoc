@@ -23,7 +23,7 @@ Sathish Thyagarajan, Michael Oglesby, Arpita Mahajan NetApp
 
 == Executive summary
 
-A growing number of organizations are leveraging retrieval-augmented generation (RAG) applications and large language models (LLMs) to interpret user prompts and generate responses to increase productivity and business value. These prompts and responses can include text, code, images, or even therapeutic protein structures retrieved from an organization's internal knowledge base, data lakes, code repositories, and document repositories. This paper covers the reference design of the NetApp AIPod Mini 2.0 solution, comprising NetApp AFF storage and servers with Intel Xeon 6 processors. It includes NetApp ONTAP data management software combined with Intel Advanced Matrix Extensions (Intel AMX), and Intel® AI for Enterprise RAG software built on Open Platform for Enterprise AI (OPEA). The NetApp AIPod Mini 2.0 for enterprise RAG enables organizations to augment a public LLM into a private generative AI (GenAI) inferencing solution. The solution demonstrates efficient and cost-effective RAG inferencing at enterprise scale, designed to enhance reliability and provide you with better control over your proprietary information.
+A growing number of organizations are leveraging retrieval-augmented generation (RAG) applications and large language models (LLMs) to interpret user prompts and generate responses to increase productivity and business value. These prompts and responses can include text, code, images, or even therapeutic protein structures retrieved from an organization's internal knowledge base, data lakes, code repositories, and document repositories. This paper covers the reference design of the NetApp AIPod Mini solution, comprising NetApp AFF storage and servers with Intel Xeon 6 processors. It includes NetApp ONTAP data management software combined with Intel Advanced Matrix Extensions (Intel AMX), and Intel® AI for Enterprise RAG software built on Open Platform for Enterprise AI (OPEA). The NetApp AIPod Mini for enterprise RAG enables organizations to augment a public LLM into a private generative AI (GenAI) inferencing solution. The solution demonstrates efficient and cost-effective RAG inferencing at enterprise scale, designed to enhance reliability and provide you with better control over your proprietary information.
 
 == Intel storage partner validation
 
@@ -397,7 +397,18 @@ link:https://github.com/opea-project/Enterprise-RAG/tree/main[OPEA project]
 https://github.com/opea-project/Enterprise-RAG/tree/main/docs[Intel® AI ERAG Documentation]
 
 https://github.com/opea-project/Enterprise-RAG/tree/main/deployment/playbooks[OPEA Enterprise RAG deployment playbook^]
+== Version History
+|===
+|*Version*	|*Date* |*Document Version History*
 
+|Version 1.0
+|Sept 2025
+|Initial Release
+
+|Version 2.0
+|Feb 2026
+|Updated with OPEA-Intel® AI for Enterprise RAG 2.0
+|===
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/ai-minipod.adoc
 
