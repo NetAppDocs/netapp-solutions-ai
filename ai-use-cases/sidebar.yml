@@ -7,10 +7,10 @@ entries:
     url: /infra/ai-minipod.html
   - title: "NetApp AIPod Mini for ERAG - Infra Readiness Checklist"
     pdf-filename: "NetApp AIPod Mini for ERAG - Infra Readiness Checklist"
-    url: infra/ai-aipod-mini-infra-readiness.html
+    url: /infra/ai-aipod-mini-infra-readiness.html
   - title: "NetApp AIPod Mini for ERAG - Deployment Steps"
     pdf-filename: "NetApp AIPod Mini for ERAG - Deployment Steps"
-    url: infra/ai-aipod-mini-deployment-steps.html
+    url: /infra/ai-aipod-mini-deployment-steps.html
   - title: "Responsible AI with Protopia image transformation"
     pdf-filename: "Responsible AI and confidential inferencing - NetApp AI with Protopia Image Transformation"
     entries:
