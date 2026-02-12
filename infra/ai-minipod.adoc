@@ -19,7 +19,7 @@ This paper presents a validated reference design of NetApp AIPod for Enterprise 
 
 image:aipod-mini-001.png[Intel Logo]
 
-Sathish Thyagarajan, Michael Oglesby, Arpita Mahajan NetApp
+Sathish Thyagarajan, Michael Oglesby, Arpita Mahajan, NetApp
 
 == Executive summary
 
@@ -171,7 +171,7 @@ image:aipod-mini-006.png[600,600]
 ==== Configure S3 permissions
 Configure S3 user/group settings for the SVM that you created in the previous step. Make sure you have a user with full access to all S3 API operations for that SVM. Refer to the ONTAP S3 documentation for details. 
 
-Note:	This user will be needed for the  Intel® AI for Enterprise RAG application's data ingest service. 
+Note: This user will be needed for the Intel® AI for Enterprise RAG application's data ingest service. 
 If you created your SVM using ONTAP System Manager, System Manager will have automatically created a user named `sm_s3_user` and a policy named `FullAccess` when you created your SVM, but no permissions will have been assigned to `sm_s3_user`. 
 
 To edit permissions for this user, navigate to Storage > Storage VMs, click the name of the SVM that you created in the previous step, click Settings, and then click the pencil icon next to "S3." To give `sm_s3_user` full access to all S3 API operations, create a new group that associates `sm_s3_user` with the `FullAccess` policy as depicted in the following screenshot.
@@ -282,7 +282,7 @@ For further details on sizing guide, refer to link:https://community.intel.com/t
 Enterprise RAG systems and LLMs are technologies that work together to help organizations provide accurate and context-aware responses. These responses involve information retrieval based on a vast collection of private and internal enterprise data. By using RAG, APIs, vector embeddings, and high-performance storage systems to query document repositories that contain company data, the data is processed faster and securely. The NetApp AIPod Mini combines NetApp's intelligent data infrastructure with ONTAP data management capabilities and Intel Xeon 6 processors, Intel® AI for Enterprise RAG, and the OPEA software stack to help deploy high-performance RAG applications and put organizations on the path to AI leadership. 
 
 == Acknowledgment
-This document is authored by Sathish Thyagarajan, Michael Ogelsby and Arpita Mahajan, members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Anna Alberska, Maciej Cichocki, Shreejan Mistry, Nicholas Rago and Ned Fiori-as well as other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio, for their continued support and help during the solution validation process.
+This document is authored by Sathish Thyagarajan, Michael Oglesby and Arpita Mahajan, members of the NetApp Solutions Engineering team. The authors would also like to thank the Enterprise AI product team at Intel—Ajay Mungara, Mikolaj Zyczynski, Igor Konopko, Ramakrishna Karamsetty, Michal Prostko, Anna Alberska, Maciej Cichocki, Shreejan Mistry, Nicholas Rago and Ned Fiori-as well as other team members at NetApp—Lawrence Bunka, Bobby Oommen, and Jeff Liborio, for their continued support and help during the solution validation process.
 
 == Bill of Materials
 The following was the BOM used for the functional validation of this solution and can be used for reference. Any server or networking component (or even existing network with preferably 100GbE bandwidth) that aligns with the following configuration could be used.

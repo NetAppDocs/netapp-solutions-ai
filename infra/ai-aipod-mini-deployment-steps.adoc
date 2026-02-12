@@ -118,12 +118,12 @@ Note: If a deploy node is used to deploy the ERAG, ensure that passwordless SSH 
 === 5. Verify connectivity
 [source,cli]
 ----
-ansible all -i inventory<cluster-name>/inventory.ini -m ping 
+ansible all -i inventory/<cluster-name>/inventory.ini -m ping 
 ----
 Note: If you do not have passwordless sudo set up on your nodes, then you will need to add --ask-become-pass to this command. When using --ask-become-pass, it is critical that the ssh user have the SAME password on each node.
 
 === 6. Edit `config.yaml` file
-Prepare the deployment by editing `inventory/,cluster-name./config.yaml` to reflect your environment specifics.
+Prepare the deployment by editing `inventory/<cluster-name>/config.yaml` to reflect your environment specifics.
 
 [source,cli]
 ----
@@ -176,7 +176,7 @@ Refer to the https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/[Insta
 Retrieve the kubeconfig file from `<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf`.
 
 === 10. Install MetalLB in Kubernetes cluster
-Install Metallb using helm on your Kubernetes cluster.
+Install MetalLB using helm on your Kubernetes cluster.
 
 [source,cli]
 ----
