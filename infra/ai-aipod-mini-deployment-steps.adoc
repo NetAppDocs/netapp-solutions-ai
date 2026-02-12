@@ -65,7 +65,7 @@ git checkout tags/release-2.0.1
 ----
 cd deployment/
 sudo apt-get install python3.11-venv
-Python3.11 -m venv erag-venv
+python3 -m venv erag-venv
 source erag-venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -183,7 +183,7 @@ Install MetalLB using helm on your Kubernetes cluster.
 helm repo add metallb https://metallb.github.io/metallb
 helm -n metallb-system install metallb metallb/metallb --create-namespace
 ----
-Refer to the https://metallb.io/installation/[MetalLb Installation] for details.
+Refer to the https://metallb.io/installation/[MetalLB Installation] for details.
 
 === 11. Configure MetalLB 
 MetalLB was configured in Layer 2 mode, and the required IPAddressPool and L2Advertisement resources were created in accordance with the documented configuration guidelines.
@@ -227,7 +227,7 @@ Edit `config.yaml` and apply the following configuration changes:
 
 - FQDN: Specify the fully qualified domain name used to access the deployment.
 - Volume access mode: Under the gmc.pvc section, set `accessMode: ReadWriteMany` to support concurrent access to model volumes across multiple pods.
-Ingress configuration: Configure the ingress service_type as LoadBalancer to enable external access to the application.
+- Ingress configuration: Configure the ingress service_type as LoadBalancer to enable external access to the application.
 - S3 storage details: Set storageType to s3compatible and configure ONTAP S3 parameters, including region, access credentials, internal and external endpoints.
 - SSL certificate verification: Set edpInternalCertVerify and edpExternalCertVerify to false only when ONTAP S3 is configured with self-signed certificates. If certificates are issued by a publicly trusted CA, these parameters should remain enabled.
 
