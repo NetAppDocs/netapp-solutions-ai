@@ -1,0 +1,70 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-intro.html
+keywords: Lustre, NetApp E-Series, EF80, EF600, HPC, AI, parallel file system, NVMe-oF, high-performance storage
+summary: Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using NetApp EF-Series all-flash arrays and a building block architecture.
+---
+
+= Lustre with NetApp E-Series Storage - Introduction
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Deploy a high-performance Lustre parallel file system on NetApp E-Series all-flash storage to deliver scalable throughput and metadata performance for AI, machine learning (ML), and high-performance computing (HPC) workloads.
+
+NetApp Solution Engineering
+
+== Executive summary
+
+Lustre with NetApp E-Series Storage combines the open-source Lustre parallel file system with NetApp EF-Series block storage to provide a simple, reliable, and scalable storage foundation for data-intensive workloads. The solution uses a repeatable *building block* design: each building block consists of two OSS/MDS server nodes and two E-Series arrays connected over NVMe-oF, with a separate high-speed fabric for Lustre networking (LNet).
+
+The validated standard building block uses NetApp EF80 all-flash arrays and a six-host-channel-adapter (HCA) server topology. The same building block model applies to other supported E-Series platforms; connectivity and pool layout vary by array model and drive type. You deploy and operate the solution using NetApp-provided Ansible automation and NetApp-built Lustre packages.
+
+This document set describes the solution architecture, technical requirements, deployment workflow, and sizing guidance for Lustre with NetApp E-Series Storage.
+
+== Standard building block
+
+Each building block is the fundamental unit of capacity and performance:
+
+* 2× OSS/MDS server nodes in a two-node high availability (HA) cluster
+* 2× NetApp E-Series NVMe arrays
+* Backend connectivity over NVMe-oF (NVMe/InfiniBand or NVMe/RoCE)
+* Frontend connectivity for LNet over IPoIB or RoCE
+
+A base building block provides one management service (MGS), eight metadata targets (MDTs), and thirty-two object storage targets (OSTs). You add building blocks to scale capacity and aggregate performance linearly.
+
+== Supported E-Series platforms
+
+NetApp EF80 is the latest EF-Series platform and the validated standard for this solution release. NetApp EF600 and other EF-Series models are also supported. The building block concept is the same across platforms, but overall architecture varies by model—for example, EF80 uses six HCAs and eight NVMe-oF paths to each array, while EF600 uses four HCAs and four paths to each array.
+
+For platform specifications, see link:ai-eseries-lustre-requirements.html[Technical requirements] and the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
+
+== Server model
+
+The solution uses a bring-your-own-server (BYOS) model. You deploy Lustre services on customer-provided servers that meet the requirements in link:ai-eseries-lustre-requirements.html[Technical requirements]. NetApp validated the solution using Lenovo ThinkSystem SR665 V3 servers; equivalent servers from other vendors are supported when they meet the same requirements.
+
+== Software and compatibility
+
+Supported operating system, kernel, Lustre, firmware, and driver versions change over time. Do not rely on version numbers in this document. Use the NetApp Interoperability Matrix Tool (IMT) as the authoritative source:
+
+link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^]
+
+In IMT, search for *E-Series Lustre* to find supported software and hardware combinations for your deployment.
+
+== Deployment automation
+
+NetApp provides Ansible collections and deployment templates to provision E-Series storage, configure Lustre HA services, and deploy clients. For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].
+
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp ansible-lustre collection^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master[NetApp-built Lustre RPMs (netapp-lustre)^]
+
+== Document overview
+
+* link:ai-eseries-lustre-architecture.html[Solution architecture] — building blocks, scaling, HA, and network design
+* link:ai-eseries-lustre-requirements.html[Technical requirements] — servers, arrays, storage layout, and software
+* link:ai-eseries-lustre-deploy.html[Deploy the solution] — high-level deployment workflow with links to the runbook
+* link:ai-eseries-lustre-validation.html[Validation and sizing] — capacity guidance and scaling decisions
+* link:ai-eseries-lustre-conclusion.html[Additional information] — related documentation and references

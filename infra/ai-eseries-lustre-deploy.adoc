@@ -1,0 +1,175 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-deploy.html
+keywords: Lustre, NetApp E-Series, EF80, deployment, Ansible, NVMe-oF, runbook
+summary: Lustre with NetApp E-Series Storage - High-level deployment workflow using NetApp Ansible automation and customizable inventory templates.
+---
+
+= Lustre with NetApp E-Series Storage - Deploy the Solution
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section describes the high-level deployment workflow for Lustre with NetApp E-Series Storage. Detailed procedures, inventory examples, and command references are in the NetApp ansible-lustre collection and deployment templates on GitHub.
+
+== Before you begin
+
+Complete the following before you start deployment:
+
+. Confirm that your servers, E-Series arrays, and network fabric appear in IMT for the *E-Series Lustre* solution.
++
+link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^]
+
+. Choose your building block type (base, MDT+OST, or OST-only).
+. Choose your fabric (InfiniBand or RoCE) and E-Series platform (EF80 six-HCA topology for new deployments).
+. Choose your drive layout (TLC with RAID6 volume groups, or QLC with DDP).
+. Prepare an Ansible control node with the required collections installed.
+
+For requirements, see link:ai-eseries-lustre-requirements.html[Technical requirements]. For architecture context, see link:ai-eseries-lustre-architecture.html[Solution architecture].
+
+== Deployment overview
+
+The deployment workflow consists of seven phases. Each phase maps to playbooks in the link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection^].
+
+. Prepare hardware and network
+. Configure E-Series arrays
+. Prepare server operating systems
+. Customize the Ansible inventory
+. Deploy the Lustre HA cluster
+. Deploy Lustre clients
+. Verify the deployment
+
+NOTE: IP addresses, hostnames, interface names, and volume sizing in the deployment templates are examples. Modify all inventory files for your environment before you run any playbook.
+
+== Phase 1: Prepare hardware and network
+
+. Rack and cable two OSS/MDS servers and two E-Series arrays per building block.
+. Cable the backend NVMe-oF network between servers and arrays according to your platform topology (six-HCA for EF80, four-HCA for EF600).
+. Cable the frontend LNet fabric (IPoIB or RoCE) for Lustre client and inter-node communication.
+. Configure out-of-band management for server BMCs and array management ports.
+. Configure your RoCE fabric for lossless operation (PFC) if you use RoCE.
+
+== Phase 2: Configure E-Series arrays
+
+Configure array management addresses, NVMe-oF port addressing, and initial SANtricity settings.
+
+. Install the link:https://github.com/NetApp/ansible-lustre[ansible-lustre^] and link:https://github.com/NetApp/ansible-santricity[ansible-santricity^] collections on the Ansible control node.
+. Copy the deployment template inventory for your fabric and platform.
+. Update array management IP addresses and NVMe-oF port configuration in the `host_vars` files for each array.
+. Run the storage array configuration playbook:
+
+[source,bash]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml \
+  configure_storage_array_playbook.yml
+----
+
+This playbook provisions volume groups or DDP pools and creates volumes for MGS, MDT, and OST targets according to your inventory.
+
+== Phase 3: Prepare server operating systems
+
+Prepare each OSS/MDS node with the supported operating system, kernel, NVIDIA networking packages, and NetApp-built Lustre packages.
+
+. Install the operating system and enable required repositories (see IMT).
+. Run the OS preparation and NVIDIA package playbooks from the deployment template:
+
+[source,bash]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml \
+  deploy_lustre_os/deploy_lustre_os_playbook.yml
+
+ansible-playbook -i <inventory_path>/lustre_inventory.yml \
+  deploy_nvidia_packages/deploy_nvidia_packages_playbook.yml
+----
+
+. Install NetApp-built Lustre packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^].
+
+== Phase 4: Customize the Ansible inventory
+
+Copy and customize the deployment template inventory for your site.
+
+=== Deployment templates
+
+Start from the template that matches your fabric and platform:
+
+* *InfiniBand, EF80 (four-HCA legacy template):* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1[IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1^]
+* *RoCE, EF80 (six-HCA template):* Available in a future ansible-lustre release. Use the local `ROCE_H2_6HCA_RoCE_DAC_A2_EF80` template as a reference until the published path is available.
+
+=== Inventory files to customize
+
+Customize at minimum the following files:
+
+* `lustre_inventory.yml` — host groups, HA resource group membership, and building block structure
+* `host_vars/<server>.yml` — management IP, NVMe-oF interface addresses, LNet addresses, and Corosync IPs
+* `host_vars/<array>.yml` — array management IP, NVMe-oF port addresses, and protocol settings
+* `group_vars/mgs.yml`, `group_vars/mds_*.yml`, `group_vars/oss_*.yml` — volume layout, segment size, and Lustre target configuration
+* `group_vars/ha_cluster.yml` — Pacemaker properties, fencing, and udev rules
+* `group_vars/eseries_storage_systems.yml` — global array defaults and drive selection order
+
+Set building block type by including or excluding MGS and MDS resource groups in the inventory. For an OST-only expansion building block, include OSS resource groups only and register targets against the existing MGS using `mgsnode=`.
+
+== Phase 5: Deploy the Lustre HA cluster
+
+Run the main Lustre deployment playbook:
+
+[source,bash]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml \
+  lustre_playbook.yml
+----
+
+This playbook performs the following tasks:
+
+* Configures NVMe-oF host connectivity to E-Series volumes
+* Formats and mounts Lustre targets (MGS, MDT, OST)
+* Configures LNet on all server nodes
+* Applies performance tuning parameters
+* Configures Pacemaker HA resources for all Lustre targets
+
+For role tags and incremental execution options, see the lustre role documentation in the collection.
+
+== Phase 6: Deploy Lustre clients
+
+Deploy Lustre clients on compute nodes that require filesystem access.
+
+. Install Lustre client packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] or use the `lustre_client` Ansible role.
+. Configure LNet on each client to match the server frontend fabric.
+. Mount the filesystem using the MGS NIDs and filesystem name from your deployment.
+
+Example mount command (replace NIDs and filesystem name with your values):
+
+[source,bash]
+----
+mount -t lustre <nid1>@o2ib,<nid2>@o2ib,...:/<fsname> /mnt/<fsname>
+----
+
+== Phase 7: Verify the deployment
+
+Verify that the deployment completed successfully:
+
+. Confirm that all Pacemaker resources are started on the expected nodes.
+. Confirm that all MDT and OST targets are mounted and visible in `mount` output.
+. Run `lfs df -h` from a client or server node to confirm filesystem capacity.
+. Write and read test files from a Lustre client.
+. Test HA failover by stopping a target resource on one node and confirming that it starts on the partner node.
+
+== Expand the filesystem
+
+To add capacity or metadata performance, deploy an additional building block and register it against the existing MGS:
+
+. Deploy a new building block (MDT+OST or OST-only) using the same workflow above.
+. Assign globally unique MDT and OST indices in the inventory.
+. Set the `mgsnode=` parameter to reference the existing MGS NIDs.
+. Ensure the new building block uses the same `fsname` and LNet fabric as the existing filesystem.
+
+See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-validation.html[Validation and sizing] for guidance on when to add each building block type.
+
+== Related runbook documentation
+
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection README^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre RPM repository^]
+* HA administration: `roles/lustre/docs/ha_user_guide.md` in the ansible-lustre collection
+* Performance tuning: `roles/lustre/docs/performance_tuning.md` in the ansible-lustre collection

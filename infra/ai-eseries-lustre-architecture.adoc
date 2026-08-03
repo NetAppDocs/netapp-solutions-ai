@@ -1,0 +1,193 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-architecture.html
+keywords: Lustre, NetApp E-Series, EF80, EF600, building block, NVMe-oF, LNet, Pacemaker, HA, scaling
+summary: Lustre with NetApp E-Series Storage - Solution architecture, building block design, scaling rules, and network topology for EF80 and other supported platforms.
+---
+
+= Lustre with NetApp E-Series Storage - Solution Architecture
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section describes the building block architecture, scaling model, high availability design, and network topology for Lustre with NetApp E-Series Storage.
+
+== Building block definition
+
+A *building block* is the fundamental scalable unit of the solution. Each building block contains:
+
+* 2× OSS/MDS server nodes configured as a two-node HA cluster
+* 2× NetApp E-Series all-flash arrays
+* Dedicated backend NVMe-oF connectivity between servers and arrays
+* Dedicated frontend LNet connectivity for Lustre clients and inter-node communication
+
+Both server nodes run Lustre target services (MGS, MDT, and/or OST) managed by Pacemaker. Each Lustre target is an HA resource that runs on one node at a time and fails over to the partner node when required.
+
+== Building block types
+
+You deploy one of three building block types depending on filesystem growth requirements.
+
+.Building block types
+|===
+| Type | MGS | MDTs | OSTs | Use
+
+| Base
+| 1
+| 8
+| 32
+| First building block in a filesystem. Hosts the MGS and initial MDT and OST capacity.
+
+| MDT+OST
+| 0
+| 8
+| 32
+| Adds metadata and data capacity. Register against the base building block MGS.
+
+| OST-only
+| 0
+| 0
+| 32
+| Adds data capacity only. Register against the base building block MGS.
+|===
+
+== Scaling rules
+
+Follow these rules when you add building blocks to a filesystem:
+
+. Deploy exactly *one* base building block per filesystem. The base building block hosts the MGS.
+. Register additional building blocks against the base building block MGS using the `mgsnode=` mount option.
+. Assign *globally unique* MDT and OST indices across all building blocks in the filesystem.
+. Use the same `fsname` and LNet fabric for all building blocks.
+. Limit each Pacemaker/Corosync cluster to *five building blocks* (ten server nodes). Split larger deployments evenly across additional HA clusters to avoid resource constraints in large Pacemaker configurations.
+
+=== When to add metadata capacity
+
+Add an MDT+OST building block when metadata performance or namespace capacity becomes a bottleneck. Scale MDTs based on file count and metadata IOPS, not storage capacity alone. Monitor `mdt.*.md_stats` on existing MDTs to determine when additional metadata targets are required.
+
+=== Linear scale-out
+
+Each building block adds two server nodes and two arrays, increasing aggregate bandwidth through additional OSTs and NVMe-oF paths. Adding OST-only building blocks increases usable capacity and read/write throughput. Adding MDT+OST building blocks increases both metadata and data capacity.
+
+== High availability
+
+The solution uses Pacemaker and Corosync to manage Lustre target failover between the two server nodes in each building block. Each MGS, MDT pair, and OST pair is configured as an HA resource.
+
+* STONITH fencing is required. NetApp recommends `fence_redfish` for servers with Redfish-capable baseboard management controllers (BMCs).
+* Both server nodes are peers in the cluster, but each target is active on only one node at a time.
+* Server nodes access all four array controllers through multiple NVMe-oF paths so that targets can fail over without losing array connectivity.
+
+For cluster administration tasks, see the HA user guide in the link:https://github.com/NetApp/ansible-lustre[ansible-lustre collection^].
+
+== Network architecture
+
+The solution uses separate network paths for storage backend traffic and Lustre frontend traffic.
+
+=== Backend: NVMe-oF
+
+Servers connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. This path carries block I/O between Lustre target services and E-Series volumes. Both InfiniBand and RoCE are validated backend transports.
+
+=== Frontend: LNet
+
+Lustre clients and server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. IPoIB (InfiniBand) and RoCE are both validated for the frontend fabric.
+
+Configure multi-rail LNet when multiple frontend interfaces are available to increase bandwidth and redundancy.
+
+== Platform connectivity
+
+The building block model is consistent across E-Series platforms. Connectivity to the arrays varies by platform generation.
+
+.Platform connectivity comparison
+|===
+| Attribute | EF80 (standard) | EF600
+
+| HCAs per OSS/MDS node
+| 6 (12 ports)
+| 4 (8 ports)
+
+| NVMe-oF paths to each array
+| 8
+| 4
+
+| Array I/O ports (max, per datasheet)
+| 12× 200Gb NVMe/IB or NVMe/RoCE
+| 4× 200Gb NVMe/IB or NVMe/RoCE
+
+| SANtricity OS (minimum)
+| 12.0
+| 11.90 GA
+|===
+
+=== EF80 six-HCA topology
+
+On EF80, each OSS/MDS node uses six dual-port HCAs (twelve ports total):
+
+.HCA assignment (EF80)
+|===
+| HCA | Interfaces | Role
+
+| 1
+| i1a, i1b
+| LNet / cluster fabric
+
+| 2
+| i2a, i2b
+| NVMe-oF to array 1
+
+| 3
+| i3a, i3b
+| NVMe-oF to array 1
+
+| 4
+| i4a, i4b
+| LNet / cluster fabric
+
+| 5
+| i5a, i5b
+| NVMe-oF to array 2
+
+| 6
+| i6a, i6b
+| NVMe-oF to array 2
+|===
+
+HCAs 2 and 3 provide redundant, NUMA-local paths to array 1. HCAs 5 and 6 provide redundant, NUMA-local paths to array 2. Both server nodes use identical cabling to both arrays so that any target can fail over and retain multipath access to storage.
+
+=== EF600 four-HCA topology
+
+On EF600, each OSS/MDS node uses four dual-port HCAs. One port on each HCA connects to NVMe-oF storage and the other port connects to the LNet fabric, yielding four NVMe-oF paths to each array. See the Ansible deployment template for your platform and fabric for interface naming and addressing details.
+
+NOTE: Per-port cabling and IP addressing are site-specific. The Ansible inventory template for your fabric and platform contains the authoritative interface layout. Do not copy example addresses from this document into a production deployment.
+
+== Storage layout (base building block)
+
+Each base building block provisions the following Lustre targets:
+
+* 1× MGS
+* 8× MDT
+* 32× OST
+
+=== Drive type and pool layout
+
+E-Series supports traditional RAID volume groups and Dynamic Disk Pools (DDP). Choose the layout based on drive type:
+
+* *TLC NVMe drives:* Use RAID6 volume groups for OST storage and RAID1 volume groups for MGS and MDT storage.
+* *QLC NVMe drives:* Use Dynamic Disk Pools (DDP) for the shared drive pool, with RAID1 volume groups inside the DDP for MGS and MDT volumes.
+
+Use a 32 KB segment size for MGS, MDT, and OST volumes. For detailed volume counts and sizing, see link:ai-eseries-lustre-requirements.html[Technical requirements].
+
+=== Target distribution (base building block)
+
+On a two-node base building block, targets are distributed across both servers and both arrays:
+
+* *MGS:* One target on array 1 (base building block only)
+* *MDT:* Four targets per server (eight total), balanced across both arrays
+* *OST:* Sixteen targets per server (thirty-two total), balanced across both arrays
+
+== Lustre clients
+
+Lustre clients are not part of a building block. Clients mount the filesystem over LNet and access data in parallel across all active OSTs. Deploy clients on compute nodes using the `lustre_client` role in the link:https://github.com/NetApp/ansible-lustre[ansible-lustre collection^] or by installing NetApp-built Lustre client packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^].
+
+Clients require connectivity to the same LNet fabric as the OSS/MDS server nodes.

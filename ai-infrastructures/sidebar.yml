@@ -32,6 +32,21 @@ entries:
   - title: "BeeGFS on NetApp with E-Series storage"
     pdf-filename: "BeeGFS on NetApp with E-Series storage"
     url: /infra/ai-eseries-beegfs.html
+  - title: "Lustre with NetApp E-Series storage"
+    pdf-filename: "Lustre with NetApp E-Series storage"
+    entries:
+      - title: "Introduction"
+        url: /infra/ai-eseries-lustre-intro.html
+      - title: "Solution architecture"
+        url: /infra/ai-eseries-lustre-architecture.html
+      - title: "Technical requirements"
+        url: /infra/ai-eseries-lustre-requirements.html
+      - title: "Deploy the solution"
+        url: /infra/ai-eseries-lustre-deploy.html
+      - title: "Validation and sizing guidance"
+        url: /infra/ai-eseries-lustre-validation.html
+      - title: "Conclusion and additional information"
+        url: /infra/ai-eseries-lustre-conclusion.html
   - title: "Deploy IBM Spectrum Scale with E-Series storage"
     pdf-filename: "Deploy IBM Spectrum Scale with E-Series storage"
     url: /infra/ai-eseries-spectrumscale.html

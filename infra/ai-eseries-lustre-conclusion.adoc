@@ -1,0 +1,49 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-conclusion.html
+keywords: Lustre, NetApp E-Series, EF80, documentation, references, Ansible
+summary: Lustre with NetApp E-Series Storage - Additional information, related documentation, and references.
+---
+
+= Lustre with NetApp E-Series Storage - Conclusion and Additional Information
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section provides links to related documentation and references for Lustre with NetApp E-Series Storage.
+
+== Conclusion
+
+Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using a repeatable building block architecture. NetApp EF80 arrays and six-HCA server connectivity provide the highest level of performance in the EF-Series portfolio, while the same building block model extends to other supported E-Series platforms. Ansible automation and NetApp-built Lustre packages simplify deployment and reduce operational complexity.
+
+== NetApp documentation and tools
+
+* link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^] — search for *E-Series Lustre*
+* link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^]
+* link:https://docs.netapp.com/us-en/e-series-santricity/[NetApp SANtricity System Manager documentation^]
+* link:ai-eseries-lustre-intro.html[Lustre with NetApp E-Series Storage solution pages]
+
+== Deployment and software
+
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp ansible-lustre collection^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master[NetApp-built Lustre RPMs (netapp-lustre)^]
+* link:https://github.com/NetApp/ansible-santricity[NetApp ansible-santricity collection^]
+* link:https://github.com/NetApp/ansible-host[NetApp ansible-host collection^]
+
+== Lustre resources
+
+* link:https://www.lustre.org/[Lustre file system^]
+* Lustre documentation included with NetApp-built packages
+
+== Related NetApp AI infrastructure solutions
+
+* link:ai-eseries-beegfs.html[BeeGFS on NetApp with E-Series Storage]
+* link:ai-eseries-spectrumscale.html[Deploying IBM Spectrum Scale with NetApp E-Series Storage]
+* link:ai-eseries-superpod.html[NVIDIA DGX SuperPOD with NetApp EF-series]
+
+== Acknowledgements
+
+This document is the work of the NetApp Solution Engineering team.

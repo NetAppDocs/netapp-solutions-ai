@@ -1,0 +1,275 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-requirements.html
+keywords: Lustre, NetApp E-Series, EF80, EF600, requirements, TLC, QLC, RAID6, DDP, NVMe-oF, BYOS
+summary: Lustre with NetApp E-Series Storage - Technical requirements for servers, EF80 building blocks, storage layout, network, and supported software versions.
+---
+
+= Lustre with NetApp E-Series Storage - Technical Requirements
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section lists the technical requirements for servers, NetApp E-Series storage, networking, and software for the Lustre with NetApp E-Series Storage solution.
+
+== Server requirements
+
+The solution uses a bring-your-own-server (BYOS) model. Each building block requires two server nodes that meet or exceed the following specifications.
+
+.Server requirements (per OSS/MDS node)
+|===
+| Component | Requirement
+
+| Quantity
+| 2 nodes per building block
+
+| Operating system
+| See IMT (search *E-Series Lustre*)
+
+| Lustre version
+| See IMT (search *E-Series Lustre*)
+
+| CPU
+| AMD EPYC or Intel Xeon, 32 cores or higher
+
+| Memory
+| 256 GB DDR5 (minimum)
+
+| Network HCAs
+| Platform-dependent (see <<platform-connectivity,Platform connectivity>>)
+
+| Boot drives
+| 2× drives in RAID 1 (software or hardware RAID recommended)
+
+| Local storage
+| None required; all Lustre data resides on E-Series arrays via NVMe-oF
+|===
+
+NetApp validated the solution using Lenovo ThinkSystem SR665 V3 servers. Equivalent servers from other vendors are supported when they meet these requirements and appear in IMT for the *E-Series Lustre* solution.
+
+[[platform-connectivity]]
+=== Platform connectivity
+
+.HCA requirements by E-Series platform
+|===
+| Platform | HCAs per node | NVMe-oF paths to each array | Example HCA
+
+| EF80
+| 6 (12 ports)
+| 8
+| Mellanox ConnectX-7
+
+| EF600
+| 4 (8 ports)
+| 4
+| Mellanox ConnectX-7 or equivalent
+|===
+
+== EF80 standard building block
+
+The EF80 is the validated standard platform for this solution release.
+
+=== Array specifications
+
+.EF80 array (per building block, two arrays)
+|===
+| Component | Specification
+
+| Model
+| NetApp EF80
+
+| Form factor
+| 2U base chassis, 24 internal NVMe SSD slots
+
+| Controllers
+| Dual active controllers (A and B)
+
+| Drives
+| 24× NVMe SSD per array
+
+| I/O connectivity
+| Up to 12× 200Gb NVMe/IB or NVMe/RoCE ports per array
+
+| SANtricity OS
+| 12.0 or later
+
+| Segment size
+| 32 KB (all volume types)
+|===
+
+For full EF-Series specifications across all models, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
+
+=== Drive layout (24 drives per array)
+
+Each EF80 array in a base building block uses all twenty-four NVMe drive slots:
+
+* 4× drives in RAID 1 for MGS/MDT storage (shared volume group or DDP allocation)
+* 10× drives in RAID 6 for OST storage (first OST pool)
+* 10× drives in RAID 6 for OST storage (second OST pool)
+
+This layout applies when using TLC drives with traditional volume groups. When using QLC drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID1 volume groups inside the pool for MGS and MDT volumes.
+
+=== Volume and target counts (base building block)
+
+.Base building block targets
+|===
+| Target type | Count per BB | RAID / pool | Notes
+
+| MGS
+| 1
+| RAID 1
+| Base building block only; array 1
+
+| MDT
+| 8
+| RAID 1
+| 4 per array
+
+| OST
+| 32
+| RAID 6 (TLC) or DDP (QLC)
+| 16 per array
+|===
+
+.Volume sizing guidelines
+|===
+| Volume | Recommended size | Notes
+
+| MGS
+| 5–10 GiB
+| Configuration data only
+
+| MDT
+| RAID 1 capacity ÷ MDT count
+| Approximately 1–2 TiB each (typical)
+
+| OST
+| RAID 6 pool capacity ÷ OST count per pool
+| Approximately 22 TiB each (typical, TLC layout)
+|===
+
+=== Primary building block volume distribution
+
+*Array 1 (13 volumes):*
+
+* 1× MGS
+* 4× MDT
+* 16× OST (8 per RAID 6 pool × 2 pools, or equivalent DDP allocation)
+
+*Array 2 (12 volumes):*
+
+* 4× MDT
+* 16× OST
+
+=== Target assignment per server
+
+*OSS/MDS server 1:*
+
+* MGS: 1 (base building block only)
+* MDT: 4 (2 from each array)
+* OST: 16 (8 from each array)
+
+*OSS/MDS server 2:*
+
+* MDT: 4 (2 from each array)
+* OST: 16 (8 from each array)
+
+== Other E-Series platforms
+
+NetApp EF600 and other EF-Series models are supported with the same building block target counts (1 MGS, 8 MDT, 32 OST per base building block). Connectivity, port counts, and maximum performance differ by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
+
+== Storage pool selection: TLC vs QLC
+
+Choose the E-Series pool type based on the NVMe drive type in your arrays:
+
+* *TLC drives:* Use *RAID6 volume groups* for OST volumes. Use *RAID1 volume groups* for MGS and MDT volumes.
+* *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+
+Use a 32 KB segment size for all volume types regardless of pool type.
+
+== Network requirements
+
+=== Backend (NVMe-oF)
+
+* NVMe/InfiniBand or NVMe/RoCE between each OSS/MDS node and each E-Series array
+* MTU 9000 on NVMe/RoCE backend interfaces (typical)
+* Eight paths per array on EF80 (four per array on EF600)
+
+=== Frontend (LNet)
+
+* IPoIB or RoCE for LNet (`@o2ib` network type)
+* MTU 9216 on RoCE frontend interfaces (typical)
+* Multi-rail LNet recommended when four frontend ports are available (EF80: i1 and i4 HCAs, both ports)
+* Lossless RoCE (PFC) recommended on RoCE fabrics
+
+=== Management
+
+* Out-of-band management network for server BMCs and array management ports
+* Dedicated Corosync network or shared frontend fabric (site-dependent)
+
+== Software requirements
+
+Do not use version numbers in this document as the authoritative source. Supported combinations change over time.
+
+Use the NetApp Interoperability Matrix Tool (IMT):
+
+link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^]
+
+Search for *E-Series Lustre* to find supported versions of:
+
+* Operating system and Lustre-patched kernel
+* NetApp-built Lustre packages
+* SANtricity OS and array firmware
+* NVIDIA MOFED/DOCA and HCA firmware
+* Pacemaker, Corosync, and fencing agents
+
+Install NetApp-built Lustre packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^].
+
+== Lustre target format parameters
+
+Lustre targets use the `ldiskfs` backend file system. Configure `mkfs.lustre` options to align with E-Series volume geometry.
+
+=== OST format options
+
+.OST mkfs.lustre options (typical)
+|===
+| Parameter | Value | Rationale
+
+| `-E stride=8`
+| 32 KB segment ÷ 4 KB block
+| Aligns to E-Series 32 KB segment size
+
+| `-E stripe-width=64`
+| 8 stride × 8 data drives
+| Aligns to RAID6 full stripe (8 data drives in 10-drive RAID6)
+
+| `-i 1048576`
+| 1 MiB inode spacing
+| Lustre default for OSTs larger than 8 TiB
+
+| `-I 512`
+| 512-byte inodes
+| Sufficient for OST extended attribute storage
+|===
+
+Example Ansible inventory setting:
+
+[source,yaml]
+----
+mkfsoptions: "-E stride=8,stripe-width=64 -i 1048576 -I 512"
+----
+
+The Ansible collection applies format options during deployment. Customize options in your inventory when your RAID geometry differs from the standard building block layout.
+
+== Client requirements
+
+Lustre clients require:
+
+* A supported client operating system and Lustre client packages (see IMT, *E-Series Lustre*)
+* Connectivity to the LNet frontend fabric
+* NetApp-built Lustre client packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] or deployment via the `lustre_client` Ansible role
+
+Clients are deployed independently of building blocks. See link:ai-eseries-lustre-deploy.html[Deploy the solution] for client deployment steps.
