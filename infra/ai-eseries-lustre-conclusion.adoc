@@ -21,7 +21,7 @@ Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file
 
 == NetApp documentation and tools
 
-* link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^] — search for *E-Series Lustre*
+* link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^] - search for *E-Series Lustre*
 * link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^]
 * link:https://docs.netapp.com/us-en/e-series-santricity/[NetApp SANtricity System Manager documentation^]
 * link:ai-eseries-lustre-intro.html[Lustre with NetApp E-Series Storage solution pages]

@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-validation_sizing.html
 keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance
-summary: Lustre with NetApp E-Series Storage - Sizing guidance, scaling decisions, and validation methodology for base and expansion building blocks.
+summary: Lustre with NetApp E-Series Storage - Sizing guidance, scaling decisions, and validation methodology for base and additional building blocks.
 ---
 
 = Lustre with NetApp E-Series Storage - Validation and Sizing Guidance
@@ -36,7 +36,7 @@ A base building block with two EF80 arrays and TLC NVMe drives provides the foll
 | Approximately 22 TiB each (TLC, RAID6 layout)
 |===
 
-Usable capacity depends on drive capacity, RAID level, and volume allocation percentages in your Ansible inventory. Use the volume sizing percentages in your deployment template as a starting point and adjust for your overprovisioning requirements.
+Usable capacity depends on drive capacity, RAID level, and volume allocation percentages in the Ansible inventory. Use the volume sizing percentages in the deployment template as a starting point and adjust for overprovisioning requirements.
 
 For array-level performance specifications, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^]. EF80 supports up to 5,000,000 IOPS and 57 GB/s write bandwidth per array under peak conditions.
 
@@ -47,7 +47,7 @@ NOTE: Published solution validation benchmark results will be added after formal
 === Add an OST-only building block when:
 
 * File count and metadata load are within capacity of existing MDTs
-* You need additional storage capacity and aggregate read/write throughput
+* Additional storage capacity and aggregate read/write throughput are required
 * `mdt.*.md_stats` on existing MDTs show no metadata saturation
 
 An OST-only building block adds 32 OSTs and two server nodes without adding MGS or MDT capacity.
@@ -56,7 +56,7 @@ An OST-only building block adds 32 OSTs and two server nodes without adding MGS 
 
 * File count or metadata operation rate is approaching MDT capacity
 * `mdt.*.md_stats` on existing MDTs show elevated operation rates or latency
-* You need both additional metadata throughput and data capacity
+* Both additional metadata throughput and data capacity are required
 
 An MDT+OST building block adds 8 MDTs and 32 OSTs.
 
@@ -103,9 +103,9 @@ BB2 registers its OST targets against the MGS in BB1 using `mgsnode=`. OST indic
 
 Formal validation testing uses industry-standard HPC I/O benchmarks to characterize throughput, IOPS, and metadata performance:
 
-* *IOR* — sequential and random read/write throughput at scale
-* *mdtest* — metadata operation rates (create, stat, remove)
-* *fio* — single-node and multi-node block-level characterization
+* *IOR* - sequential and random read/write throughput at scale
+* *mdtest* - metadata operation rates (create, stat, remove)
+* *fio* - single-node and multi-node block-level characterization
 
 Tests run from Lustre clients connected to the frontend fabric, with enough clients to saturate OST aggregate bandwidth. Tests include HA failover validation to confirm target recovery within acceptable service interruption windows.
 
@@ -115,11 +115,11 @@ NOTE: Validation results, including measured throughput, metadata rates, and sca
 
 == Sizing worksheet
 
-Use the following checklist when you size a deployment:
+Use the following checklist when sizing a deployment:
 
 . Determine total usable capacity required today and at full scale-out.
 . Estimate file count and metadata operation rate to determine MDT count.
-. Calculate the number of base and expansion building blocks required.
+. Calculate the number of base and additional building blocks required.
 . Confirm that the total building block count per HA cluster does not exceed five.
 . Confirm that server, HCA, and array models appear in IMT for *E-Series Lustre*.
 . Select TLC (RAID6) or QLC (DDP) layout based on drive type.

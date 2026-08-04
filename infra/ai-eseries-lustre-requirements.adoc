@@ -179,11 +179,11 @@ This layout applies when using TLC drives with traditional volume groups. When u
 
 == Other E-Series platforms
 
-NetApp EF600 and other EF-Series models are supported with the same building block target counts (1 MGS, 8 MDT, 32 OST per base building block). Connectivity, port counts, and maximum performance differ by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
+NetApp EF600 and other EF-Series models are supported with the same building block profiles. EF600 uses sixteen OSTs per building block (EF80 uses thirty-two); MGS and MDT counts are the same. Connectivity, port counts, and maximum performance differ by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
 
 == Storage pool selection: TLC vs QLC
 
-Choose the E-Series pool type based on the NVMe drive type in your arrays:
+Choose the E-Series pool type based on the NVMe drive type in the arrays:
 
 * *TLC drives:* Use *RAID6 volume groups* for OST volumes. Use *RAID1 volume groups* for MGS and MDT volumes.
 * *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
@@ -262,7 +262,7 @@ Example Ansible inventory setting:
 mkfsoptions: "-E stride=8,stripe-width=64 -i 1048576 -I 512"
 ----
 
-The Ansible collection applies format options during deployment. Customize options in your inventory when your RAID geometry differs from the standard building block layout.
+The Ansible collection applies format options during deployment. Customize options in the inventory when RAID geometry differs from the standard building block layout.
 
 == Client requirements
 
@@ -270,6 +270,6 @@ Lustre clients require:
 
 * A supported client operating system and Lustre client packages (see IMT, *E-Series Lustre*)
 * Connectivity to the LNet frontend fabric
-* NetApp-built Lustre client packages from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] or deployment via the `lustre_client` Ansible role
+* Lustre client packages built from NetApp Lustre source RPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] (see IMT, *E-Series Lustre*) or deployment via the optional `lustre_client` Ansible role
 
 Clients are deployed independently of building blocks. See link:ai-eseries-lustre-deploy.html[Deploy the solution] for client deployment steps.
