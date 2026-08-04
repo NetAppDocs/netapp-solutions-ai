@@ -135,7 +135,7 @@ For role tags and incremental execution options, see the lustre role documentati
 
 Deploy Lustre clients on compute nodes that require filesystem access.
 
-. Build or install Lustre client packages from NetApp Lustre SRPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] (see IMT, *E-Series Lustre*), or use the optional `lustre_client` Ansible role from the ansible-lustre collection.
+. Build or install Lustre client packages from NetApp Lustre SRPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] for a client operating system supported by the deployed Lustre release (see the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^]), or use the optional `lustre_client` Ansible role from the ansible-lustre collection.
 . Configure LNet on each client to match the server frontend fabric (handled by `lustre_client` when using Ansible).
 . Mount the filesystem using the MGS NIDs and filesystem name from the deployment (also managed by `lustre_client` when using Ansible).
 

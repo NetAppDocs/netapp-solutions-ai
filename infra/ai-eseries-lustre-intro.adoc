@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-intro.html
 keywords: Lustre, NetApp E-Series, EF80, EF600, HPC, AI, parallel file system, NVMe-oF, high-performance storage
-summary: Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using NetApp EF-Series all-flash arrays and a building block architecture.
+summary: Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using a repeatable building block architecture with NetApp E-Series all-flash arrays.
 ---
 
 = Lustre with NetApp E-Series Storage - Introduction
@@ -12,15 +12,17 @@ summary: Lustre with NetApp E-Series Storage delivers a validated, scalable para
 :linkattrs:
 :imagesdir: ../media/
 
+[.lead]
+Lustre with NetApp E-Series Storage is a validated parallel file system solution for AI and HPC workloads, built from repeatable building blocks of HA server pairs and E-Series all-flash arrays.
+
 == Executive summary
 
-Lustre with NetApp E-Series Storage combines the open-source Lustre parallel file system with NetApp EF-Series block storage to provide a simple, reliable, and scalable storage foundation for data-intensive workloads. The solution uses a repeatable building block design in which each building block consists of two OSS/MDS server nodes in a two-node high availability (HA) cluster, two E-Series all-flash arrays, backend connectivity over NVMe-oF, and a separate high-speed fabric for Lustre networking (LNet). A base building block provides the management service (MGS), metadata targets (MDTs), and object storage targets (OSTs). Additional building blocks scale capacity and aggregate performance linearly.
+Lustre with NetApp E-Series Storage combines the open-source Lustre parallel file system with NetApp E-Series block storage to deliver a scalable, high-performance foundation for data-intensive workloads. Each building block pairs two OSS/MDS server nodes in a two-node high availability (HA) cluster with two E-Series all-flash arrays. Backend NVMe-oF connectivity carries block I/O to the arrays; a separate LNet fabric connects clients and server nodes for parallel file system access.
 
-Lustre with NetApp E-Series Storage is deployed using Ansible automation, which is hosted on GitHub (the ansible-lustre collection is available from link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp's GitHub^]). NetApp-built Lustre RPM packages are available from link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre^]. Supported operating system, kernel, Lustre, firmware, and driver versions change over time. Refer to link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool (IMT)^] as the authoritative source. Search for *E-Series Lustre* in IMT to find supported software and hardware combinations for the deployment.
+A base building block hosts the management service (MGS) and initial metadata targets (MDTs) and object storage targets (OSTs). Additional building blocks register against the base MGS to scale metadata capacity, data capacity, and aggregate throughput as workload demands grow.
 
-The following figure shows an example deployment with three building blocks, an Ansible control node, and Lustre clients connected over LNet.
+The figure below shows an example deployment with multiple building blocks and Lustre clients connected over LNet.
 
 _Lustre with NetApp E-Series Storage - solution overview_
 
-// TBD: Overall solution diagram - Ansible control node, three building blocks (each: 2 OSS/MDS HA servers + 2 EF-Series arrays), LNet frontend with example clients, NVMe-oF backend per building block
-image:lustre-solution-overview.png["Lustre with NetApp E-Series Storage solution overview with Ansible control node, building blocks, and clients"]
+image:lustre-solution-overview.png["Lustre with NetApp E-Series Storage solution overview with building blocks and clients"]

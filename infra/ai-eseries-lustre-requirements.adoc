@@ -268,8 +268,8 @@ The Ansible collection applies format options during deployment. Customize optio
 
 Lustre clients require:
 
-* A supported client operating system and Lustre client packages (see IMT, *E-Series Lustre*)
+* A supported client operating system and kernel version for the deployed Lustre release (see the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^])
 * Connectivity to the LNet frontend fabric
-* Lustre client packages built from NetApp Lustre source RPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] (see IMT, *E-Series Lustre*) or deployment via the optional `lustre_client` Ansible role
+* Lustre client packages built from NetApp Lustre source RPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] or deployment via the optional `lustre_client` Ansible role
 
 Clients are deployed independently of building blocks. See link:ai-eseries-lustre-deploy.html[Deploy the solution] for client deployment steps.
