@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-requirements.html
-keywords: Lustre, NetApp E-Series, EF80, EF600, requirements, TLC, QLC, RAID6, DDP, NVMe-oF, BYOS
+keywords: Lustre, NetApp E-Series, EF80, EF600, requirements, TLC, QLC, RAID 6, DDP, NVMe-oF, BYOS
 summary: Lustre with NetApp E-Series Storage - Technical requirements for servers, EF80 building blocks, storage layout, network, and supported software versions.
 ---
 
@@ -17,7 +17,7 @@ This section lists the technical requirements for servers, NetApp E-Series stora
 
 == Server requirements
 
-The solution uses a bring-your-own-server (BYOS) model. Each building block requires two server nodes that meet or exceed the following specifications.
+The solution uses a bring-your-own-server (BYOS) model. Each building block requires two OSS/MDS server nodes that meet or exceed the following specifications.
 
 .Server requirements (per OSS/MDS node)
 |===
@@ -68,6 +68,8 @@ NetApp validated the solution using Lenovo ThinkSystem SR665 V3 servers. Equival
 | Mellanox ConnectX-7 or equivalent
 |===
 
+NetApp recommends six HCAs per node on EF80 and four HCAs per node on EF600 to maximize NVMe-oF connectivity to the arrays. Both topologies are validated. LNet uses four frontend interfaces in each configuration regardless of backend HCA count.
+
 == EF80 standard building block
 
 The EF80 is the validated standard platform for this solution release.
@@ -94,7 +96,7 @@ The EF80 is the validated standard platform for this solution release.
 | Up to 12× 200Gb NVMe/IB or NVMe/RoCE ports per array
 
 | SANtricity OS
-| 12.0 or later
+| See IMT (search *E-Series Lustre*)
 
 | Segment size
 | 32 KB (all volume types)
@@ -110,7 +112,7 @@ Each EF80 array in a base building block uses all twenty-four NVMe drive slots:
 * 10× drives in RAID 6 for OST storage (first OST pool)
 * 10× drives in RAID 6 for OST storage (second OST pool)
 
-This layout applies when using TLC drives with traditional volume groups. When using QLC drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID1 volume groups inside the pool for MGS and MDT volumes.
+This layout applies when using TLC drives with traditional volume groups. When using QLC drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volume groups inside the pool for MGS and MDT volumes.
 
 === Volume and target counts (base building block)
 
@@ -185,8 +187,8 @@ NetApp EF600 and other EF-Series models are supported with the same building blo
 
 Choose the E-Series pool type based on the NVMe drive type in the arrays:
 
-* *TLC drives:* Use *RAID6 volume groups* for OST volumes. Use *RAID1 volume groups* for MGS and MDT volumes.
-* *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+* *TLC drives:* Use *RAID 6 volume groups* for OST volumes. Use *RAID 1 volume groups* for MGS and MDT volumes.
+* *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
 
 Use a 32 KB segment size for all volume types regardless of pool type.
 
@@ -214,7 +216,7 @@ Use a 32 KB segment size for all volume types regardless of pool type.
 
 Do not use version numbers in this document as the authoritative source. Supported combinations change over time.
 
-Use the NetApp Interoperability Matrix Tool (IMT):
+Use the NetApp Interoperability Matrix Tool (IMT) for building block and server components. Client operating systems are not listed in IMT for this solution; see the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^] for client OS and kernel requirements.
 
 link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^]
 
@@ -244,7 +246,7 @@ Lustre targets use the `ldiskfs` backend file system. Configure `mkfs.lustre` op
 
 | `-E stripe-width=64`
 | 8 stride × 8 data drives
-| Aligns to RAID6 full stripe (8 data drives in 10-drive RAID6)
+| Aligns to RAID 6 full stripe (8 data drives in 10-drive RAID 6)
 
 | `-i 1048576`
 | 1 MiB inode spacing
@@ -270,6 +272,6 @@ Lustre clients require:
 
 * A supported client operating system and kernel version for the deployed Lustre release (see the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^])
 * Connectivity to the LNet frontend fabric
-* Lustre client packages built from NetApp Lustre source RPMs in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] or deployment via the optional `lustre_client` Ansible role
+* Lustre client packages built from NetApp Lustre source RPMs (SRPMs) in link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] (recommended), or deployment via the optional `lustre_client` Ansible role
 
 Clients are deployed independently of building blocks. See link:ai-eseries-lustre-deploy.html[Deploy the solution] for client deployment steps.
