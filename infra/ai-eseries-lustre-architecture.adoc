@@ -83,7 +83,7 @@ For cluster administration and fencing configuration, see the link:https://githu
 
 The solution uses separate network paths for storage backend traffic and LNet frontend traffic.
 
-* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes. Both InfiniBand and RoCE are validated backend transports.
+* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes.
 
 * *Frontend (LNet):* Lustre clients and OSS/MDS server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. InfiniBand and RoCE are both validated frontend transports. The ansible-lustre collection configures all frontend interfaces for multi-rail LNet to increase bandwidth and redundancy.
 
