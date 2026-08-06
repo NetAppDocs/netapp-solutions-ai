@@ -17,7 +17,7 @@ This section provides sizing guidance for building blocks, recommendations for s
 
 == Base building block capacity
 
-A base building block with two EF80 arrays and TLC NVMe drives provides the following Lustre target layout:
+A base building block with two EF80 arrays and TLC NVMe drives provides the following Lustre target layout. For a diagram of preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[Primary building block volume distribution^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
 
 .Base building block summary (EF80)
 |===

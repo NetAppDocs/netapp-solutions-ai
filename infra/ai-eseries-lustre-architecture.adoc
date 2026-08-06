@@ -55,7 +55,7 @@ NetApp recommends the following building block configuration profiles for most d
 
 * *Drive type and pool layout:* E-Series supports traditional RAID volume groups and Dynamic Disk Pools (DDP). For TLC NVMe drives, use RAID 6 volume groups for OST storage and RAID 1 volume groups for MGS and MDT storage. For QLC NVMe drives, use DDP for the shared drive pool.
 
-* *Target distribution:* Lustre targets in each building block are balanced across both OSS/MDS server nodes and both E-Series arrays. The layout spreads I/O across server CPUs and array controllers to improve NVMe-oF path performance and maintain redundancy.
+* *Target distribution:* Lustre targets in each building block are balanced across both OSS/MDS server nodes and both E-Series arrays. The layout spreads I/O across server CPUs and array controllers to improve NVMe-oF path performance and maintain redundancy. See link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[target distribution and NVMe-oF connectivity^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
 
 Supported operating systems, Lustre versions, array firmware, and related building block components are listed in link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool (IMT)^] under *E-Series Lustre*. For detailed volume counts, drive layouts, and sizing guidelines, see link:ai-eseries-lustre-requirements.html[Technical requirements].
 
@@ -93,7 +93,7 @@ For cluster administration and fencing configuration, see the link:https://githu
 
 The solution uses separate network paths for storage backend traffic and LNet frontend traffic.
 
-* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes.
+* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes. For EF80 six-HCA backend cabling, see link:ai-eseries-lustre-deploy.html#_phase_1_prepare_hardware_and_network[Phase 1: Prepare hardware and network^] in link:ai-eseries-lustre-deploy.html[Deploy the solution]. For preferred target placement across nodes and arrays, see link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[target distribution^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
 
 * *Frontend (LNet):* Lustre clients and OSS/MDS server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. InfiniBand and RoCE are both validated frontend transports. The ansible-lustre collection configures all frontend interfaces for multi-rail LNet, which aggregates multiple ports to increase bandwidth and provide path redundancy for client and inter-node traffic.
 

@@ -155,11 +155,11 @@ This layout applies when using TLC drives with traditional volume groups. When u
 
 === Primary building block volume distribution
 
-The figure below shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block.
+The figure below shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block. The diagram labels the management target as *MGT* (management target); one MGT hosts the MGS (management server) service referenced elsewhere in this document.
 
 _Base building block — target distribution (EF80)_
 
-image:lustre_target_distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
+image:lustre-target-distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
 
 *Array 1 (13 volumes):*
 
@@ -205,6 +205,7 @@ Use a 32 KB segment size for all volume types regardless of pool type.
 * NVMe/InfiniBand or NVMe/RoCE between each OSS/MDS node and each E-Series array
 * MTU 9000 on NVMe/RoCE backend interfaces (typical)
 * Eight paths per array on EF80 (four per array on EF600)
+* EF80 uses six HCAs per node (i2, i3, i5, and i6 for NVMe-oF; i1 and i4 for LNet). Node A terminates on array *a* ports; Node B on array *b* ports. See link:ai-eseries-lustre-deploy.html#_phase_1_prepare_hardware_and_network[EF80 six-HCA backend cabling^] in link:ai-eseries-lustre-deploy.html[Deploy the solution].
 
 === Frontend (LNet)
 
