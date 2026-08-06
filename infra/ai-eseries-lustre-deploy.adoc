@@ -50,6 +50,11 @@ NOTE: IP addresses, hostnames, interface names, and volume sizing in the deploym
 
 . Rack and cable two OSS/MDS servers and two E-Series arrays per building block.
 . Cable the backend NVMe-oF network between servers and arrays according to the platform topology (six HCAs per node on EF80, four HCAs per node on EF600). Both topologies are validated; additional HCAs increase NVMe-oF paths to maximize array performance.
+
+_EF80 six-HCA backend cabling (RoCE or InfiniBand)_
+
+image:ef80-6hca-server-cabling.png["EF80 six-HCA backend NVMe-oF cabling between two OSS/MDS server nodes and two EF80 arrays"]
+
 . Cable the frontend LNet fabric (IPoIB or RoCE) for Lustre client and inter-node communication. LNet uses four frontend interfaces in each configuration.
 . Configure out-of-band management for server BMCs and array management ports.
 . Configure the RoCE fabric for lossless operation (PFC) when using RoCE.

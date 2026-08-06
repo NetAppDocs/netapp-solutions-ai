@@ -19,6 +19,10 @@ This section describes the building block architecture, scaling model, high avai
 
 A building block is the fundamental scalable unit of the NetApp E-Series Lustre solution. Each building block consists of two OSS/MDS server nodes in a two-node high availability (HA) cluster, two NetApp E-Series all-flash arrays, dedicated backend NVMe-oF connectivity between servers and arrays, and dedicated frontend LNet connectivity for Lustre clients and inter-node communication. Lustre services are deployed and configured through the NetApp ansible-lustre collection.
 
+_Lustre building block_
+
+image:lustre-building-block-simple.png["Lustre HA building block with two OSS/MDS server nodes and two E-Series EF80 arrays"]
+
 Building blocks scale to match file system growth requirements. Every file system requires one base building block. The base building block hosts the management service (MGS) and provides initial metadata target (MDT) and object storage target (OST) capacity. Additional building blocks extend the file system and register their MDT and OST targets against the base building block's MGS. The modular approach allows capacity and performance to scale independently based on workload needs.
 
 NetApp recommends the following building block configuration profiles for most deployments. The MGS, MDT, and OST counts listed are recommended defaults that are optimized to maximize the performance and capacity of the E-Series storage arrays. Adjust target counts, volume sizes, and E-Series drive allocation in the Ansible inventory to suit workload needs. For example, deployments requiring greater metadata storage capacity can provision more MDTs and fewer OSTs within the same building block hardware.
@@ -63,6 +67,12 @@ The Lustre file system scales by adding building blocks when metadata capacity, 
 . *Additional building block profile:* Add an OST-only building block when existing MDT capacity is sufficient and data capacity or throughput must increase. Add an MDT+OST building block when metadata performance or namespace capacity becomes the bottleneck.
 . *Pacemaker cluster limit:* Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). Split larger deployments evenly into multiple Pacemaker clusters to avoid resource constraints in large configurations.
 
+The figure below shows up to five building blocks stacked in a 42U rack (one Pacemaker HA cluster per rack). Multiple racks can participate in a single Lustre file system; only the base building block hosts the MGS.
+
+_Lustre parallel file system — rack scaling_
+
+image:lustre-2x2-rack-scaling.png["Lustre parallel file system scaling across multiple 42U racks, each with up to five building blocks in one Pacemaker HA cluster"]
+
 For sizing examples and a deployment checklist, see link:ai-eseries-lustre-validation.html[Validation and sizing].
 
 == HA architecture
@@ -71,11 +81,11 @@ Lustre with NetApp E-Series Storage uses a shared-disk high availability (HA) ar
 
 Each MGS, MDT, and OST is configured as an HA resource with its dependencies in a Pacemaker resource group. Pacemaker ensures resources start and stop in the correct order, remain collocated on the same node, and run on only one node at a time. Concurrent access to the same target from both nodes could corrupt the underlying file system.
 
-* *Target failover:* Both OSS/MDS server nodes are peers in the cluster, but each Lustre target is active on only one node at a time. If a failure occurs, Pacemaker restarts affected targets on the partner node.
+* *Target failover:* Both OSS/MDS server nodes are peers in the cluster, but each Lustre target is active on only one node at a time. A Pacemaker monitoring resource watches the health of each target and its dependencies and triggers a failover when a target becomes unavailable on its current node. On failure, Pacemaker restarts the affected resource group on the partner node in the correct order, and clients transparently reconnect to the target at its new location once services resume. Because each target activates on a single node, the file system is never exposed to concurrent writes from both nodes.
 
-* *Shared storage access:* Multipath NVMe-oF paths connect each OSS/MDS server node to all E-Series controllers in the building block. Lustre targets can fail over between OSS/MDS server nodes or array controllers without losing access to backing volumes.
+* *Shared storage access:* Multipath NVMe-oF paths connect each OSS/MDS server node to all E-Series controllers in the building block, so every target volume is reachable from either node. If a server node fails, the partner node already has active paths to the same volumes and can assume ownership of the targets without reconfiguring storage connectivity. If an array controller or path fails, multipath redirects I/O to a surviving controller. This dual redundancy lets Lustre targets fail over between OSS/MDS server nodes or array controllers without losing access to backing volumes.
 
-* *STONITH fencing:* STONITH fencing is required so Pacemaker can isolate a faulty node before resources fail over elsewhere. NetApp recommends `fence_redfish` for servers with Redfish-capable baseboard management controllers (BMCs). Other fencing agents, such as `fence_apc`, are also supported.
+* *STONITH fencing:* When a failure occurs, Pacemaker sometimes cannot communicate with the faulty node to confirm its targets are stopped. Before restarting those targets elsewhere, Pacemaker fences the faulty node, ideally by removing power, to ensure it is down. Fencing prevents a split-brain scenario in which both nodes access the same target concurrently and corrupt the underlying file system, preserving data integrity during failover. NetApp recommends `fence_redfish` for servers with Redfish-capable baseboard management controllers (BMCs). Other fencing agents, such as `fence_apc`, are also supported.
 
 For cluster administration and fencing configuration, see the link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md[HA user guide^] in the link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection^].
 
@@ -85,7 +95,9 @@ The solution uses separate network paths for storage backend traffic and LNet fr
 
 * *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes.
 
-* *Frontend (LNet):* Lustre clients and OSS/MDS server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. InfiniBand and RoCE are both validated frontend transports. The ansible-lustre collection configures all frontend interfaces for multi-rail LNet to increase bandwidth and redundancy.
+* *Frontend (LNet):* Lustre clients and OSS/MDS server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. InfiniBand and RoCE are both validated frontend transports. The ansible-lustre collection configures all frontend interfaces for multi-rail LNet, which aggregates multiple ports to increase bandwidth and provide path redundancy for client and inter-node traffic.
+
+* *Management and cluster:* An out-of-band management network provides server management, BMC access, and array management. STONITH fencing agents, such as `fence_redfish`, use this network to reach the server BMCs and remove power from a failed node. Corosync can also run cluster communication over this network as an additional ring alongside the frontend fabric. Configuring Corosync with multiple rings adds redundancy for cluster messaging and reduces the risk that a single network failure disrupts quorum.
 
 == Lustre clients
 

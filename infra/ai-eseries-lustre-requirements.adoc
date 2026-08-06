@@ -155,6 +155,12 @@ This layout applies when using TLC drives with traditional volume groups. When u
 
 === Primary building block volume distribution
 
+The figure below shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block.
+
+_Base building block — target distribution (EF80)_
+
+image:lustre_target_distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
+
 *Array 1 (13 volumes):*
 
 * 1× MGS

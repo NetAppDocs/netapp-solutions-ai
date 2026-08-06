@@ -25,4 +25,4 @@ The figure below shows an example deployment with multiple building blocks and L
 
 _Lustre with NetApp E-Series Storage - solution overview_
 
-image:lustre_overview_diagram.png["Lustre with NetApp E-Series Storage solution overview with building blocks and clients"]
+image:lustre-overview-diagram.png["Lustre with NetApp E-Series Storage solution overview with building blocks and clients"]
