@@ -2,10 +2,10 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-conclusion.html
 keywords: Lustre, NetApp E-Series, EF80, documentation, references, Ansible
-summary: Lustre with NetApp E-Series Storage - Additional information, related documentation, and references.
+summary: Find related documentation, tools, and software references for Lustre with NetApp E-Series Storage.
 ---
 
-= Lustre with NetApp E-Series Storage - Additional information
+= Lustre with NetApp E-Series Storage - Related information
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -13,7 +13,7 @@ summary: Lustre with NetApp E-Series Storage - Additional information, related d
 :imagesdir: ../media/
 
 [.lead]
-Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using a repeatable building block architecture with NetApp E-Series all-flash arrays. Use the links below for related documentation, tools, and software as you plan or expand a deployment.
+Use these links for related documentation, tools, and software as you plan or expand a Lustre with NetApp E-Series Storage deployment.
 
 == NetApp documentation and tools
 

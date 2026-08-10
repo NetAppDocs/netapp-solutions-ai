@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-validation.html
 keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance
-summary: Lustre with NetApp E-Series Storage - Sizing guidance, scaling decisions, and validation methodology for base and additional building blocks.
+summary: Size Lustre with NetApp E-Series Storage building blocks, decide when to scale, and review the performance validation methodology.
 ---
 
 = Lustre with NetApp E-Series Storage - Validation and Sizing Guidance
@@ -13,7 +13,7 @@ summary: Lustre with NetApp E-Series Storage - Sizing guidance, scaling decision
 :imagesdir: ../media/
 
 [.lead]
-This section provides sizing guidance for building blocks, recommendations for scaling decisions, and the validation methodology used to characterize Lustre with NetApp E-Series Storage performance.
+Size base and additional building blocks, decide when to add OST-only or MDT+OST capacity, and review the methodology used to validate Lustre with NetApp E-Series Storage performance.
 
 == Base building block capacity
 

@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-sw.html
 keywords: Lustre, NetApp E-Series, software, SANtricity, Rocky Linux, Pacemaker, Corosync, MOFED, DOCA, Lustre client
-summary: Lustre with NetApp E-Series Storage - Software components and deployment automation overview.
+summary: Review software components and Ansible automation used to deploy Lustre with NetApp E-Series Storage.
 ---
 
 = Lustre with NetApp E-Series Storage - Software Components
@@ -13,7 +13,7 @@ summary: Lustre with NetApp E-Series Storage - Software components and deploymen
 :imagesdir: ../media/
 
 [.lead]
-This section provides an overview of the software components and deployment automation used in Lustre with NetApp E-Series Storage. For information about servers, storage, and networks, see link:ai-eseries-lustre-hw.html[Hardware components].
+Review the software stack and Ansible automation that deploy Lustre with NetApp E-Series Storage. For servers, storage, and networks, see link:ai-eseries-lustre-hw.html[Hardware components].
 
 == Building block software
 

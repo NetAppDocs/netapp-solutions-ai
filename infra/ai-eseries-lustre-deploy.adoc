@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-deploy.html
 keywords: Lustre, NetApp E-Series, EF80, deployment, Ansible, NVMe-oF, runbook
-summary: Lustre with NetApp E-Series Storage - High-level deployment workflow using NetApp Ansible automation and customizable inventory templates.
+summary: Deploy Lustre with NetApp E-Series Storage by using NetApp Ansible automation and customizable inventory templates.
 ---
 
 = Lustre with NetApp E-Series Storage - Deploy the Solution
@@ -16,7 +16,7 @@ summary: Lustre with NetApp E-Series Storage - High-level deployment workflow us
 :client-tmpl: https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients
 
 [.lead]
-This section describes the high-level deployment workflow for Lustre with NetApp E-Series Storage. Detailed procedures, inventory examples, and command references are in the NetApp `ansible-lustre` collection and deployment templates on GitHub.
+Deploy Lustre with NetApp E-Series Storage by racking and cabling hardware, preparing servers and arrays, customizing the Ansible inventory, and running the NetApp `ansible-lustre` playbooks. Detailed inventory examples and command references are in the collection and deployment templates on GitHub.
 
 == Prerequisites
 
@@ -35,37 +35,37 @@ NOTE: NetApp supports deploying the Lustre HA cluster and Lustre clients with th
 
 The deployment workflow has seven phases. Early phases are completed manually. The Lustre HA cluster and Lustre clients are deployed with Ansible playbooks from the link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp E-Series Lustre Ansible collection^].
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png[One] Rack and cable the hardware
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["One"] Rack and cable the hardware
 
 [role="quick-margin-para"]
 <<phase-prepare-hardware,Rack the Lustre servers and E-Series storage arrays>>, then cable the backend NVMe-oF and frontend LNet fabrics for each building block.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png[Two] Prepare servers and arrays
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["Two"] Prepare servers and arrays
 
 [role="quick-margin-para"]
-<<phase-prepare-servers-arrays,Configure management access, operating systems, and array settings>> for access and administration of the Lustre servers and E-Series arrays.
+<<phase-prepare-servers-arrays,Configure management access, operating systems, and array settings>> on the Lustre servers and E-Series arrays.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png[Three] Prepare the Ansible control node
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["Three"] Prepare the Ansible control node
 
 [role="quick-margin-para"]
 <<phase-prepare-control-node,Prepare the Ansible control node>> with the required packages, collections, and passwordless SSH access to the Lustre servers.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png[Four] Customize the Ansible inventory
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["Four"] Customize the Ansible inventory
 
 [role="quick-margin-para"]
-<<phase-customize-inventory,Populate a deployment template inventory>> custom to your site with the servers, arrays, and building blocks for your site.
+<<phase-customize-inventory,Populate a deployment template inventory>> for your site with the servers, arrays, and building blocks.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png[Five] Deploy the Lustre HA cluster with Ansible
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["Five"] Deploy the Lustre HA cluster with Ansible
 
 [role="quick-margin-para"]
 <<phase-deploy-ha,Deploy the Lustre HA cluster with Ansible>> by running the main playbook to configure storage, NVMe-oF, LNet, Lustre targets, and Pacemaker resources.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png[Six] Deploy Lustre clients with Ansible
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["Six"] Deploy Lustre clients with Ansible
 
 [role="quick-margin-para"]
 <<phase-deploy-clients,Deploy Lustre clients with Ansible>> by running the client playbook to configure and mount systems that need file system access.
 
-.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-7.png[Seven] Verify the deployment
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-7.png["Seven"] Verify the deployment
 
 [role="quick-margin-para"]
 <<phase-verify,Confirm cluster health, mounts, capacity, and HA failover>> before you place the file system in production.
@@ -88,7 +88,7 @@ For HCA counts, path requirements, and MTU guidance, see link:ai-eseries-lustre-
 [[phase-prepare-servers-arrays]]
 == Phase 2: Prepare servers and arrays
 
-Configure management access and base settings on each E-Series array and Lustre servers for access and administration of the systems.
+Configure management access and base settings on each E-Series array and Lustre server.
 
 === Prepare E-Series arrays
 
@@ -155,7 +155,7 @@ ssh-copy-id <ip_or_hostname>
 +
 Repeat `ssh-copy-id` for each Lustre server.
 
-CAUTION: Do not configure passwordless SSH to the E-Series arrays. Ansible manages the arrays through the SANtricity Web Services API by using the credentials defined in the inventory.
+NOTE: Do not configure passwordless SSH to the E-Series arrays. Ansible manages the arrays through the SANtricity Web Services API by using the credentials defined in the inventory.
 
 [[phase-customize-inventory]]
 == Phase 4: Customize the Ansible inventory
@@ -241,7 +241,7 @@ The following table lists the site-specific values you must set in the inventory
 | `eseries_roce_interfaces` (RoCE) / `eseries_ipoib_interfaces` (InfiniBand)
 | link:{bb-tmpl}/host_vars/lustre_01.yml#L47[RoCE host_vars/lustre_01.yml#L47^], link:{bb-tmpl-ib}/host_vars/lustre_01.yml#L38[InfiniBand host_vars/lustre_01.yml#L38^]
 | Repeat per Lustre server
-| Front-end LNet interface addresses (RoCE values at L56; InfiniBand values at L47).
+| Frontend LNet interface addresses (RoCE values at L56; InfiniBand values at L47).
 
 | Corosync node IPs
 | `eseries_lustre_corosync_node_ips`
@@ -268,7 +268,7 @@ The following table lists the site-specific values you must set in the inventory
 | Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
 |===
 
-NOTE: *Repeat for each host and building block.* Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block. Array and BMC credentials are supplied at runtime (for example, with Ansible Vault or `--extra-vars`) and are not stored in the template files.
+NOTE: Repeat for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block. Array and BMC credentials are supplied at runtime (for example, with Ansible Vault or `--extra-vars`) and are not stored in the template files.
 
 NOTE: IP addresses, hostnames, interface names, and volume sizing in the deployment templates are examples. Modify all inventory files for the environment before running any playbook.
 
@@ -279,7 +279,7 @@ Deploy the Lustre HA cluster by running the main Ansible playbook to provision s
 
 . From the directory that contains your customized inventory, run the main deployment playbook. Replace `<inventory_path>` with the path to your inventory directory.
 +
-[source,bash]
+[source,console]
 ----
 ansible-playbook -i <inventory_path>/lustre_inventory.yml lustre_playbook.yml
 ----
@@ -352,13 +352,13 @@ Deploy Lustre clients on any system that requires file system access by customiz
 | `eseries_roce_interfaces`
 | link:{client-tmpl}/host_vars/client_01.yml#L10[host_vars/client_01.yml#L10^]
 | Repeat per client
-| Front-end interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
+| Frontend interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
 |===
 +
-NOTE: *Repeat per client.* Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`.
+NOTE: Repeat for each client. Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`.
 . Run the client playbook from the client template directory:
 +
-[source,bash]
+[source,console]
 ----
 ansible-playbook -i lustre_client_inventory.yml lustre_client_playbook.yml
 ----
@@ -400,9 +400,9 @@ To add capacity or metadata performance, extend your existing inventory with an 
 . Add the new building block hosts, arrays, and resource groups (MDT+OST or OST-only) to the same inventory and `host_vars` / `group_vars` you used for the original deployment.
 . Rerun the main deployment playbook against the updated inventory.
 
-See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-validation.html[Validation and sizing] for guidance on when to add each building block type.
+See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-validation.html[Validation and sizing guidance] for guidance on when to add each building block type.
 
-== Related documentation
+== Related information
 
 * link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection README^]
 * link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre RPM repository^]

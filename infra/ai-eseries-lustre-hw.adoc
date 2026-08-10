@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-hw.html
 keywords: Lustre, NetApp E-Series, EF80, EF600, hardware, servers, storage, network, NVMe-oF, BYOS
-summary: Lustre with NetApp E-Series Storage - Hardware requirements for servers, E-Series arrays, storage layout, and networking.
+summary: Review server, E-Series array, storage layout, and networking requirements for Lustre with NetApp E-Series Storage.
 ---
 
 = Lustre with NetApp E-Series Storage - Hardware Components
@@ -13,7 +13,7 @@ summary: Lustre with NetApp E-Series Storage - Hardware requirements for servers
 :imagesdir: ../media/
 
 [.lead]
-This section lists the hardware requirements for servers, NetApp E-Series storage, and networking for the Lustre with NetApp E-Series Storage solution. For software components, see link:ai-eseries-lustre-sw.html[Software components].
+Use these hardware requirements for servers, NetApp E-Series arrays, storage layout, and networking when you size and order Lustre with NetApp E-Series Storage. For software components, see link:ai-eseries-lustre-sw.html[Software components].
 
 == Server requirements
 
@@ -151,10 +151,9 @@ Use the following volume sizing guidelines as a starting point in the Ansible in
 
 === Primary building block volume distribution
 
-The figure below shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block. The diagram labels the management target as *MGT* (management target); one MGT hosts the MGS (management server) service referenced elsewhere in this document.
+The following figure shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block. The diagram labels the management target as *MGT* (management target); one MGT hosts the MGS (management server) service referenced elsewhere in this document.
 
-_Base building block — target distribution (EF80)_
-
+.Base building block target distribution (EF80)
 image:lustre-target-distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
 
 *Array 1 (13 volumes):*
