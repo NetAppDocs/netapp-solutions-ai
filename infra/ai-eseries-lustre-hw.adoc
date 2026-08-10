@@ -1,0 +1,214 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-hw.html
+keywords: Lustre, NetApp E-Series, EF80, EF600, hardware, servers, storage, network, NVMe-oF, BYOS
+summary: Lustre with NetApp E-Series Storage - Hardware requirements for servers, E-Series arrays, storage layout, and networking.
+---
+
+= Lustre with NetApp E-Series Storage - Hardware Components
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section lists the hardware requirements for servers, NetApp E-Series storage, and networking for the Lustre with NetApp E-Series Storage solution. For software components, see link:ai-eseries-lustre-sw.html[Software components].
+
+== Server requirements
+
+The solution uses a bring-your-own-server (BYOS) model. Each building block requires two OSS/MDS server nodes that meet or exceed the following specifications.
+
+=== Node specifications
+
+The following table lists the minimum server requirements per OSS/MDS node.
+
+|===
+| Component | Requirement
+
+| Quantity
+| 2 nodes per building block
+
+| CPU
+| AMD EPYC or Intel Xeon, 32 cores or higher
+
+| Memory
+| 256 GB DDR5 (minimum)
+
+| Network HCAs
+| Platform-dependent (see <<platform-connectivity,Platform connectivity>>)
+
+| Boot drives
+| 2× drives in RAID 1 (software or hardware RAID recommended)
+
+|===
+
+NetApp validated the solution using Lenovo ThinkSystem SR665 V3 servers. Equivalent servers from other vendors are supported when they meet these requirements.
+
+[[platform-connectivity]]
+=== Platform connectivity
+
+The following table lists HCA and NVMe-oF path requirements by E-Series platform.
+
+|===
+| Platform | HCAs per node | NVMe-oF paths to each array | Example HCA
+
+| EF80
+| 6 (12 ports)
+| 8
+| MCX755106AS-HEAT (Dual port 200Gb PCIe gen5 card)
+
+| EF600
+| 4 (8 ports)
+| 4
+| MCX755106AS-HEAT (Dual port 200Gb PCIe gen5 card)
+|===
+
+NetApp recommends six HCAs per node on EF80 and four HCAs per node on EF600 to maximize the bandwidth of the storage arrays. Both topologies are validated. LNet uses four frontend interfaces in each configuration regardless of backend HCA count.
+
+== EF80 standard building block
+
+The EF80 is the validated standard platform for this solution release.
+
+=== Array specifications
+
+The following table lists EF80 array specifications for a building block (two arrays).
+
+|===
+| Component | Specification
+
+| Model
+| NetApp EF80
+
+| Form factor
+| 2U base chassis, 24 internal NVMe SSD slots
+
+| Controllers
+| Dual active controllers (A and B)
+
+| Drives
+| 24× NVMe SSD per array
+
+| I/O connectivity
+| Up to 12× 200Gb NVMe/IB or NVMe/RoCE ports per array
+
+|===
+
+For full EF-Series specifications across all models, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
+
+=== Drive layout (24 drives per array)
+
+Each EF80 array in a base building block uses all twenty-four NVMe drive slots:
+
+* 4× drives in RAID 1 for MGS/MDT storage (shared volume group or DDP allocation)
+* 10× drives in RAID 6 for OST storage (first OST pool)
+* 10× drives in RAID 6 for OST storage (second OST pool)
+
+This layout applies when using TLC drives with traditional volume groups. When using QLC drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volume groups inside the pool for MGS and MDT volumes.
+
+image:lustre-ef80-driveslots.png["Lustre drive layout with 24 NVMe drives per EF80 array"]
+
+=== Volume and target counts (base building block)
+
+The following table lists MGS, MDT, and OST counts for a base building block.
+
+|===
+| Target type | Count per BB | RAID / pool | Notes
+
+| MGS
+| 1
+| RAID 1
+| Base building block only; array 1
+
+| MDT
+| 8
+| RAID 1
+| 4 per array
+
+| OST
+| 32
+| RAID 6 (TLC) or DDP (QLC)
+| 16 per array
+|===
+
+Use the following volume sizing guidelines as a starting point in the Ansible inventory.
+
+|===
+| Volume | Recommended size | Notes
+
+| MGS
+| 5–10 GiB
+| Configuration data only
+
+| MDT
+| RAID 1 capacity ÷ MDT count
+| Approximately 1–2 TiB each (typical)
+
+| OST
+| RAID 6 pool capacity ÷ OST count per pool
+| Approximately 22 TiB each (typical, TLC layout)
+|===
+
+=== Primary building block volume distribution
+
+The figure below shows preferred Lustre target placement and NVMe-oF connectivity across OSS/MDS server nodes and E-Series arrays in a base EF80 building block. The diagram labels the management target as *MGT* (management target); one MGT hosts the MGS (management server) service referenced elsewhere in this document.
+
+_Base building block — target distribution (EF80)_
+
+image:lustre-target-distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
+
+*Array 1 (13 volumes):*
+
+* 1× MGS
+* 4× MDT
+* 16× OST (8 per RAID 6 pool × 2 pools, or equivalent DDP allocation)
+
+*Array 2 (12 volumes):*
+
+* 4× MDT
+* 16× OST
+
+=== Target assignment per server
+
+*OSS/MDS server 1:*
+
+* MGS: 1 (base building block only)
+* MDT: 4 (2 from each array)
+* OST: 16 (8 from each array)
+
+*OSS/MDS server 2:*
+
+* MDT: 4 (2 from each array)
+* OST: 16 (8 from each array)
+
+== Other E-Series platforms
+
+NetApp EF600 and other EF-Series models are supported with the same building block architecture. Drive layout, connectivity, and performance characteristics vary by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
+
+== Storage pool selection: TLC vs QLC
+
+Choose the E-Series pool type based on the NVMe drive type in the arrays:
+
+* *TLC drives:* Use *RAID 6 volume groups* for OST volumes. Use *RAID 1 volume groups* for MGS and MDT volumes.
+* *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+
+== Network requirements
+
+=== Backend (NVMe-oF)
+
+* NVMe/InfiniBand or NVMe/RoCE between each OSS/MDS node and each E-Series array
+* MTU 9000 on NVMe/RoCE backend interfaces (typical)
+* Eight paths per array on EF80 (four per array on EF600)
+* EF80 uses six HCAs per node (i2, i3, i5, and i6 for NVMe-oF; i1 and i4 for LNet). Node A terminates on array *a* ports; Node B on array *b* ports. See link:ai-eseries-lustre-deploy.html#phase-prepare-hardware[EF80 six-HCA backend cabling] in link:ai-eseries-lustre-deploy.html[Deploy the solution].
+
+=== Frontend (LNet)
+
+* IPoIB or RoCE for LNet (`@o2ib` network type)
+* MTU 9216 on RoCE frontend interfaces (typical)
+* Multi-rail LNet recommended when four frontend ports are available (EF80: i1 and i4 HCAs, both ports)
+* Lossless RoCE (PFC) recommended on RoCE fabrics
+
+=== Management
+
+* Out-of-band management network for server BMCs and array management ports
+* Dedicated Corosync network or shared frontend fabric (site-dependent)

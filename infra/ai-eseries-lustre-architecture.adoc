@@ -27,7 +27,8 @@ Building blocks scale to match file system growth requirements. Every file syste
 
 NetApp recommends the following building block configuration profiles for most deployments. The MGS, MDT, and OST counts listed are recommended defaults that are optimized to maximize the performance and capacity of the E-Series storage arrays. Adjust target counts, volume sizes, and E-Series drive allocation in the Ansible inventory to suit workload needs. For example, deployments requiring greater metadata storage capacity can provision more MDTs and fewer OSTs within the same building block hardware.
 
-.Building block types
+The following table summarizes building block types and recommended target counts.
+
 |===
 | Type | MGS | MDTs | OSTs (EF80) | OSTs (EF600) | Use
 
@@ -55,9 +56,9 @@ NetApp recommends the following building block configuration profiles for most d
 
 * *Drive type and pool layout:* E-Series supports traditional RAID volume groups and Dynamic Disk Pools (DDP). For TLC NVMe drives, use RAID 6 volume groups for OST storage and RAID 1 volume groups for MGS and MDT storage. For QLC NVMe drives, use DDP for the shared drive pool.
 
-* *Target distribution:* Lustre targets in each building block are balanced across both OSS/MDS server nodes and both E-Series arrays. The layout spreads I/O across server CPUs and array controllers to improve NVMe-oF path performance and maintain redundancy. See link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[target distribution and NVMe-oF connectivity^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
+* *Target distribution:* Lustre targets in each building block are balanced across both OSS/MDS server nodes and both E-Series arrays. The layout spreads I/O across server CPUs and array controllers to improve NVMe-oF path performance and maintain redundancy. See link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[target distribution and NVMe-oF connectivity^] in link:ai-eseries-lustre-hw.html[Hardware components].
 
-Supported operating systems, Lustre versions, array firmware, and related building block components are listed in link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool (IMT)^] under *E-Series Lustre*. For detailed volume counts, drive layouts, and sizing guidelines, see link:ai-eseries-lustre-requirements.html[Technical requirements].
+Supported operating systems, Lustre versions, array firmware, and related building block components are listed in link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool (IMT)^] under *E-Series Lustre*. For detailed volume counts, drive layouts, and sizing guidelines, see link:ai-eseries-lustre-hw.html[Hardware components]. For software components, see link:ai-eseries-lustre-sw.html[Software components].
 
 == Scaling recommendations
 
@@ -93,7 +94,7 @@ For cluster administration and fencing configuration, see the link:https://githu
 
 The solution uses separate network paths for storage backend traffic and LNet frontend traffic.
 
-* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes. For EF80 six-HCA backend cabling, see link:ai-eseries-lustre-deploy.html#_phase_1_prepare_hardware_and_network[Phase 1: Prepare hardware and network^] in link:ai-eseries-lustre-deploy.html[Deploy the solution]. For preferred target placement across nodes and arrays, see link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[target distribution^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
+* *Backend (NVMe-oF):* OSS/MDS server nodes connect to E-Series arrays over NVMe-oF using NVMe/InfiniBand or NVMe/RoCE. The NVMe-oF path carries block I/O between Lustre target services and E-Series volumes. For EF80 six-HCA backend cabling, see link:ai-eseries-lustre-deploy.html#phase-prepare-hardware[Rack and cable the hardware^] in link:ai-eseries-lustre-deploy.html[Deploy the solution]. For preferred target placement across nodes and arrays, see link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[target distribution^] in link:ai-eseries-lustre-hw.html[Hardware components].
 
 * *Frontend (LNet):* Lustre clients and OSS/MDS server nodes communicate over LNet using the `@o2ib` network type with the NVIDIA OFED stack. InfiniBand and RoCE are both validated frontend transports. The ansible-lustre collection configures all frontend interfaces for multi-rail LNet, which aggregates multiple ports to increase bandwidth and provide path redundancy for client and inter-node traffic.
 
@@ -105,6 +106,6 @@ A Lustre client loads the client kernel module, establishes LNet connectivity to
 
 Client nodes require connectivity to the same LNet fabric and network type as the OSS/MDS server nodes. If required, a LNet router can bridge separate LNet subnets or fabrics.
 
-NetApp publishes pre-built Lustre packages for server nodes only. NetApp recommends building client packages from source RPMs (SRPMs) in the link:https://github.com/NetApp/netapp-lustre/tree/master/repo/lustre[netapp-lustre repository^] for a client operating system listed in the Lustre Support Matrix.
+NetApp publishes pre-built Lustre packages for server nodes only. Build client packages for the client kernel from the Lustre source code in the link:https://github.com/NetApp/netapp-lustre[netapp-lustre repository^]. The source RPMs in the repository target specific kernel versions and are not a general client installation method.
 
-The link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection^] provides optional automation through the `lustre_client` role, which configures multi-rail LNet to match the server frontend fabric, validates connectivity, and manages persistent systemd mounts. Ansible is not required to mount the file system. Clients can also be configured manually. For step-by-step procedures, see link:ai-eseries-lustre-deploy.html[Deploy the solution] and the link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre_client/README.md[lustre_client role documentation^].
+After the client packages are installed, the optional `lustre_client` role in the link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection^] configures client network interfaces and LNet, enables multi-rail LNet when selected, validates connectivity, and manages a persistent systemd mount unit. The role does not build or install Lustre. Clients can also be configured manually. For step-by-step procedures, see link:ai-eseries-lustre-deploy.html[Deploy the solution] and the link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre_client/README.md[lustre_client role documentation^].

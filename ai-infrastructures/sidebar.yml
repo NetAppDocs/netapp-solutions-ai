@@ -39,8 +39,10 @@ entries:
         url: /infra/ai-eseries-lustre-intro.html
       - title: "Solution architecture"
         url: /infra/ai-eseries-lustre-architecture.html
-      - title: "Technical requirements"
-        url: /infra/ai-eseries-lustre-requirements.html
+      - title: "Hardware components"
+        url: /infra/ai-eseries-lustre-hw.html
+      - title: "Software components"
+        url: /infra/ai-eseries-lustre-sw.html
       - title: "Deploy the solution"
         url: /infra/ai-eseries-lustre-deploy.html
       - title: "Validation and sizing guidance"

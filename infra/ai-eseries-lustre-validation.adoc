@@ -17,9 +17,10 @@ This section provides sizing guidance for building blocks, recommendations for s
 
 == Base building block capacity
 
-A base building block with two EF80 arrays and TLC NVMe drives provides the following Lustre target layout. For a diagram of preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-requirements.html#_primary_building_block_volume_distribution[Primary building block volume distribution^] in link:ai-eseries-lustre-requirements.html[Technical requirements].
+A base building block with two EF80 arrays and TLC NVMe drives provides the following Lustre target layout. For a diagram of preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[Primary building block volume distribution] in link:ai-eseries-lustre-hw.html[Hardware components].
 
-.Base building block summary (EF80)
+The following table summarizes typical usable capacity for a base EF80 building block.
+
 |===
 | Component | Count | Typical usable capacity (per target)
 
@@ -66,9 +67,8 @@ Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS serve
 
 == Scaling example
 
-The following example shows a file system with two EF80 building blocks in a single HA cluster:
+The following example shows a file system with two EF80 building blocks in a single HA cluster. The table lists target counts for a base building block plus an OST-only building block.
 
-.Scaling example: base + OST-only (EF80)
 |===
 | Building block | Type | Servers | Arrays | MGS | MDT | OST
 
@@ -124,4 +124,4 @@ Use the following questions when sizing a deployment:
 . Confirm that server, HCA, and array models appear in IMT for *E-Series Lustre*.
 . Select TLC (RAID 6) or QLC (DDP) layout based on drive type.
 
-For drive layout and volume counts, see link:ai-eseries-lustre-requirements.html[Technical requirements]. For a field-level inventory checklist, see the deployment template README in the ansible-lustre collection (a standalone checklist will be published on GitHub). For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].
+For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For a field-level inventory checklist, see the deployment template README in the ansible-lustre collection (a standalone checklist will be published on GitHub). For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].

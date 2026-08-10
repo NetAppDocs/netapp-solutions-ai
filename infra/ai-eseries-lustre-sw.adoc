@@ -1,0 +1,80 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-sw.html
+keywords: Lustre, NetApp E-Series, software, SANtricity, Rocky Linux, Pacemaker, Corosync, MOFED, DOCA, Lustre client
+summary: Lustre with NetApp E-Series Storage - Software components and deployment automation overview.
+---
+
+= Lustre with NetApp E-Series Storage - Software Components
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This section provides an overview of the software components and deployment automation used in Lustre with NetApp E-Series Storage. For information about servers, storage, and networks, see link:ai-eseries-lustre-hw.html[Hardware components].
+
+== Building block software
+
+The following table lists the software components used by E-Series arrays and OSS/MDS server nodes. Use the link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool (IMT)^] as the authoritative source for supported versions and component combinations. Search for *E-Series Lustre* and confirm the operating system, Lustre, SANtricity OS, DOCA-OFED, HCA firmware, and HA package versions before deployment.
+
+[options="header" cols="30%,70%"]
+|===
+| Component | Function
+
+| SANtricity OS
+| Runs on each E-Series array and provides SANtricity System Manager, dual-active controller high availability with automated I/O path failover, automatic load balancing and path monitoring, Dynamic Disk Pools and traditional RAID, automatic drive rebuilds, mirrored cache protection, Data Assurance, proactive drive health monitoring, and online software, firmware, and configuration changes.
+
+| Lustre
+| Presents clients with a single POSIX-compliant namespace while distributing metadata and file data across multiple targets for parallel access. The management service (MGS) stores file system configuration, metadata targets (MDTs) manage the namespace, and object storage targets (OSTs) store file data on E-Series volumes. This separation enables performance and capacity to scale by adding building blocks.
+
+| Red Hat Enterprise Linux (RHEL) or Rocky Linux
+| Provides the kernel, system services, and package framework for Lustre target services, HA clustering, and storage and network connectivity. The supported operating system repositories also supply Pacemaker, Corosync, fence agents, NVMe-oF, and multipath packages that are tested together as a solution stack.
+
+| High-availability cluster services (Pacemaker, Corosync, and fence agents)
+| Together, these services provide coordinated high availability for Lustre targets across OSS/MDS server nodes. They maintain cluster membership and quorum, monitor resources, orchestrate ordered failover, and isolate unresponsive nodes before activating shared targets elsewhere. This coordination prevents split-brain access to E-Series volumes and protects file system integrity during failures.
+
+| NVIDIA DOCA-OFED
+| Provides HCA drivers, RDMA libraries, and management utilities for InfiniBand and RoCE fabrics. The same software stack supports low-latency backend NVMe-oF access to E-Series arrays and high-throughput frontend LNet communication with Lustre clients.
+
+|===
+
+== Ansible automation
+
+Lustre with NetApp E-Series Storage is delivered and deployed using Ansible automation from a control node with management access to the E-Series arrays and OSS/MDS server nodes. An Ansible inventory models the desired solution, including arrays, servers, storage assignments, network interfaces, and HA cluster resources.
+
+The NetApp E-Series Lustre Ansible collection orchestrates the end-to-end deployment by using the SANtricity and Host collections. Together, these collections provision and map E-Series storage, prepare the server operating system, configure NVMe-oF and LNet connectivity, deploy Lustre targets, and create Pacemaker resources. This automation makes the configuration repeatable and simplifies adding building blocks to an existing file system.
+
+The following table summarizes the principal software packages used on the Ansible control node. See the link:https://github.com/NetApp/ansible-lustre[NetApp E-Series Lustre Ansible collection^] for current package dependencies.
+
+[options="header" cols="35%,65%"]
+|===
+| Package | Dependency or purpose
+
+| Python
+| Provides the runtime for Ansible and required Python modules.
+
+| ansible-core
+| Requires Python and runs the NetApp E-Series Ansible collections.
+
+| Additional Python packages
+| `cryptography`, `ipaddr`, `netaddr`, `passlib`, `resolvelib`, `jinja2`, and `pyyaml`
+
+| NetApp E-Series Lustre Ansible collection
+| Configures Lustre, LNet, NVMe-oF host connectivity, and Pacemaker resources.
+
+| NetApp E-Series SANtricity Ansible collection
+| Configures E-Series arrays, storage pools, volumes, and host mappings through the SANtricity Web Services API.
+
+| NetApp E-Series Host Ansible collection
+| Prepares OSS/MDS server nodes for LNet and NVMe-oF connectivity to E-Series arrays.
+|===
+
+== Lustre client software
+
+Lustre client software enables a system to access the parallel file system through the frontend LNet fabric. Each client needs Lustre kernel modules and Lustre client utilities that are compatible with both its running kernel and the Lustre release deployed on the servers.
+
+Use the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^] to find a compatible client operating system and kernel for your Lustre version. Lustre client packages can be built from the NetApp-provided Lustre source code in the link:https://github.com/NetApp/netapp-lustre[netapp-lustre repository^]. After the Lustre client packages are installed, the `lustre_client` role can configure network interfaces, LNet, and create a persistent systemd mount unit for the Lustre file system.
+
+For client deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].
