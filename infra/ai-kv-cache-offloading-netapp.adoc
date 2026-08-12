@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: infra/ai-kv-cache-offloading-netapp.html
 keywords: netapp, kv cache, lmcache, vllm, ai inference, storagegrid, ontap, offloading
-summary: The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization.
+summary: "The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization."
 ---
 
 = KV Cache Offloading with NetApp
