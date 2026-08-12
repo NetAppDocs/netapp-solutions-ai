@@ -10,7 +10,7 @@ summary: The first wave of enterprise AI investment focused on model training an
 :nofooter:
 :icons: font
 :linkattrs:
-:imagesdir: ./media/
+:imagesdir: ../media/
 
 [.lead]
 
