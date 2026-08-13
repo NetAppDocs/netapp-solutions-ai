@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-validation.html
-keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance
-summary: Size Lustre with NetApp E-Series Storage building blocks, decide when to scale, and review the performance validation methodology.
+keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance, capacity
+summary: Size Lustre with NetApp E-Series Storage building blocks by capacity and metadata needs, decide when to scale, and review the factors that affect performance.
 ---
 
 = Lustre with NetApp E-Series Storage - Validation and Sizing Guidance
@@ -13,61 +13,97 @@ summary: Size Lustre with NetApp E-Series Storage building blocks, decide when t
 :imagesdir: ../media/
 
 [.lead]
-Size base and additional building blocks, decide when to add OST-only or MDT+OST capacity, and review the methodology used to validate Lustre with NetApp E-Series Storage performance.
+Size Lustre with NetApp E-Series Storage building blocks by capacity and metadata needs, decide when to add capacity, and review the factors that affect performance.
 
-== Base building block capacity
+== Capacity sizing
 
-A base building block with two EF80 arrays and TLC NVMe drives provides the following Lustre target layout. For a diagram of preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[Primary building block volume distribution] in link:ai-eseries-lustre-hw.html[Hardware components].
-
-The following table summarizes typical usable capacity for a base EF80 building block.
+A base building block with two EF80 arrays provides the following Lustre target layout. For preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[Primary building block volume distribution] in link:ai-eseries-lustre-hw.html[Hardware components].
 
 |===
-| Component | Count | Typical usable capacity (per target)
+| Component | Count | Typical volume size (per target)
 
 | MGS
 | 1
-| 5–10 GiB
+| 5-10 GiB
 
 | MDT
 | 8
-| Approximately 1–2 TiB each
+| Size varies by drive capacity and RAID layout
 
 | OST
 | 32
-| Approximately 22 TiB each (TLC, RAID 6 layout)
+| Size varies by drive capacity and RAID layout
 |===
 
 EF600 building blocks use the same MGS and MDT counts but sixteen OSTs per building block. See link:ai-eseries-lustre-architecture.html[Solution architecture] for platform-specific target counts.
 
-Usable capacity depends on drive capacity, RAID level, and volume allocation percentages in the Ansible inventory. Use the volume sizing percentages in the deployment template as a starting point and adjust for overprovisioning requirements.
+Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
 
-For array-level performance specifications, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^]. EF80 supports up to 5,000,000 IOPS and 57 GB/s write bandwidth per array under peak conditions.
+The following table lists raw and approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
 
-== Scaling decisions
+[cols="2,4,2,2",options="header"]
+|===
+| Drive capacity | Layout (per array) | Raw (building block) | Approximate usable (building block)
 
-=== Add an OST-only building block when:
+| 3.84 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 184.32 TB
+| 125.58 TiB
 
-* File count and metadata load are within capacity of existing MDTs
-* Additional storage capacity and aggregate read/write throughput are required
-* `mdt.*.md_stats` on existing MDTs show no metadata saturation
+| 3.84 TB
+| DDP (24 drives, 2 reserved)
+| 184.32 TB
+| 121.54 TiB
 
-An OST-only building block adds 32 OSTs on EF80 (16 on EF600) and two OSS/MDS server nodes without adding MGS or MDT capacity.
+| 7.68 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 368.64 TB
+| 251.34 TiB
 
-=== Add an MDT+OST building block when:
+| 7.68 TB
+| DDP (24)
+| 368.64 TB
+| 243.26 TiB
 
-* File count or metadata operation rate is approaching MDT capacity
-* `mdt.*.md_stats` on existing MDTs show elevated operation rates or latency
-* Both additional metadata throughput and data capacity are required
+| 15.3 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 734.4 TB
+| 502.84 TiB
 
-An MDT+OST building block adds 8 MDTs and 32 OSTs on EF80 (16 OSTs on EF600).
+| 15.3 TB
+| DDP (24)
+| 734.4 TB
+| 486.72 TiB
 
-=== Pacemaker cluster limits
+| 30.7 TB
+| DDP only
+| 1,473.6 TB
+| 973.48 TiB
 
-Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). For larger deployments, split building blocks evenly across multiple HA clusters. See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules.
+| 61.4 TB
+| DDP only
+| 2,947.2 TB
+| 1,966.96 TiB
+|===
 
-== Scaling example
+Size metadata and data separately, then set volume sizes in the Ansible inventory. The deployment templates format targets with ldiskfs; MDT uses the Lustre default inode ratio, and OST templates set `-i 4096`.
 
-The following example shows a file system with two EF80 building blocks in a single HA cluster. The table lists target counts for a base building block plus an OST-only building block.
+* *Metadata (MDT):* Size MDTs by expected file count. Plan roughly twice the expected file count for growth. An undersized MDT can prevent new file creates even when OST capacity remains.
+* *Data (OST):* Size OSTs from usable capacity and throughput needs.
+* *MGS:* Use a small management target (5-10 GiB) for file system configuration only.
+
+Adjust MDT and OST volume sizes in the inventory for the selected drive capacity. Change `format_options.mkfsoptions` in `eseries_lustre_filesystem_mdt` or `eseries_lustre_filesystem_ost` only when a site needs a different inode ratio. For background on inode ratios, see the link:https://wiki.lustre.org/Lustre_Tuning[Lustre Wiki: Lustre Tuning^]. For when to add building blocks, see <<Scaling>>.
+
+== Scaling
+
+Add building blocks when capacity or metadata load requires it:
+
+* *OST-only:* File count and metadata load are within existing MDT capacity, and you need more data capacity or aggregate throughput. Adds 32 OSTs on EF80 (16 on EF600) and two OSS/MDS server nodes.
+* *MDT+OST:* File count or metadata rate is approaching MDT capacity, or you need both more metadata throughput and data capacity. Adds 8 MDTs and 32 OSTs on EF80 (16 OSTs on EF600).
+
+Use `mdt.*.md_stats` on existing MDTs to confirm whether metadata is saturated. Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). For larger deployments, split building blocks evenly across multiple HA clusters. See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules.
+
+The following example shows a file system with a base building block plus an OST-only building block in one HA cluster.
 
 |===
 | Building block | Type | Servers | Arrays | MGS | MDT | OST
@@ -99,29 +135,12 @@ The following example shows a file system with two EF80 building blocks in a sin
 
 BB2 registers its OST targets against the MGS in BB1 using `mgsnode=`. OST indices for BB2 are assigned globally (for example, OST0032 through OST0063) so that no index conflicts with BB1.
 
-== Validation methodology
+== Performance
 
-Formal validation testing uses industry-standard HPC I/O benchmarks to characterize throughput, IOPS, and metadata performance:
+Formal validation uses IOR, mdtest, and fio from Lustre clients to characterize relative throughput, IOPS, and metadata behavior, and to validate HA failover. These tests do not publish guaranteed performance numbers. Synthetic benchmarks measure best-case behavior and may not reflect real application performance.
 
-* *IOR* - sequential and random read/write throughput at scale
-* *mdtest* - metadata operation rates (create, stat, remove)
-* *fio* - single-node and multi-node block-level characterization
+Performance scales approximately with the number of building blocks. Realized results depend on drive type and pool layout, NVMe-oF path count, LNet fabric and client count, and the mix of data versus metadata I/O.
 
-Tests run from Lustre clients connected to the frontend fabric, with enough clients to saturate OST aggregate bandwidth. Tests include HA failover validation to confirm target recovery within acceptable service interruption windows.
+Contact your NetApp account team for workload-specific sizing and performance recommendations.
 
-== Validation results
-
-NOTE: Validation results, including measured throughput, metadata rates, and scalability data, will be published here after formal testing is complete.
-
-== Sizing guidance
-
-Use the following questions when sizing a deployment:
-
-. Determine total usable capacity required today and at full scale-out.
-. Estimate file count and metadata operation rate to determine MDT count.
-. Calculate the number of base and additional building blocks required.
-. Confirm that the total building block count per HA cluster does not exceed five.
-. Confirm that server, HCA, and array models appear in IMT for *E-Series Lustre*.
-. Select TLC (RAID 6) or QLC (DDP) layout based on drive type.
-
-For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For a field-level inventory checklist, see the deployment template README in the ansible-lustre collection (a standalone checklist will be published on GitHub). For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].
+For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution]. For a field-level inventory checklist, see the deployment template README in the ansible-lustre collection.

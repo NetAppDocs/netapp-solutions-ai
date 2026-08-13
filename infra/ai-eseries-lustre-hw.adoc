@@ -104,7 +104,7 @@ Each EF80 array in a base building block uses all twenty-four NVMe drive slots:
 * 10× drives in RAID 6 for OST storage (first OST pool)
 * 10× drives in RAID 6 for OST storage (second OST pool)
 
-This layout applies when using TLC drives with traditional volume groups. When using QLC drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volume groups inside the pool for MGS and MDT volumes.
+This layout applies when using 3.84 TB, 7.68 TB, or 15.3 TB drives with traditional volume groups. When using 30.7 TB or 61.4 TB Capacity Flash (QLC) drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volumes inside the pool for MGS and MDT volumes, while utilizing default RAID 6 volumes for OSTs.
 
 image:lustre-ef80-driveslots.png["Lustre drive layout with 24 NVMe drives per EF80 array"]
 
@@ -145,8 +145,8 @@ Use the following volume sizing guidelines as a starting point in the Ansible in
 | Approximately 1–2 TiB each (typical)
 
 | OST
-| RAID 6 pool capacity ÷ OST count per pool
-| Approximately 22 TiB each (typical, TLC layout)
+| RAID 6 or DDP capacity ÷ OST count per pool
+| Scales with drive capacity; see link:ai-eseries-lustre-validation.html[Validation and sizing guidance]
 |===
 
 === Primary building block volume distribution
@@ -186,10 +186,12 @@ NetApp EF600 and other EF-Series models are supported with the same building blo
 
 == Storage pool selection: TLC vs QLC
 
-Choose the E-Series pool type based on the NVMe drive type in the arrays:
+Choose the E-Series pool type based on the NVMe drive capacity in the arrays:
 
-* *TLC drives:* Use *RAID 6 volume groups* for OST volumes. Use *RAID 1 volume groups* for MGS and MDT volumes.
-* *QLC drives:* Use *Dynamic Disk Pools (DDP)* for the shared drive pool. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+* *3.84 TB, 7.68 TB, and 15.3 TB drives:* Use *RAID 6 volume groups* for OST volumes and *RAID 1 volume groups* for MGS and MDT volumes, or use DDP for the shared drive pool.
+* *30.7 TB and 61.4 TB Capacity Flash (QLC) drives:* Use *Dynamic Disk Pools (DDP)* only. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+
+For per-array usable capacity estimates by drive size and layout, see link:ai-eseries-lustre-validation.html[Validation and sizing guidance].
 
 == Network requirements
 
