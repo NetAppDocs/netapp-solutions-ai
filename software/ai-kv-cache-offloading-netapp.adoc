@@ -43,7 +43,6 @@ KV cache offloading already helps when a single inference engine outgrows GPU me
   The CPU tier is fast, but it is local to each serving engine process. One instance cannot access KV cache entries that another instance offloaded to its local CPU RAM unless you implement a peer-to-peer channel, which introduces additional latency and operational complexity.Shared storage removes that barrier. CPU RAM remains valuable as a fast-staging tier on each node, but shared S3 or NAS provides the common memory plane that multiple engines can read and write. You are no longer scaling GPUs in isolation you are scaling with shared cache infrastructure.
 
 - *Enabling a three-tier design strategy* 
-+
 --
 A preferable architecture combines:
 
