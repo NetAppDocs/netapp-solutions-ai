@@ -55,9 +55,10 @@ With this architecture, KV cache blocks can be staged from the shared tier into 
 - *Economics of inference, not just speed*
   From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows. That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
 
-- *Boost Inference Performance and GPU investment*
+- *Boost Inference Performance and GPU investment* +
   This benchmark compares inference performance as conversation length and concurrent load increase. When KV cache is kept only in GPU memory, available headroom is exhausted quickly and throughput drops (orange line). With a three-tier design (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform sustains more sessions and avoids the same steep performance decline. In practice, tiering helps you get more work from the same GPUs by reducing repeated prefill computation.
-
+  +
+  --
   * *In simple terms:*
   ** *GPU tier* — handles active, in-flight work.
   ** *CPU tier* — keeps recently used cache close to the serving engine.
@@ -67,7 +68,7 @@ Figure 1 - Multi-round Inference Benchmark
 image:kv-cache-002.png[600,600]
 
 The benchmark indicates that adding shared storage alongside CPU memory does not reduce performance; it extends the usable operating range before throughput degradation appears. Tiering effectively adds memory layers for inference, reducing the need to add GPUs every time session counts, context length, or concurrency increases.
-
+  --
 - *Enterprise fit: standard protocols, no proprietary client*
   Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
 
