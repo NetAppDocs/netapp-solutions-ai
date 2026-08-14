@@ -39,50 +39,42 @@ EF600 building blocks use the same MGS and MDT counts but sixteen OSTs per build
 
 Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
 
-The following table lists raw and approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
+The following table lists approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
 
-[cols="2,4,2,2",options="header"]
+[cols="2,4,2",options="header"]
 |===
-| Drive capacity | Layout (per array) | Raw (building block) | Approximate usable (building block)
+| Drive capacity | Layout (per array) | Approximate usable (building block)
 
 | 3.84 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
-| 184.32 TB
 | 138.08 TB
 
 | 3.84 TB
 | DDP (24 drives, 2 reserved)
-| 184.32 TB
 | 133.63 TB
 
 | 7.68 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
-| 368.64 TB
 | 276.35 TB
 
 | 7.68 TB
 | DDP (24)
-| 368.64 TB
 | 267.47 TB
 
 | 15.3 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
-| 734.4 TB
 | 552.88 TB
 
 | 15.3 TB
 | DDP (24)
-| 734.4 TB
 | 535.15 TB
 
 | 30.7 TB
 | DDP only
-| 1,473.6 TB
 | 1,070.35 TB
 
 | 61.4 TB
 | DDP only
-| 2,947.2 TB
 | 2,162.70 TB
 |===
 
