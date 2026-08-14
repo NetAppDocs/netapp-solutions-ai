@@ -16,10 +16,6 @@ summary: "The first wave of enterprise AI investment focused on model training a
 
 The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization rises quickly not because every request runs a full training pass, but because every follow-up question, every new turn in a conversation, and every concurrent user adds load to the inference stack.
 
-image:kv-cache-001.png[NetApp]
-
-NetApp, Inc. · Technical Marketing
-
 == Introduction
 
 A pattern soon becomes visible: the GPU is doing a surprising amount of repeated work, recomputing attention over tokens it has already processed. That repetition is not a tuning issue alone; it is a memory architecture issue. The industry’s response is a tiered memory strategy built around the KV cache.
