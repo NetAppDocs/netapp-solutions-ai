@@ -67,13 +67,11 @@ image:kv-cache-002.png[600,600]
 The benchmark indicates that adding shared storage alongside CPU memory does not reduce performance; it extends the usable operating range before throughput degradation appears. Tiering effectively adds memory layers for inference, reducing the need to add GPUs every time session counts, context length, or concurrency increases.
 
 - *Enterprise fit: standard protocols, no proprietary client*
-+
-Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
-+
-** *StorageGRID S3*
-** *NFS / pNFS for ONTAP NAS*
-+
-No custom proprietary inference client is required. Operations teams can use the same storage protocols they already operate for other data services, with familiar data protection, security, and multicloud mobility behind them.
+  Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
+
+   ** *StorageGRID S3*
+   ** *NFS / pNFS for ONTAP NAS*
+.. No custom proprietary inference client is required. Operations teams can use the same storage protocols they already operate for other data services, with familiar data protection, security, and multicloud mobility behind them.
 
 == Deploy KV cache offloading
 
