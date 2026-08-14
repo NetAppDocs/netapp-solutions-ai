@@ -37,59 +37,58 @@ KV cache offloading addresses that constraint by moving a previously processed p
 KV cache offloading already helps when a single inference engine outgrows GPU memory. Moving cache blocks to CPU RAM extends capacity on one server. That is useful, but it solves only part of the production problem. Real inference platforms rarely run as a single serving engine instance. They run behind load balancers, scale horizontally, and serve many concurrent users and agents. In that world, shared storage is what turns KV cache from a local optimization into a platform capability.
 
 - *Shared storage enables reuse across serving instances*
-One of the primary benefits of shared storage is the ability to access the same files or objects across multiple instances and nodes. This is especially true in case of a scaled deployment of two or more serving engine instances behind a load balancer, each configured to offload KV cache blocks to the same shared bucket or NAS volume.
+  One of the primary benefits of shared storage is the ability to access the same files or objects across multiple instances and nodes. This is especially true in case of a scaled deployment of two or more serving engine instances behind a load balancer, each configured to offload KV cache blocks to the same shared bucket or NAS volume.
 
-For example, when one instance processes a prompt prefix and offloads the resulting cache blocks, another instance can load those blocks on a cache hit instead of recomputing the same prefill work.
+  For example, when one instance processes a prompt prefix and offloads the resulting cache blocks, another instance can load those blocks on a cache hit instead of recomputing the same prefill work.
 
-That matters because production traffic is distributed. A user’s first question might hit instance A; a follow-up or another user with a similar system prompt might hit instance B. Without shared storage, each instance maintains its own private cache world.
+  That matters because production traffic is distributed. A user’s first question might hit instance A; a follow-up or another user with a similar system prompt might hit instance B. Without shared storage, each instance maintains its own private cache world.
 
 - *CPU memory alone is not enough for multi-instance deployments*
-The CPU tier is fast, but it is local to each serving engine process. One instance cannot access KV cache entries that another instance offloaded to its local CPU RAM unless you implement a peer-to-peer channel, which introduces additional latency and operational complexity.
+  The CPU tier is fast, but it is local to each serving engine process. One instance cannot access KV cache entries that another instance offloaded to its local CPU RAM unless you implement a peer-to-peer channel, which introduces additional latency and operational complexity.
 
-Shared storage removes that barrier. CPU RAM remains valuable as a fast-staging tier on each node, but shared S3 or NAS provides the common memory plane that multiple engines can read and write. You are no longer scaling GPUs in isolation you are scaling with shared cache infrastructure.
+  Shared storage removes that barrier. CPU RAM remains valuable as a fast-staging tier on each node, but shared S3 or NAS provides the common memory plane that multiple engines can read and write. You are no longer scaling GPUs in isolation you are scaling with shared cache infrastructure.
 
-- *Enabling a* three-tier design *strategy*
-A preferable architecture combines:
+- *Enabling a three-tier design strategy*
+  A preferable architecture combines:
 
-- *GPU memory* — active cache for in-flight requests
-- *CPU memory* — fast staging as prompts enters the queue
-- *Shared storage* — durable, large, shareable backing store
-With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
+   - *GPU memory* — active cache for in-flight requests
+   - *CPU memory* — fast staging as prompts enters the queue
+   - *Shared storage* — durable, large, shareable backing store
+  With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
 
 - *Economics of inference, not just speed*
-From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.
+  From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.
 
-Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows.
+  Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows.
 
-That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
+  That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
 
-*Boost Inference Performance and GPU investment*
+- *Boost Inference Performance and GPU investment*
+  This chart compares inference performance as conversation length and load increase. When KV cache is kept only in GPU memory, the system runs out of headroom quickly and throughput drops (indicated by the orange line).
 
-This chart compares inference performance as conversation length and load increase. When KV cache is kept only in GPU memory, the system runs out of headroom quickly and throughput drops (indicated by the orange line).
+  With multi-tier storage in place (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform accommodates more sessions and keeps performance from falling off as quickly. In other words, tiering helps you do more with the same GPUs, instead of hitting memory limits and recomputing the same work repeatedly.
 
-With multi-tier storage in place (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform accommodates more sessions and keeps performance from falling off as quickly. In other words, tiering helps you do more with the same GPUs, instead of hitting memory limits and recomputing the same work repeatedly.
+  *In simple terms:*
 
-*In simple terms:*
+   *GPU tier* - handles what is happening right now
 
-*GPU tier* - handles what is happening right now
+   *CPU tier* - holds recently used cache close to the engine
 
-*CPU tier* - holds recently used cache close to the engine
+   *Shared storage tier* - keeps cache available across servers and frees GPU and CPU memory space for new sessions.
 
-*Shared storage tier* - keeps cache available across servers and frees GPU and CPU memory space for new sessions.
+  Figure 1 - Multi-round Inference Benchmark
+  image:kv-cache-002.png[600,600]
 
-Figure 1 - Multi-round Inference Benchmark
-image:kv-cache-002.png[600,600]
+  The benchmark shows that adding shared storage alongside CPU memory does not slow the system down, instead it extends how far your GPUs can go before performance suffers.
 
-The benchmark shows that adding shared storage alongside CPU memory does not slow the system down, instead it extends how far your GPUs can go before performance suffers.
-
-Additionally, tiering acts like extra memory layers for inference, so you are not forced to buy more GPUs every time user sessions, chat history, or concurrent load increases. With tiering in place, the system supports heavier, more realistic production traffic on the hardware you already have.
+  Additionally, tiering acts like extra memory layers for inference, so you are not forced to buy more GPUs every time user sessions, chat history, or concurrent load increases. With tiering in place, the system supports heavier, more realistic production traffic on the hardware you already have.
 
 - *Enterprise fit: standard protocols, no proprietary client*
-Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
+  Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
 
-- StorageGRID S3
-- NFS / pNFS for ONTAP NAS
-No custom proprietary inference client is required. Operations teams can use the same storage protocols they already operate for other data services, with familiar data protection, security, and multicloud mobility behind them.
+   - StorageGRID S3
+   - NFS / pNFS for ONTAP NAS
+  No custom proprietary inference client is required. Operations teams can use the same storage protocols they already operate for other data services, with familiar data protection, security, and multicloud mobility behind them.
 
 == Deploy KV cache offloading
 
