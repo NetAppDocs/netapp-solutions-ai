@@ -72,7 +72,7 @@ The following figure shows up to five building blocks stacked in a 42U rack (one
 .Lustre parallel file system rack scaling
 image:lustre-2x2-rack-scaling.png["Lustre parallel file system scaling across multiple 42U racks, each with up to five building blocks in one Pacemaker HA cluster"]
 
-For sizing examples and a deployment checklist, see link:ai-eseries-lustre-validation.html[Validation and sizing guidance].
+For sizing examples, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 
 == HA architecture
 

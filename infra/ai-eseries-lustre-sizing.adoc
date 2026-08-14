@@ -1,11 +1,11 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-eseries-lustre-validation.html
+permalink: infra/ai-eseries-lustre-sizing.html
 keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance, capacity
 summary: Size Lustre with NetApp E-Series Storage building blocks by capacity and metadata needs, decide when to scale, and review the factors that affect performance.
 ---
 
-= Lustre with NetApp E-Series Storage - Validation and Sizing Guidance
+= Lustre with NetApp E-Series Storage - Sizing Guidance
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -48,42 +48,42 @@ The following table lists raw and approximate usable capacity for an EF80 buildi
 | 3.84 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
 | 184.32 TB
-| 125.58 TiB
+| 138.08 TB
 
 | 3.84 TB
 | DDP (24 drives, 2 reserved)
 | 184.32 TB
-| 121.54 TiB
+| 133.63 TB
 
 | 7.68 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
 | 368.64 TB
-| 251.34 TiB
+| 276.35 TB
 
 | 7.68 TB
 | DDP (24)
 | 368.64 TB
-| 243.26 TiB
+| 267.47 TB
 
 | 15.3 TB
 | RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
 | 734.4 TB
-| 502.84 TiB
+| 552.88 TB
 
 | 15.3 TB
 | DDP (24)
 | 734.4 TB
-| 486.72 TiB
+| 535.15 TB
 
 | 30.7 TB
 | DDP only
 | 1,473.6 TB
-| 973.48 TiB
+| 1,070.35 TB
 
 | 61.4 TB
 | DDP only
 | 2,947.2 TB
-| 1,966.96 TiB
+| 2,162.70 TB
 |===
 
 Size metadata and data separately, then set volume sizes in the Ansible inventory. The deployment templates format targets with ldiskfs; MDT uses the Lustre default inode ratio, and OST templates set `-i 4096`.

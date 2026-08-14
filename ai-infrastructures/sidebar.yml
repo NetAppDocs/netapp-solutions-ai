@@ -45,10 +45,10 @@ entries:
         url: /infra/ai-eseries-lustre-sw.html
       - title: "Deploy the solution"
         url: /infra/ai-eseries-lustre-deploy.html
-      - title: "Validation and sizing guidance"
-        url: /infra/ai-eseries-lustre-validation.html
-      - title: "Related information"
-        url: /infra/ai-eseries-lustre-conclusion.html
+      - title: "Sizing guidance"
+        url: /infra/ai-eseries-lustre-sizing.html
+      - title: "Related resources"
+        url: /infra/ai-eseries-lustre-resources.html
   - title: "Deploy IBM Spectrum Scale with E-Series storage"
     pdf-filename: "Deploy IBM Spectrum Scale with E-Series storage"
     url: /infra/ai-eseries-spectrumscale.html

@@ -146,7 +146,7 @@ Use the following volume sizing guidelines as a starting point in the Ansible in
 
 | OST
 | RAID 6 or DDP capacity ÷ OST count per pool
-| Scales with drive capacity; see link:ai-eseries-lustre-validation.html[Validation and sizing guidance]
+| Scales with drive capacity; see link:ai-eseries-lustre-sizing.html[Sizing guidance]
 |===
 
 === Primary building block volume distribution
@@ -191,7 +191,7 @@ Choose the E-Series pool type based on the NVMe drive capacity in the arrays:
 * *3.84 TB, 7.68 TB, and 15.3 TB drives:* Use *RAID 6 volume groups* for OST volumes and *RAID 1 volume groups* for MGS and MDT volumes, or use DDP for the shared drive pool.
 * *30.7 TB and 61.4 TB Capacity Flash (QLC) drives:* Use *Dynamic Disk Pools (DDP)* only. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
 
-For per-array usable capacity estimates by drive size and layout, see link:ai-eseries-lustre-validation.html[Validation and sizing guidance].
+For per-building-block usable capacity estimates by drive size and layout, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 
 == Network requirements
 

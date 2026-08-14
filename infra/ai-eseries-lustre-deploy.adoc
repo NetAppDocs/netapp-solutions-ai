@@ -24,7 +24,7 @@ This page assumes you have already sized the solution, verified interoperability
 
 Before you start the deployment, ensure the following:
 
-* You followed the sizing and building-block guidance in link:ai-eseries-lustre-validation.html[Validation and sizing guidance] and selected hardware that matches link:ai-eseries-lustre-hw.html[Hardware components].
+* You followed the sizing and building-block guidance in link:ai-eseries-lustre-sizing.html[Sizing guidance] and selected hardware that matches link:ai-eseries-lustre-hw.html[Hardware components].
 * You confirmed that the server, HCA, E-Series, operating system, Lustre, SANtricity OS, and DOCA-OFED combination is listed for *E-Series Lustre* in the link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^].
 * All OSS/MDS server nodes and E-Series arrays for the planned building blocks are on site and ready to rack.
 * You have credentials and network access for server BMCs, array management ports, and the host that will serve as the Ansible control node.
@@ -391,7 +391,7 @@ mount -t lustre
 lfs df -h
 ----
 
-For performance validation with IOR, mdtest, and fio, see link:ai-eseries-lustre-validation.html[Validation and sizing guidance].
+For performance validation with IOR, mdtest, and fio, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 
 == Expand the file system
 
@@ -400,7 +400,7 @@ To add capacity or metadata performance, extend your existing inventory with an 
 . Add the new building block hosts, arrays, and resource groups (MDT+OST or OST-only) to the same inventory and `host_vars` / `group_vars` you used for the original deployment.
 . Rerun the main deployment playbook against the updated inventory.
 
-See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-validation.html[Validation and sizing guidance] for guidance on when to add each building block type.
+See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-sizing.html[Sizing guidance] for guidance on when to add each building block type.
 
 == Related information
 

@@ -1,11 +1,11 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-eseries-lustre-conclusion.html
+permalink: infra/ai-eseries-lustre-resources.html
 keywords: Lustre, NetApp E-Series, EF80, documentation, references, Ansible
 summary: Find related documentation, tools, and software for Lustre with NetApp E-Series Storage.
 ---
 
-= Lustre with NetApp E-Series Storage - Related information
+= Lustre with NetApp E-Series Storage - Related resources
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -13,7 +13,7 @@ summary: Find related documentation, tools, and software for Lustre with NetApp 
 :imagesdir: ../media/
 
 [.lead]
-Use these links for related documentation, tools, and software as you plan or expand a Lustre with NetApp E-Series Storage deployment. For sizing and deployment steps, see link:ai-eseries-lustre-validation.html[Validation and sizing guidance] and link:ai-eseries-lustre-deploy.html[Deploy the solution].
+Use these links for related documentation, tools, and software as you plan or expand a Lustre with NetApp E-Series Storage deployment. For sizing and deployment steps, see link:ai-eseries-lustre-sizing.html[Sizing guidance] and link:ai-eseries-lustre-deploy.html[Deploy the solution].
 
 == NetApp resources
 
