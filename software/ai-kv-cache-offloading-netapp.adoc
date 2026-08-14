@@ -48,7 +48,8 @@ KV cache offloading already helps when a single inference engine outgrows GPU me
   ** *GPU memory* — active cache for in-flight requests
   ** *CPU memory* — fast staging as prompts enters the queue
   ** *Shared storage* — durable, large, shareable backing store
-  With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
+
+ With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
 
 - *Economics of inference, not just speed*
   From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.
