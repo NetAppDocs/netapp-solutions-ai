@@ -48,7 +48,7 @@ KV cache offloading already helps when a single inference engine outgrows GPU me
   ** *GPU memory* — active cache for in-flight requests.
   ** *CPU memory* — fast staging as prompts enters the queue.
   ** *Shared storage* — durable, large, shareable backing store.
-+
++ 
 With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
 
 - *Economics of inference, not just speed*
@@ -59,20 +59,20 @@ With this architecture, KV cache blocks can be staged from the shared tier into 
 
   With multi-tier storage in place (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform accommodates more sessions and keeps performance from falling off as quickly. In other words, tiering helps you do more with the same GPUs, instead of hitting memory limits and recomputing the same work repeatedly.
 
-  *In simple terms:*
+  *In simple terms:* +
 
-   *GPU tier* - handles what is happening right now
+  ** *GPU tier* - handles what is happening right now
 
-   *CPU tier* - holds recently used cache close to the engine
+  ** *CPU tier* - holds recently used cache close to the engine
 
-   *Shared storage tier* - keeps cache available across servers and frees GPU and CPU memory space for new sessions.
+  ** *Shared storage tier* - keeps cache available across servers and frees GPU and CPU memory space for new sessions.
 
-  Figure 1 - Multi-round Inference Benchmark
-  image:kv-cache-002.png[600,600]
+Figure 1 - Multi-round Inference Benchmark
+image:kv-cache-002.png[600,600]
 
-  The benchmark shows that adding shared storage alongside CPU memory does not slow the system down, instead it extends how far your GPUs can go before performance suffers.
+The benchmark shows that adding shared storage alongside CPU memory does not slow the system down, instead it extends how far your GPUs can go before performance suffers.
 
-  Additionally, tiering acts like extra memory layers for inference, so you are not forced to buy more GPUs every time user sessions, chat history, or concurrent load increases. With tiering in place, the system supports heavier, more realistic production traffic on the hardware you already have.
+Additionally, tiering acts like extra memory layers for inference, so you are not forced to buy more GPUs every time user sessions, chat history, or concurrent load increases. With tiering in place, the system supports heavier, more realistic production traffic on the hardware you already have.
 
 - *Enterprise fit: standard protocols, no proprietary client*
   Shared storage is important, but not all shared storage is created equal. NetApp supports KV cache offloading using industry-standard protocols and tooling:
