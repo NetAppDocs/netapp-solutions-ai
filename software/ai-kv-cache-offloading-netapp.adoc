@@ -48,8 +48,7 @@ KV cache offloading already helps when a single inference engine outgrows GPU me
   ** *GPU memory* — active cache for in-flight requests.
   ** *CPU memory* — fast staging as prompts enters the queue.
   ** *Shared storage* — durable, large, shareable backing store.
-
-With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
+  With this architecture, KV cache blocks can be staged from the shared tier into CPU memory as new requests arrive, keeping the GPU focused on active work while still retaining durable cache on storage.
 
 - *Economics of inference, not just speed*
   From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows. That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
@@ -57,7 +56,7 @@ With this architecture, KV cache blocks can be staged from the shared tier into 
 - *Boost Inference Performance and GPU investment*
   This chart compares inference performance as conversation length and load increase. When KV cache is kept only in GPU memory, the system runs out of headroom quickly and throughput drops (indicated by the orange line).With multi-tier storage in place (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform accommodates more sessions and keeps performance from falling off as quickly. In other words, tiering helps you do more with the same GPUs, instead of hitting memory limits and recomputing the same work repeatedly.
 
-  ** In simple terms:
+  * *In simple terms:*
 
   ** *GPU tier* - handles what is happening right now
 
