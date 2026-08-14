@@ -110,12 +110,14 @@ For this deployment, you will:
 - Python and uv installed
 - Docker and NVIDIA Container Toolkit installed (required for the vLLM router in Step 4)
 - Network access to download the model (for example, Hugging Face) and to reach your storage endpoint
+
 ==== StorageGRID S3 backend
 
 - S3 bucket created for KV cache use
 - Read/write credentials for the bucket
 - Network connectivity from the GPU server to the S3 endpoint
 - Virtual hosted-style S3 requests enabled
+
 ==== ONTAP pNFS/NFS backend
 
 - ONTAP volume exported to the GPU server(s)
@@ -234,12 +236,25 @@ docker run -d --rm --name vllm-router \
 
 Send traffic to link:http://localhost:8000/v1[http://localhost:8000/v1^]. The router distributes requests; LMCache and shared storage allow cache reuse across instances, not only within one GPU.
 
+For example, you can send a request to the router using curl like this (replace <shared_api_key> with your respective API key):
+
+[source,cli]
+----
+curl -s http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H 'Authorization: Bearer <shared_api_key>' \
+  -d '{
+    "model": "Qwen/Qwen3-8B",
+    "messages": [{"role": "user", "content": "What is 2+2?"}]
+  }' | jq .
+----
+
 === 5. Validate that tiering is working
 
 - Both vLLM processes listen on 8001 and 8002; router responds on 8000.
 - Send a request with a long prefix through the router.
 - Confirm objects or files appear on shared storage (S3 bucket or ls -ltr /mnt/kvcache).
-- Send a similar request again second request should show faster prefill or cache-hit behavior in logs.
+- Send a similar request again - second request should show faster prefill or cache-hit behavior in logs.
 - Repeat through the router so traffic may hit the other instance.
 
 == Conclusion
