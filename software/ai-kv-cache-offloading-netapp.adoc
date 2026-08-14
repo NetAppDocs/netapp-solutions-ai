@@ -236,7 +236,7 @@ docker run -d --rm --name vllm-router \
 
 Send traffic to link:http://localhost:8000/v1[http://localhost:8000/v1^]. The router distributes requests; LMCache and shared storage allow cache reuse across instances, not only within one GPU.
 
-For example, you can send a request to the router using curl like this (replace <shared_api_key> with your respective API key):
+For example, you can send a request to the router using curl as follows (replace <shared_api_key> with your respective API key):
 
 [source,cli]
 ----
