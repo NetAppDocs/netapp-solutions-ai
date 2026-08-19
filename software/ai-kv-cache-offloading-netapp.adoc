@@ -13,7 +13,6 @@ summary: Learn how KV cache offloading to CPU memory and shared NetApp StorageGR
 :imagesdir: ../media/
 
 [.lead]
-
 The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization rises quickly not because every request runs a full training pass, but because every follow-up question, every new turn in a conversation, and every concurrent user adds load to the inference stack.
 
 == Introduction
