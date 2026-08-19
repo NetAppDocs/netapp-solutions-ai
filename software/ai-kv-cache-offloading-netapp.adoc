@@ -66,7 +66,7 @@ This benchmark compares inference performance as conversation length and concurr
 
 Figure 1 - Multi-round Inference Benchmark
 
-image:kv-cache-002.png[600,600]
+image:kv-cache-002.png["Multi-round inference benchmark",600,600]
 
 The benchmark indicates that adding shared storage alongside CPU memory does not reduce performance; it extends the usable operating range before throughput degradation appears. Tiering effectively adds memory layers for inference, reducing the need to add GPUs every time session counts, context length, or concurrency increases.
 --
