@@ -134,7 +134,7 @@ Create a virtual environment and install the vLLM and LMCache. Refer to the LMCa
 ----
 uv venv .venv
 source .venv/bin/activate
-uv pip install --upgrade lmvache vllm
+uv pip install --upgrade lmcache vllm
 ----
 
 At this point you have the inference engine (vLLM) and the cache layer (LMCache).
