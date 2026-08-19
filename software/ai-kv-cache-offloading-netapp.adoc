@@ -95,7 +95,7 @@ LMCache is a popular open-source KV cache offloading framework. This section des
 
 In a default setup, vLLM keeps KV cache only in GPU memory. As system load grows, that becomes the bottleneck. In this solution, vLLM is paired with LMCache where vLLM serves the model, while LMCache offloads and reuses cache across CPU and shared NetApp storage. LMCache connects to vLLM through a connector; you enable it at startup with vLLM’s --kv-transfer-config flag, so vLLM and LMCache save cache to storage and reload it on a cache hit.
 
-In-process mode is the original method of running LMCache with vLLM. When you use in-process mode, LMCache runs inside the vLLM process. Later LMCache versions added multiprocess mode. This section covers in-process mode.
+In-process mode is the original method of running LMCache with vLLM. When you use in-process mode, LMCache runs inside the vLLM process. Later LMCache versions added multiprocess mode, which is the currently recommended approach for better feature support and performance. This section covers in-process mode, which is marked as deprecated in current LMCache documentation. For new deployments, consider using multiprocess mode instead.
 
 For this deployment, you will:
 
@@ -213,7 +213,7 @@ vllm serve Qwen/Qwen3-8B \
   --port 8002
 ----
 
-Use the same config file, hash seed, and API key so both instances agree on cache block identity and can read each other’s offloaded data from shared storage.
+Use the same config file and hash seed so both instances agree on cache block identity and can read each other’s offloaded data from shared storage. Set the same `VLLM_API_KEY` on both instances so they accept requests from the router.
 
 Note: A single GPU instance can also be used to implement a tiered storage architecture. In such an instance skip step 4.
 
@@ -224,11 +224,12 @@ After both instances are healthy, deploy a router so clients use one OpenAI-comp
 [source,cli]
 ----
 docker run -d --rm --name vllm-router \
- --network host \
+  --network host \
+  -e OPENAI_API_KEY="${VLLM_API_KEY}" \
   ghcr.io/vllm-project/production-stack/router:latest \
   --port 8000 \
   --service-discovery static \
-  --static-backends "http://localhost:8001,http://localhost:8002" \
+  --static-backends "http://<instance1_host>:8001,http://<instance2_host>:8002" \
   --static-models "Qwen/Qwen3-8B,Qwen/Qwen3-8B" \
   --routing-logic roundrobin
 ----
