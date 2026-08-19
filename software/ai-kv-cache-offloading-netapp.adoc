@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: software/ai-kv-cache-offloading-netapp.html
 keywords: netapp, kv cache, lmcache, vllm, ai inference, storagegrid, ontap, offloading
-summary: "The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization."
+summary: Learn how KV cache offloading to CPU memory and shared NetApp StorageGRID S3 or ONTAP NFS/pNFS storage reduces repeated prefill work and enables cache reuse across vLLM instances.
 ---
 
 = KV Cache Offloading with NetApp
