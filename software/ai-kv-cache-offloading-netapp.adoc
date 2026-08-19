@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: software/ai-kv-cache-offloading-netapp.html
 keywords: netapp, kv cache, lmcache, vllm, ai inference, storagegrid, ontap, offloading
-summary: "The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization."
+summary: "The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization."
 ---
 
 = KV Cache Offloading with NetApp
@@ -234,7 +234,7 @@ docker run -d --rm --name vllm-router \
   --routing-logic roundrobin
 ----
 
-Send traffic to link:http://localhost:8000/v1[http://localhost:8000/v1^]. The router distributes requests; LMCache and shared storage allow cache reuse across instances, not only within one GPU.
+Send traffic to \http://localhost:8000/v1. The router distributes requests; LMCache and shared storage allow cache reuse across instances, not only within one GPU.
 
 For example, you can send a request to the router using curl as follows (replace <shared_api_key> with your respective API key):
 
