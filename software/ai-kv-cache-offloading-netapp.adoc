@@ -229,7 +229,7 @@ docker run -d --rm --name vllm-router \
   ghcr.io/vllm-project/production-stack/router:latest \
   --port 8000 \
   --service-discovery static \
-  --static-backends "http://<instance1_host>:8001,http://<instance2_host>:8002" \
+  --static-backends "http://localhost:8001,http://localhost:8002" \
   --static-models "Qwen/Qwen3-8B,Qwen/Qwen3-8B" \
   --routing-logic roundrobin
 ----
