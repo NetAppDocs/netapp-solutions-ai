@@ -76,11 +76,12 @@ The deployment workflow has seven phases. Early phases are completed manually. T
 Rack the Lustre servers and E-Series storage arrays, then cable the physical infrastructure for each building block.
 
 . Rack and cable all Lustre servers and E-Series arrays according to the building block topology.
+. For each EF80 array, cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These dedicated connections provide inter-controller mirroring and are not used for host traffic. EF600 arrays do not require external inter-controller mirroring cables. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
 . Cable the backend NVMe-oF network between servers and arrays according to the platform topology. The following figure shows the EF80 six-HCA layout.
 +
 .EF80 six-HCA backend cabling (RoCE or InfiniBand)
-image:lustre-ef80-6hca-cabling.png["EF80 six-HCA backend NVMe-oF cabling between two OSS/MDS server nodes and two EF80 arrays"]
-. Cable the frontend LNet fabric (IPoIB or RoCE) for Lustre client and inter-node communication. LNet uses four frontend interfaces (the i1 and i4 HCAs) in each configuration, as shown in the cabling figure.
+image:eseries-lustre-ef80-6hca-cabling.png["EF80 six-HCA backend NVMe-oF cabling between two OSS/MDS server nodes and two EF80 arrays"]
+. Connect the four frontend LNet interfaces (the i1 and i4 HCAs) on each Lustre server and the Lustre clients to the dedicated InfiniBand or RoCE switch fabric.
 . When using RoCE, configure the fabric for lossless operation with priority flow control (PFC).
 
 For HCA counts, path requirements, and MTU guidance, see link:ai-eseries-lustre-hw.html[Hardware components].
@@ -187,7 +188,7 @@ The following table lists the site-specific values you must set in the inventory
 | `mgsnode`
 | link:{bb-tmpl}/group_vars/ha_cluster.yml#L98[ha_cluster.yml#L98^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L118[#L118^]
 | Cluster-wide
-| LNet NIDs of the MGS used to register the MDT and OST targets.
+| Include the frontend LNet NIDs from both nodes in the HA pair. List the NIDs from the node configured as the preferred MGS owner first, followed by the partner node's NIDs. MDT and OST targets use these NIDs to register with the MGS.
 
 | Pacemaker cluster name
 | `cluster-name`
@@ -213,11 +214,11 @@ The following table lists the site-specific values you must set in the inventory
 | Cluster-wide
 | Postfix domain used to send alert email.
 
-| NTP server pools
+| NTP time sources
 | `eseries_lustre_time_sync_overrides.server_pools`
 | link:{bb-tmpl}/group_vars/ha_cluster.yml#L250[ha_cluster.yml#L250^]
 | Cluster-wide
-| Time sources for the cluster nodes.
+| Time sources for the cluster nodes. Specify an NTP pool or one or more individual NTP servers. Include the required `pool` or `server` directive and options such as `iburst`.
 
 | Interface PCI-to-name udev map
 | `eseries_ip_udev_rules`
@@ -253,7 +254,7 @@ The following table lists the site-specific values you must set in the inventory
 | `lustre_target_service_nodes`
 | link:{bb-tmpl}/host_vars/lustre_01.yml#L64[host_vars/lustre_01.yml#L64^]
 | Repeat per Lustre server
-| o2ib NIDs used for HA target failover (values at L67).
+| Include frontend LNet NIDs (`@o2ib`) from both nodes in the HA pair so that target services remain reachable after failover (values at L67).
 
 | Array management IP
 | `ansible_host`
@@ -265,7 +266,7 @@ The following table lists the site-specific values you must set in the inventory
 | `mgs` / `mds_NN` / `oss_NN`
 | link:{bb-tmpl}/lustre_inventory.yml#L1[lustre_inventory.yml^]
 | Per building block
-| Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
+| Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
 |===
 
 NOTE: Repeat for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block. Array and BMC credentials are supplied at runtime (for example, with Ansible Vault or `--extra-vars`) and are not stored in the template files.

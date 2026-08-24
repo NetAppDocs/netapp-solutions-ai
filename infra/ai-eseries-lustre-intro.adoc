@@ -24,4 +24,4 @@ A base building block hosts the management service (MGS) and initial metadata ta
 The following figure shows an example deployment with multiple building blocks and Lustre clients connected over LNet.
 
 .Lustre with NetApp E-Series Storage solution overview
-image:lustre-overview-diagram.png["Lustre with NetApp E-Series Storage solution overview with building blocks and clients"]
+image:eseries-lustre-overview-diagram.png["Lustre with NetApp E-Series Storage solution overview with building blocks and clients"]

@@ -17,12 +17,12 @@ Learn how Lustre with NetApp E-Series Storage uses building blocks, high availab
 
 == Building block design
 
-A building block is the fundamental scalable unit of the NetApp E-Series Lustre solution. Each building block consists of two OSS/MDS server nodes in a two-node high availability (HA) cluster, two NetApp E-Series all-flash arrays, dedicated backend NVMe-oF connectivity between servers and arrays, and dedicated frontend LNet connectivity for Lustre clients and inter-node communication. Lustre services are deployed and configured through the NetApp ansible-lustre collection.
+A building block is the fundamental scalable unit of the NetApp E-Series Lustre solution. Each building block consists of two server nodes that provide Lustre object storage server (OSS) and metadata server (MDS) functions in a two-node high availability (HA) cluster, two NetApp E-Series all-flash arrays, dedicated backend NVMe over Fabrics (NVMe-oF) connectivity between servers and arrays, and dedicated frontend Lustre networking (LNet) connectivity for clients and inter-node communication. The NetApp `ansible-lustre` collection uses Ansible automation to deploy and configure the Lustre services.
 
 .Lustre building block
-image:lustre-building-block-simple.png["Lustre HA building block with two OSS/MDS server nodes and two E-Series EF80 arrays"]
+image:eseries-lustre-building-block-simple.png["Lustre HA building block with two OSS/MDS server nodes and two E-Series EF80 arrays"]
 
-Building blocks scale to match file system growth requirements. Every file system requires one base building block. The base building block hosts the management service (MGS) and provides initial metadata target (MDT) and object storage target (OST) capacity. Additional building blocks extend the file system and register their MDT and OST targets against the base building block's MGS. The modular approach allows capacity and performance to scale independently based on workload needs.
+Building blocks scale to match file system growth requirements. Every file system requires one base building block. The base building block hosts the management server (MGS) on a management target (MGT) and provides initial metadata target (MDT) and object storage target (OST) capacity. Additional building blocks extend the file system and register their MDT and OST targets against the base building block's MGS. The modular approach allows capacity and performance to scale independently based on workload needs.
 
 NetApp recommends the following building block configuration profiles for most deployments. The MGS, MDT, and OST counts listed are recommended defaults that are optimized to maximize the performance and capacity of the E-Series storage arrays. Adjust target counts, volume sizes, and E-Series drive allocation in the Ansible inventory to suit workload needs. For example, deployments requiring greater metadata storage capacity can provision more MDTs and fewer OSTs within the same building block hardware.
 
@@ -65,18 +65,18 @@ The Lustre file system scales by adding building blocks when metadata capacity, 
 
 . *One base building block per file system:* Deploy exactly one base building block; it hosts the MGS and initial MDT and OST targets.
 . *Additional building block profile:* Add an OST-only building block when existing MDT capacity is sufficient and data capacity or throughput must increase. Add an MDT+OST building block when metadata performance or namespace capacity becomes the bottleneck.
-. *Pacemaker cluster limit:* Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). Split larger deployments evenly into multiple Pacemaker clusters to avoid resource constraints in large configurations.
+. *HA cluster limit:* Limit each Pacemaker and Corosync HA cluster to five building blocks (ten Lustre server nodes). Split larger deployments evenly into multiple HA clusters to avoid resource constraints in large configurations.
 
 The following figure shows up to five building blocks stacked in a 42U rack (one Pacemaker HA cluster per rack). Multiple racks can participate in a single Lustre file system; only the base building block hosts the MGS.
 
 .Lustre parallel file system rack scaling
-image:lustre-2x2-rack-scaling.png["Lustre parallel file system scaling across multiple 42U racks, each with up to five building blocks in one Pacemaker HA cluster"]
+image:eseries-lustre-2x2-rack-scaling.png["Lustre parallel file system scaling across multiple 42U racks, each with up to five building blocks in one Pacemaker HA cluster"]
 
 For sizing examples, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 
 == HA architecture
 
-Lustre with NetApp E-Series Storage uses a shared-disk high availability (HA) architecture integrated with NetApp E-Series storage. Pacemaker and Corosync manage Lustre target failover between the two OSS/MDS server nodes in each building block. Multipath NVMe-oF connects both OSS/MDS server nodes to the same E-Series volumes, so either node can take over target services when required. For more information, see link:https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_high_availability_clusters/assembly_overview-of-high-availability-configuring-and-managing-high-availability-clusters[Red Hat documentation for high-availability add-ons^].
+Lustre with NetApp E-Series Storage uses a shared-disk high availability (HA) architecture integrated with NetApp E-Series storage. Pacemaker manages the HA resources, and Corosync provides cluster membership and messaging. Together, they manage Lustre target failover between the two OSS/MDS server nodes in each building block. Multipath NVMe-oF connects both OSS/MDS server nodes to the same E-Series volumes, so either node can take over target services when required.
 
 Each MGS, MDT, and OST is configured as an HA resource with its dependencies in a Pacemaker resource group. Pacemaker ensures resources start and stop in the correct order, remain collocated on the same node, and run on only one node at a time. Concurrent access to the same target from both nodes could corrupt the underlying file system.
 
