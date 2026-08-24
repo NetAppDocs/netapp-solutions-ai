@@ -20,7 +20,7 @@ Learn how Lustre with NetApp E-Series Storage uses building blocks, high availab
 A building block is the fundamental scalable unit of the NetApp E-Series Lustre solution. Each building block consists of two server nodes that provide Lustre object storage server (OSS) and metadata server (MDS) functions in a two-node high availability (HA) cluster, two NetApp E-Series all-flash arrays, dedicated backend NVMe over Fabrics (NVMe-oF) connectivity between servers and arrays, and dedicated frontend Lustre networking (LNet) connectivity for clients and inter-node communication. The NetApp `ansible-lustre` collection uses Ansible automation to deploy and configure the Lustre services.
 
 .Lustre building block
-image:eseries-lustre-building-block-simple.png["Lustre HA building block with two OSS/MDS server nodes and two E-Series EF80 arrays"]
+image:eseries-lustre-building-block.png["Lustre HA building block with two OSS/MDS server nodes and two E-Series EF80 arrays"]
 
 Building blocks scale to match file system growth requirements. Every file system requires one base building block. The base building block hosts the management server (MGS) on a management target (MGT) and provides initial metadata target (MDT) and object storage target (OST) capacity. Additional building blocks extend the file system and register their MDT and OST targets against the base building block's MGS. The modular approach allows capacity and performance to scale independently based on workload needs.
 
