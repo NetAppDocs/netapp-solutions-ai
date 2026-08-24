@@ -19,7 +19,7 @@ Lustre with NetApp E-Series Storage is a validated parallel file system solution
 
 Lustre with NetApp E-Series Storage combines the open-source Lustre parallel file system with NetApp E-Series block storage to deliver a scalable, high-performance foundation for data-intensive workloads. Each building block pairs two OSS/MDS server nodes in a two-node high availability (HA) cluster with two E-Series all-flash arrays. Backend NVMe-oF connectivity carries block I/O to the arrays; a separate LNet fabric connects clients and OSS/MDS server nodes for parallel file system access.
 
-A base building block hosts the management service (MGS) and initial metadata targets (MDTs) and object storage targets (OSTs). Additional building blocks register against the base MGS to scale metadata capacity, data capacity, and aggregate throughput as workload demands grow.
+A base building block hosts the management server (MGS) and initial metadata targets (MDTs) and object storage targets (OSTs). Additional building blocks register against the base MGS to scale metadata capacity, data capacity, and aggregate throughput as workload demands grow.
 
 The following figure shows an example deployment with multiple building blocks and Lustre clients connected over LNet.
 

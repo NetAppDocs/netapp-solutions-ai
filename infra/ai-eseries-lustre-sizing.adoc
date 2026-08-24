@@ -37,7 +37,7 @@ A base building block with two EF80 arrays provides the following Lustre target 
 
 EF600 building blocks use the same MGS and MDT counts but sixteen OSTs per building block. See link:ai-eseries-lustre-architecture.html[Solution architecture] for platform-specific target counts.
 
-Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
+Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. 1.92 TB drives are not currently recommended for this solution. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
 
 The following table lists approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
 

@@ -27,7 +27,7 @@ The following table lists the software components used by E-Series arrays and OS
 | Runs on each E-Series array and provides SANtricity System Manager, dual-active controller high availability with automated I/O path failover, automatic load balancing and path monitoring, Dynamic Disk Pools and traditional RAID, automatic drive rebuilds, mirrored cache protection, Data Assurance, proactive drive health monitoring, and online software, firmware, and configuration changes.
 
 | Lustre
-| Presents clients with a single POSIX-compliant namespace while distributing metadata and file data across multiple targets for parallel access. The management service (MGS) stores file system configuration, metadata targets (MDTs) manage the namespace, and object storage targets (OSTs) store file data on E-Series volumes. This separation enables performance and capacity to scale by adding building blocks.
+| Presents clients with a single POSIX-compliant namespace while distributing metadata and file data across multiple targets for parallel access. The management server (MGS) stores file system configuration, metadata targets (MDTs) manage the namespace, and object storage targets (OSTs) store file data on E-Series volumes. This separation enables performance and capacity to scale by adding building blocks.
 
 | Red Hat Enterprise Linux (RHEL) or Rocky Linux
 | Provides the kernel, system services, and package framework for Lustre target services, HA clustering, and storage and network connectivity. The supported operating system repositories also supply Pacemaker, Corosync, fence agents, NVMe-oF, and multipath packages that are tested together as a solution stack.
