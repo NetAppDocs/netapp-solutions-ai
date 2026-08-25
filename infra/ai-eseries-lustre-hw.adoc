@@ -78,7 +78,7 @@ Each OSS/MDS server node in an EF80 building block holds six dual-port HCAs: two
 
 * *LNet HCAs:* Install in PCIe Gen5 x16 slots to reach full frontend throughput.
 * *NVMe-oF HCAs:* Install in PCIe Gen5 x8 or PCIe Gen5 x16 slots.
-* *NUMA balance:* Divide the HCAs evenly between the two NUMA zones so that each zone hosts one LNet HCA and two NVMe-oF HCAs.
+* *NUMA balance:* Divide the HCAs evenly between the two NUMA zones so that each zone hosts two LNet interfaces and four NVMe-oF interfaces.
 
 The following table lists the minimum slots for each OSS/MDS server node in an EF80 building block.
 
@@ -134,7 +134,7 @@ The following table lists EF80 array specifications for a building block (two ar
 | 2U base chassis, 24 internal NVMe SSD slots
 
 | Controllers
-| Dual active controllers (A and B)
+| Dual controllers (A and B)
 
 | Drives
 | 24× NVMe SSD per array
@@ -158,7 +158,7 @@ Each EF80 array in a base building block uses all twenty-four NVMe drive slots:
 * 10× drives in RAID 6 for OST storage (first OST pool)
 * 10× drives in RAID 6 for OST storage (second OST pool)
 
-This layout applies when using 3.84 TB, 7.68 TB, or 15.3 TB drives with traditional volume groups. When using 30.7 TB or 61.4 TB Capacity Flash (QLC) drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volumes inside the pool for MGS and MDT volumes, while utilizing default RAID 6 volumes for OSTs.
+This layout applies when using 3.84 TB, 7.68 TB, or 15.3 TB drives with traditional volume groups. When using 30.7 TB or 61.4 TB Capacity Flash (QLC) drives, provision a single Dynamic Disk Pool across all twenty-four drives and create RAID 1 volumes inside the pool for MGS and MDT volumes, while using default RAID 6 volumes for OSTs.
 
 NOTE: 1.92 TB drives are not currently recommended for this solution. Use one of the validated drive capacities listed above.
 
@@ -212,33 +212,44 @@ The following figure shows preferred Lustre target placement and NVMe-oF connect
 .Base building block target distribution (EF80)
 image:eseries-lustre-target-distribution.png["Lustre target distribution and NVMe-oF paths across OSS/MDS server nodes and E-Series arrays in a base EF80 building block"]
 
-*Array 1 (13 volumes):*
+The following table lists how the volumes are distributed across the two arrays and which server each target prefers.
 
-* 1× MGS
-* 4× MDT
-* 16× OST (8 per RAID 6 pool × 2 pools, or equivalent DDP allocation)
+[cols="1,1,1,1,1,2",options="header"]
+|===
+| Target type | Array 1 | Array 2 | Server 1 | Server 2 | Notes
 
-*Array 2 (12 volumes):*
+| MGS
+| 1
+| 0
+| 1
+| 0
+| Base building block only
 
-* 4× MDT
-* 16× OST
+| MDT
+| 4
+| 4
+| 4
+| 4
+| Each server prefers 2 MDTs from each array
 
-=== Target assignment per server
+| OST
+| 16
+| 16
+| 16
+| 16
+| 8 per RAID 6 pool × 2 pools per array, or equivalent DDP allocation
 
-*OSS/MDS server 1:*
-
-* MGS: 1 (base building block only)
-* MDT: 4 (2 from each array)
-* OST: 16 (8 from each array)
-
-*OSS/MDS server 2:*
-
-* MDT: 4 (2 from each array)
-* OST: 16 (8 from each array)
+| *Total volumes*
+| *21*
+| *20*
+| *21*
+| *20*
+|
+|===
 
 == Other E-Series platforms
 
-NetApp EF600 and other EF-Series models are supported with the same building block architecture. Drive layout, connectivity, and performance characteristics vary by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
+NetApp EF50 and other EF-Series models are supported with the same building block architecture. Drive layout, connectivity, and performance characteristics vary by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
 
 == Storage pool selection: TLC vs QLC
 

@@ -77,7 +77,7 @@ Rack the Lustre servers and E-Series storage arrays, then cable the physical inf
 
 . Rack and cable all Lustre servers and E-Series arrays according to the building block topology.
 +
-image:eseries-lustre-building-block-labeled.png["Lustre building block stacked"]
+image:eseries-lustre-building-block-labeled.png["Labeled Lustre building block stacked with two OSS/MDS servers and two EF80 arrays"]
 
 . For each EF80 array, cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These dedicated connections provide inter-controller mirroring and are not used for host traffic. EF600 arrays do not require external inter-controller mirroring cables. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
 . Cable the backend NVMe-oF network between servers and arrays according to the platform topology. The following figure shows the EF80 six-HCA layout.
@@ -468,6 +468,6 @@ See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling 
 
 * link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection README^]
 * link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre source repository^]
-* HA administration: `roles/lustre/docs/ha_user_guide.md` in the ansible-lustre collection
-* Performance tuning: `roles/lustre/docs/performance_tuning.md` in the ansible-lustre collection
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md[HA administration user guide^]
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/performance_tuning.md[Performance tuning guide^]
 * Client templates: link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients[lustre_deployment_template/clients^]
