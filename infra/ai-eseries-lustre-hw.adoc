@@ -38,6 +38,9 @@ The following table lists the minimum server requirements per OSS/MDS node.
 | Network HCAs
 | Platform-dependent (see <<platform-connectivity,Platform connectivity>>)
 
+| PCIe slots
+| EF80: 2× PCIe Gen5 x16 and 4× PCIe Gen5 x8 (see <<pcie-slots,PCIe slot requirements>>)
+
 | Boot drives
 | 2× drives in RAID 1 (software or hardware RAID recommended)
 
@@ -67,6 +70,51 @@ The following table lists HCA, LNet frontend port, and NVMe-oF path requirements
 |===
 
 NetApp recommends six HCAs per node on EF80 and four HCAs per node on EF600 to maximize the bandwidth of the storage arrays. Both topologies are validated.
+
+[[pcie-slots]]
+=== PCIe slot requirements
+
+Each OSS/MDS server node in an EF80 building block holds six dual-port HCAs: two for LNet and four for NVMe-oF. Slot width determines the bandwidth available to each HCA, so confirm the electrical width of every slot and riser rather than the width of the card alone. A Gen5 x16 card installed in a Gen5 x8 slot runs at x8.
+
+* *LNet HCAs:* Install in PCIe Gen5 x16 slots to reach full frontend throughput.
+* *NVMe-oF HCAs:* Install in PCIe Gen5 x8 or PCIe Gen5 x16 slots.
+* *NUMA balance:* Divide the HCAs evenly between the two NUMA zones so that each zone hosts one LNet HCA and two NVMe-oF HCAs.
+
+The following table lists the minimum slots for each OSS/MDS server node in an EF80 building block.
+
+|===
+| Traffic type | HCAs per node | Minimum slot width | Slots per NUMA zone
+
+| LNet
+| 2
+| PCIe Gen5 x16
+| 1
+
+| NVMe-oF
+| 4
+| PCIe Gen5 x8
+| 2
+|===
+
+Optionally, you can split the ports on a dual-port HCA so that one port carries LNet traffic and the other carries NVMe-oF traffic. Install all four of these HCAs in PCIe Gen5 x16 slots so that every LNet port reaches full throughput, then add two more HCAs in Gen5 x8 or Gen5 x16 slots for the remaining NVMe-oF ports.
+
+.Example riser configurations for Lenovo ThinkSystem SR665 V3
+[%collapsible]
+====
+Both of the following riser combinations meet the slot requirements for an EF80 building block.
+
+*Minimum slot widths*
+
+Install a BPQU riser in riser positions 1 and 2. Each BPQU riser provides one PCIe Gen5 x16 slot and two PCIe Gen5 x8 slots. Together, the risers provide two Gen5 x16 slots for LNet and four Gen5 x8 slots for NVMe-oF, evenly divided between the NUMA zones.
+
+image:eseries-lustre-sr665v3-bpqu-6hca-layout.png["Lenovo ThinkSystem SR665 V3 rear view with BPQU risers in positions 1 and 2, showing one PCIe Gen5 x16 slot and two PCIe Gen5 x8 slots per NUMA zone"]
+
+*All Gen5 x16 slots*
+
+Install a BPQV riser in riser positions 1 and 2, and a BLL9 riser in riser position 3. Each BPQV riser provides two PCIe Gen5 x16 slots. The BLL9 riser provides slot 7 on NUMA zone 0 and slot 8 on NUMA zone 1, both PCIe Gen5 x16. This combination provides six Gen5 x16 slots, three per NUMA zone, and supports splitting LNet and NVMe-oF traffic across the ports of the same HCA.
+
+image:eseries-lustre-sr665v3-bpqv-6hca-layout.png["Lenovo ThinkSystem SR665 V3 rear view with BPQV risers in positions 1 and 2 and a BLL9 riser in position 3, showing six PCIe Gen5 x16 slots balanced across two NUMA zones"]
+====
 
 == EF80 standard building block
 
