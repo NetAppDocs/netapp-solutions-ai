@@ -76,13 +76,16 @@ The deployment workflow has seven phases. Early phases are completed manually. T
 Rack the Lustre servers and E-Series storage arrays, then cable the physical infrastructure for each building block.
 
 . Rack and cable all Lustre servers and E-Series arrays according to the building block topology.
++
+image:eseries-lustre-building-block-labeled.png["Lustre building block stacked"]
+
 . For each EF80 array, cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These dedicated connections provide inter-controller mirroring and are not used for host traffic. EF600 arrays do not require external inter-controller mirroring cables. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
 . Cable the backend NVMe-oF network between servers and arrays according to the platform topology. The following figure shows the EF80 six-HCA layout.
 +
 .EF80 six-HCA backend cabling (RoCE or InfiniBand)
 image:eseries-lustre-ef80-6hca-cabling.png["EF80 six-HCA backend NVMe-oF cabling between two OSS/MDS server nodes and two EF80 arrays"]
 . Connect the four frontend LNet interfaces (the i1 and i4 HCAs) on each Lustre server and the Lustre clients to the dedicated InfiniBand or RoCE switch fabric.
-. When using RoCE, configure the fabric for lossless operation with priority flow control (PFC).
+. When using RoCE, configure the fabric for lossless operation with priority flow control (PFC). The Ansible playbooks configure lossless RoCE on all interfaces in the building block.
 
 For HCA counts, path requirements, and MTU guidance, see link:ai-eseries-lustre-hw.html[Hardware components].
 
@@ -172,8 +175,11 @@ Start from the template that matches the site's network fabric and E-Series arra
 
 === Required site-specific settings
 
-The following table lists the site-specific values you must set in the inventory, along with the local repository and udev-rule settings. Line references point to the RoCE EF80 template files in the `ansible-lustre` `release/1.0.0` tag. The InfiniBand template (`IB_H2_IB_DAC_A2_EF80`) uses the same variable names and structure except for the LNet interface variable, which is noted in the table.
+Set the site-specific values in the inventory, along with the local repository and udev-rule settings. Line references in the table point to the RoCE EF80 template files in the `ansible-lustre` `release/1.0.0` tag. The InfiniBand template (`IB_H2_IB_DAC_A2_EF80`) uses the same variable names and structure except for the LNet interface variable, which is noted in the table.
 
+.Site-specific inventory settings
+[%collapsible]
+====
 [cols="2,3,4,2,4",options="header"]
 |===
 | Field | Ansible variable | Template file (`release/1.0.0`) | Scope | Notes
@@ -268,6 +274,7 @@ The following table lists the site-specific values you must set in the inventory
 | Per building block
 | Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
 |===
+====
 
 NOTE: Repeat for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block.
 
@@ -288,8 +295,8 @@ ansible-playbook -i <inventory_path>/lustre_inventory.yml deploy_lustre_os/deplo
 ----
 . Install NVIDIA DOCA-OFED on each Lustre server. Build the kernel modules against the kernel that the previous step installed. Follow the procedure for your kernel in link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support[NVIDIA DOCA-Host installation and upgrade^].
 +
-[%collapsible]
 .Example DOCA-OFED installation on RHEL or Rocky Linux
+[%collapsible]
 ====
 . Install the DOCA host repository package and refresh the package cache. Replace `<doca_host_package>` with the DOCA host package for your operating system and architecture:
 +
@@ -348,8 +355,11 @@ Deploy Lustre clients on any system that requires file system access by customiz
 +
 * *InfiniBand:* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/IB_lustre_cluster_clients[IB_lustre_cluster_clients^]
 * *RoCE:* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients[ROCE_lustre_cluster_clients^]
-. Customize `lustre_client_inventory.yml`, `host_vars`, and `group_vars` for your clients by setting the site-specific values in the following table. Line references point to the RoCE client template files in the `ansible-lustre` `release/1.0.0` tag; the InfiniBand client template uses the same variables except where noted.
+. Customize `lustre_client_inventory.yml`, `host_vars`, and `group_vars` for your clients. Line references in the table point to the RoCE client template files in the `ansible-lustre` `release/1.0.0` tag; the InfiniBand client template uses the same variables except where noted.
 +
+.Site-specific client inventory settings
+[%collapsible]
+====
 [cols="2,3,4,2,4",options="header"]
 |===
 | Field | Ansible variable | Template file (`release/1.0.0`) | Scope | Notes
@@ -402,6 +412,7 @@ Deploy Lustre clients on any system that requires file system access by customiz
 | Repeat per client
 | Frontend interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
 |===
+====
 +
 NOTE: Repeat for each client. Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`. Populate the shared `clients/passwords.yml` file and encrypt it with Ansible Vault before running the client playbook.
 

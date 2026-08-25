@@ -43,10 +43,10 @@ entries:
         url: /infra/ai-eseries-lustre-hw.html
       - title: "Software components"
         url: /infra/ai-eseries-lustre-sw.html
-      - title: "Deploy the solution"
-        url: /infra/ai-eseries-lustre-deploy.html
       - title: "Sizing guidance"
         url: /infra/ai-eseries-lustre-sizing.html
+      - title: "Deploy the solution"
+        url: /infra/ai-eseries-lustre-deploy.html
       - title: "Related resources"
         url: /infra/ai-eseries-lustre-resources.html
   - title: "Deploy IBM Spectrum Scale with E-Series storage"
