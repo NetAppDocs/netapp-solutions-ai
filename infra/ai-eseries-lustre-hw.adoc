@@ -197,7 +197,7 @@ NetApp EF600 and other EF-Series models are supported with the same building blo
 Choose the E-Series pool type based on the NVMe drive capacity in the arrays:
 
 * *3.84 TB, 7.68 TB, and 15.3 TB drives:* Use *RAID 6 volume groups* for OST volumes and *RAID 1 volume groups* for MGS and MDT volumes, or use DDP for the shared drive pool.
-* *30.7 TB and 61.4 TB Capacity Flash (QLC) drives:* Use *Dynamic Disk Pools (DDP)* only. Create RAID 1 volume groups inside the DDP for MGS and MDT volumes. Allocate OST volumes from the DDP.
+* *30.7 TB and 61.4 TB Capacity Flash (QLC) drives:* Use *Dynamic Disk Pools (DDP)* only. Create RAID 1 volumes inside the DDP for MGS and MDT storage. Create RAID 6 volumes for OST storage from the DDP.
 
 For per-building-block usable capacity estimates by drive size and layout, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 

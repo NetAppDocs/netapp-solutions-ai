@@ -135,4 +135,4 @@ Performance scales approximately with the number of building blocks. Realized re
 
 Contact your NetApp account team for workload-specific sizing and performance recommendations.
 
-For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution]. For a field-level inventory checklist, see the deployment template README in the ansible-lustre collection.
+For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For deployment steps and field-level inventory guidance, see link:ai-eseries-lustre-deploy.html#phase-customize-inventory[Customize the Ansible inventory].

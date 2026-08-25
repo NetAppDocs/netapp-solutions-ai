@@ -40,6 +40,8 @@ The following table lists the software components used by E-Series arrays and OS
 
 |===
 
+NetApp provides prebuilt Lustre server RPMs for Rocky Linux 9.8 and Red Hat Enterprise Linux 9.8.
+
 == Ansible automation
 
 Lustre with NetApp E-Series Storage is delivered and deployed using Ansible automation from a control node with management access to the E-Series arrays and OSS/MDS server nodes. An Ansible inventory models the desired solution, including arrays, servers, storage assignments, network interfaces, and HA cluster resources.
@@ -75,6 +77,6 @@ The following table summarizes the principal software packages used on the Ansib
 
 Lustre client software enables a system to access the parallel file system through the frontend LNet fabric. Each client needs Lustre kernel modules and Lustre client utilities that are compatible with both its running kernel and the Lustre release deployed on the servers.
 
-Use the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^] to find a compatible client operating system and kernel for your Lustre version. Lustre client packages can be built from the NetApp-provided Lustre source code in the link:https://github.com/NetApp/netapp-lustre[netapp-lustre repository^]. After the Lustre client packages are installed, the `lustre_client` role can configure network interfaces, LNet, and create a persistent systemd mount unit for the Lustre file system.
+Use the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^] to find a compatible client operating system and kernel for your Lustre version. NetApp does not provide prebuilt Lustre client packages. Build client packages for the client operating system and kernel from the NetApp-provided Lustre source code in the link:https://github.com/NetApp/netapp-lustre[netapp-lustre repository^]. After the Lustre client packages are installed, the `lustre_client` role can configure network interfaces, LNet, and create a persistent systemd mount unit for the Lustre file system.
 
 For client deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution].

@@ -68,7 +68,7 @@ The deployment workflow has seven phases. Early phases are completed manually. T
 .image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-7.png["Seven"] Verify the deployment
 
 [role="quick-margin-para"]
-<<phase-verify,Confirm cluster health, mounts, capacity, and HA failover>> before you place the file system in production.
+<<phase-verify,Confirm cluster health, mounts, and capacity>> before you place the file system in production.
 
 [[phase-prepare-hardware]]
 == Phase 1: Rack and cable the hardware
@@ -161,7 +161,7 @@ NOTE: Do not configure passwordless SSH to the E-Series arrays. Ansible manages 
 [[phase-customize-inventory]]
 == Phase 4: Customize the Ansible inventory
 
-Copy a deployment template inventory from the ansible-lustre collection and customize it to populate the servers, arrays, and building blocks for your site. For field-level inventory guidance, see the deployment template README in the collection.
+Create a working copy of the `building_blocks` deployment template that preserves its directory structure. Keep the selected inventory under its fabric and platform directory, and retain the shared `playbooks` directory and `passwords.yml` file at the root of `building_blocks`. Customize the inventory to populate the servers, arrays, and building blocks for your site. Use the table in this section for field-level inventory guidance.
 
 === Deployment templates
 
@@ -269,16 +269,63 @@ The following table lists the site-specific values you must set in the inventory
 | Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
 |===
 
-NOTE: Repeat for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block. Array and BMC credentials are supplied at runtime (for example, with Ansible Vault or `--extra-vars`) and are not stored in the template files.
+NOTE: Repeat for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block.
+
+The deployment playbooks load array, Pacemaker, and BMC credentials from the shared `building_blocks/passwords.yml` file. Populate this file and encrypt it with Ansible Vault before deployment, or override the values securely at runtime with `--extra-vars`. Do not commit plaintext credentials to source control.
 
 NOTE: IP addresses, hostnames, interface names, and volume sizing in the deployment templates are examples. Modify all inventory files for the environment before running any playbook.
 
 [[phase-deploy-ha]]
 == Phase 5: Deploy the Lustre HA cluster with Ansible
 
-Deploy the Lustre HA cluster by running the main Ansible playbook to provision storage, configure connectivity, and build the HA cluster.
+Prepare the operating system, install the NVIDIA DOCA-OFED software, then run the main Ansible playbook to provision storage, configure connectivity, and build the HA cluster.
 
-. From the directory that contains your customized inventory, run the main deployment playbook. Replace `<inventory_path>` with the path to your inventory directory.
+. From the `building_blocks/playbooks` directory in your working copy, prepare the operating system on the Lustre servers. Replace `<inventory_path>` with the path to your customized inventory directory:
++
+[source,console]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml deploy_lustre_os/deploy_lustre_os_playbook.yml
+----
+. Install NVIDIA DOCA-OFED on each Lustre server. Build the kernel modules against the kernel that the previous step installed. Follow the procedure for your kernel in link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support[NVIDIA DOCA-Host installation and upgrade^].
++
+[%collapsible]
+.Example DOCA-OFED installation on RHEL or Rocky Linux
+====
+. Install the DOCA host repository package and refresh the package cache. Replace `<doca_host_package>` with the DOCA host package for your operating system and architecture:
++
+[source,console]
+----
+dnf install -y wget tar
+wget https://www.mellanox.com/downloads/DOCA/<doca_host_package>.rpm
+rpm -i <doca_host_package>.rpm
+dnf clean all
+dnf makecache
+----
+. Build the DOCA kernel modules for the running kernel. The script prints the path of the package it creates:
++
+[source,console]
+----
+dnf install -y doca-extra
+/opt/mellanox/doca/tools/doca-kernel-support
+----
+. Install the kernel module repository package that the script created, then refresh the package cache. Replace `<doca_kernel_repo>` with the path from the previous step:
++
+[source,console]
+----
+rpm -Uvh <doca_kernel_repo>.rpm
+dnf makecache
+----
+. Install the DOCA-OFED user space, kernel, and NVMe packages. Replace `<kernel_version>` with the running kernel version:
++
+[source,console]
+----
+dnf install -y doca-ofed-userspace
+dnf install -y --disablerepo=doca doca-kernel-<kernel_version>
+dnf install -y kmod-mlnx-nvme
+----
+====
+
+. Run the main deployment playbook:
 +
 [source,console]
 ----
@@ -289,7 +336,7 @@ NOTE: Adjust `--forks` for the size of the deployment to control how many hosts 
 
 This playbook provisions E-Series volume groups or DDP pools and volumes, configures NVMe-oF host connectivity, formats and mounts the Lustre targets, configures LNet, applies performance tuning, and configures the Pacemaker HA resources. For role tags and incremental execution options, see the lustre role documentation in the collection.
 
-NOTE: A single building block forms a two-node Pacemaker cluster. Node A is given an extra vote in the case of failover. To achieve quorum in a two-node cluster, consider configuring a qdevice. Review the fencing and quorum configuration in the HA administration guide so the cluster can safely recover targets during a node failure.
+NOTE: A deployment with one building block forms a two-node Pacemaker cluster. Node A is given an extra vote in the case of failover. To achieve quorum in a two-node cluster, consider configuring a qdevice. When a deployment contains multiple building blocks, each building block contributes a two-node server pair to the larger Pacemaker cluster, up to the documented cluster limit. Review the fencing and quorum configuration in the HA administration guide so the cluster can safely recover targets during a node failure.
 
 [[phase-deploy-clients]]
 == Phase 6: Deploy Lustre clients with Ansible
@@ -297,7 +344,7 @@ NOTE: A single building block forms a two-node Pacemaker cluster. Node A is give
 Deploy Lustre clients on any system that requires file system access by customizing the client deployment template and running the client playbook.
 
 . Select a compatible client operating system and kernel from the link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^]. Build and install the Lustre client packages for that kernel from link:https://github.com/NetApp/netapp-lustre[netapp-lustre^] if they are not already installed.
-. Copy the client deployment template that matches your fabric:
+. Create a working copy of the `clients` template directory, including its shared `passwords.yml` file, and select the template that matches your fabric:
 +
 * *InfiniBand:* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/IB_lustre_cluster_clients[IB_lustre_cluster_clients^]
 * *RoCE:* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients[ROCE_lustre_cluster_clients^]
@@ -356,7 +403,8 @@ Deploy Lustre clients on any system that requires file system access by customiz
 | Frontend interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
 |===
 +
-NOTE: Repeat for each client. Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`.
+NOTE: Repeat for each client. Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`. Populate the shared `clients/passwords.yml` file and encrypt it with Ansible Vault before running the client playbook.
+
 . Run the client playbook from the client template directory:
 +
 [source,console]
@@ -394,6 +442,8 @@ lfs df -h
 
 For performance validation with IOR, mdtest, and fio, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
 
+For controlled target migration or HA failover testing, follow the procedures in the link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md[HA user guide^].
+
 == Expand the file system
 
 To add capacity or metadata performance, extend your existing inventory with an additional building block. Do not create a separate inventory for the new building block. The playbook automatically assigns unique MDT and OST indices and registers the new targets against the existing MGS.
@@ -406,7 +456,7 @@ See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling 
 == Related information
 
 * link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[ansible-lustre collection README^]
-* link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre RPM repository^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master[netapp-lustre source repository^]
 * HA administration: `roles/lustre/docs/ha_user_guide.md` in the ansible-lustre collection
 * Performance tuning: `roles/lustre/docs/performance_tuning.md` in the ansible-lustre collection
 * Client templates: link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients[lustre_deployment_template/clients^]
