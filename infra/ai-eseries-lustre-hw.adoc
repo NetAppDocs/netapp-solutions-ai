@@ -267,7 +267,7 @@ For per-building-block usable capacity estimates by drive size and layout, see l
 * NVMe/InfiniBand or NVMe/RoCE between each OSS/MDS node and each E-Series array
 * MTU 9000 on NVMe/RoCE backend interfaces (typical)
 * Eight paths from each Lustre node to the storage arrays on EF80 (four to each array), or four paths on EF600 (two to each array)
-* EF80 uses six HCAs per node (i2, i3, i5, and i6 for NVMe-oF; i1 and i4 for LNet). Cable Node A to controller ports whose labels end in `a`, such as `1a` and `2a`. Cable Node B to controller ports whose labels end in `b`, such as `1b` and `2b`. See link:ai-eseries-lustre-deploy.html#phase-prepare-hardware[EF80 six-HCA backend cabling] in link:ai-eseries-lustre-deploy.html[Deploy the solution].
+* EF80 uses six HCAs per node (i2, i3, i5, and i6 for NVMe-oF; i1 and i4 for LNet). Cable Node A to controller ports whose labels end in `a`, such as `1a` and `2a`. Cable Node B to controller ports whose labels end in `b`, such as `1b` and `2b`. See link:ai-eseries-lustre-deploy-hardware.html[EF80 six-HCA backend cabling].
 
 === Frontend (LNet)
 
