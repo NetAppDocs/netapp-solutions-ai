@@ -28,10 +28,8 @@ Before you begin, complete and secure the inventory described in link:ai-eseries
 ----
 ansible-playbook -i <inventory_path>/lustre_inventory.yml deploy_lustre_os/deploy_lustre_os_playbook.yml
 ----
-. Install NVIDIA DOCA-OFED on each Lustre server. Build the kernel modules against the kernel that the previous step installed. Follow the procedure for your kernel in link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support[NVIDIA DOCA-Host installation and upgrade^].
+. Install NVIDIA DOCA-OFED on each Lustre server. Build the kernel modules against the kernel that the previous step installed. Follow the procedure for your kernel in link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support[NVIDIA DOCA-Host installation and upgrade^]. The following example shows a DOCA-OFED installation on RHEL or Rocky Linux.
 +
-.Example DOCA-OFED installation on RHEL or Rocky Linux
-[%collapsible]
 ====
 . Install the DOCA host repository package and refresh the package cache. Replace `<doca_host_package>` with the DOCA host package for your operating system and architecture:
 +
@@ -93,9 +91,6 @@ Deploy Lustre clients on any system that requires file system access by customiz
 * *RoCE:* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients[ROCE_lustre_cluster_clients^]
 . Customize `lustre_client_inventory.yml`, `host_vars`, and `group_vars` for your clients. Line references in the table point to the RoCE client template files in the `ansible-lustre` `release/1.0.0` tag; the InfiniBand client template uses the same variables except where noted.
 +
-.Site-specific client inventory settings
-[%collapsible]
-====
 [cols="2,3,4,2,4",options="header"]
 |===
 | Field | Ansible variable | Template file (`release/1.0.0`) | Scope | Notes
@@ -148,7 +143,6 @@ Deploy Lustre clients on any system that requires file system access by customiz
 | Repeat per client
 | Frontend interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
 |===
-====
 +
 Repeat the settings for each client. Create one `host_vars/client_NN.yml` file for each client and add the corresponding host to `lustre_client_inventory.yml`. Populate the shared `clients/passwords.yml` file and encrypt it with Ansible Vault before running the client playbook.
 

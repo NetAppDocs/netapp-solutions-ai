@@ -30,9 +30,6 @@ Start from the template that matches the site's network fabric:
 
 Set the site-specific values in the inventory, along with the local repository and udev-rule settings. Line references in the table point to the RoCE EF80 template files in the `ansible-lustre` `release/1.0.0` tag. The InfiniBand template uses the same variable names and structure except for the LNet interface variable, which is noted in the table.
 
-.Site-specific inventory settings
-[%collapsible]
-====
 [cols="2,3,4,2,4",options="header"]
 |===
 | Field | Ansible variable | Template file (`release/1.0.0`) | Scope | Notes
@@ -127,7 +124,6 @@ Set the site-specific values in the inventory, along with the local repository a
 | Per building block
 | Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
 |===
-====
 
 Repeat the settings for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block.
 
