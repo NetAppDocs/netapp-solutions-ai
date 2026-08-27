@@ -29,9 +29,7 @@ Before you begin, complete and secure the inventory described in link:ai-eseries
 ansible-playbook -i <inventory_path>/lustre_inventory.yml deploy_lustre_os/deploy_lustre_os_playbook.yml
 ----
 . Install NVIDIA DOCA-OFED on each Lustre server. Build the kernel modules against the kernel that the previous step installed. Follow the procedure for your kernel in link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support[NVIDIA DOCA-Host installation and upgrade^]. The following example shows a DOCA-OFED installation on RHEL or Rocky Linux.
-+
-====
-. Install the DOCA host repository package and refresh the package cache. Replace `<doca_host_package>` with the DOCA host package for your operating system and architecture:
+.. Install the DOCA host repository package and refresh the package cache. Replace `<doca_host_package>` with the DOCA host package for your operating system and architecture:
 +
 [source,console]
 ----
@@ -41,21 +39,21 @@ rpm -i <doca_host_package>.rpm
 dnf clean all
 dnf makecache
 ----
-. Build the DOCA kernel modules for the running kernel. The script prints the path of the package it creates:
+.. Build the DOCA kernel modules for the running kernel. The script prints the path of the package it creates:
 +
 [source,console]
 ----
 dnf install -y doca-extra
 /opt/mellanox/doca/tools/doca-kernel-support
 ----
-. Install the kernel module repository package that the script created, then refresh the package cache. Replace `<doca_kernel_repo>` with the path from the previous step:
+.. Install the kernel module repository package that the script created, then refresh the package cache. Replace `<doca_kernel_repo>` with the path from the previous step:
 +
 [source,console]
 ----
 rpm -Uvh <doca_kernel_repo>.rpm
 dnf makecache
 ----
-. Install the DOCA-OFED user space, kernel, and NVMe packages. Replace `<kernel_version>` with the running kernel version:
+.. Install the DOCA-OFED user space, kernel, and NVMe packages. Replace `<kernel_version>` with the running kernel version:
 +
 [source,console]
 ----
@@ -63,7 +61,6 @@ dnf install -y doca-ofed-userspace
 dnf install -y --disablerepo=doca doca-kernel-<kernel_version>
 dnf install -y kmod-mlnx-nvme
 ----
-====
 
 . Run the main deployment playbook:
 +
