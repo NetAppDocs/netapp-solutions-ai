@@ -26,7 +26,7 @@ Confirm cluster health, Lustre mounts, and file system capacity before productio
 pcs status
 ----
 
-. From a Lustre client, confirm that all MDT and OST targets are mounted and visible:
+. From a Lustre client, confirm that the Lustre file system is mounted:
 +
 [source,cli]
 ----
