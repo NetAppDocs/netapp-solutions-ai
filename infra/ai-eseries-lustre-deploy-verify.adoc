@@ -33,7 +33,7 @@ pcs status
 mount -t lustre
 ----
 
-. From a Lustre client, confirm the file system capacity:
+. From a Lustre client, confirm file system capacity and that MDT and OST targets are visible:
 +
 [source,cli]
 ----

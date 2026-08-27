@@ -35,22 +35,22 @@ Set the site-specific values in the inventory, along with the local repository a
 | Field | Ansible variable | Template file (`release/1.0.0`) | Scope | Notes
 
 | File system name
-| `fsname`
+| `eseries_lustre_filesystem_mgt.format_options.fsname`, `eseries_lustre_filesystem_mdt.format_options.fsname`, `eseries_lustre_filesystem_ost.format_options.fsname`
 | link:{bb-tmpl}/group_vars/ha_cluster.yml#L76[ha_cluster.yml#L76^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L90[#L90^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L110[#L110^]
 | Cluster-wide
-| Maximum 8 characters. Use the same value on all targets and clients.
+| Nested under `format_options` for the MGT, MDT, and OST maps. Maximum 8 characters. Use the same value in all three locations. A top-level `fsname` key has no effect.
 
 | MGS NIDs for target registration
-| `mgsnode`
+| `eseries_lustre_filesystem_mdt.format_options.mgsnode`, `eseries_lustre_filesystem_ost.format_options.mgsnode`
 | link:{bb-tmpl}/group_vars/ha_cluster.yml#L98[ha_cluster.yml#L98^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L118[#L118^]
 | Cluster-wide
-| Include the frontend LNet NIDs from both nodes in the HA pair. List the NIDs from the node configured as the preferred MGS owner first, followed by the partner node's NIDs. MDT and OST targets use these NIDs to register with the MGS.
+| Nested under MDT and OST `format_options`. Include the frontend LNet NIDs from both nodes in the HA pair. List the NIDs from the node configured as the preferred MGS owner first, followed by the partner node's NIDs.
 
 | Pacemaker cluster name
-| `cluster-name`
+| `eseries_lustre_pacemaker_cib_properties_overrides.cluster_properties.cluster-name`
 | link:{bb-tmpl}/group_vars/ha_cluster.yml#L228[ha_cluster.yml#L228^]
 | Cluster-wide
-| Unique name for the HA cluster.
+| Nested under Pacemaker CIB property overrides. Unique name for the HA cluster.
 
 | BMC fencing addresses
 | `eseries_lustre_pacemaker_fencing_agents.fence_redfish.ip`
@@ -93,6 +93,11 @@ Set the site-specific values in the inventory, along with the local repository a
 | link:{bb-tmpl}/host_vars/lustre_01.yml#L10[host_vars/lustre_01.yml#L10^]
 | Repeat per Lustre server
 | One `host_vars/lustre_NN.yml` file per server.
+
+| NVMe-oF backend interfaces
+| `eseries_nvme_roce_interfaces` (RoCE) / `eseries_nvme_ib_interfaces` (InfiniBand)
+| link:{bb-tmpl}/host_vars/lustre_01.yml#L21[RoCE host_vars/lustre_01.yml#L21^], link:{bb-tmpl-ib}/host_vars/lustre_01.yml#L17[InfiniBand host_vars/lustre_01.yml#L17^]
+| Repeat per Lustre server
 
 | LNet cluster interfaces
 | `eseries_roce_interfaces` (RoCE) / `eseries_ipoib_interfaces` (InfiniBand)
