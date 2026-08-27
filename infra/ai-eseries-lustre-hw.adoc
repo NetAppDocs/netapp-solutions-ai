@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-hw.html
-keywords: Lustre, NetApp E-Series, EF80, EF600, hardware, servers, storage, network, NVMe-oF, BYOS
+keywords: Lustre, NetApp E-Series, EF80, hardware, servers, storage, network, NVMe-oF, BYOS
 summary: Review server, E-Series array, storage layout, and networking requirements for Lustre with NetApp E-Series Storage.
 ---
 
@@ -36,10 +36,10 @@ The following table lists the minimum server requirements per OSS/MDS node.
 | 256 GB DDR5 (minimum)
 
 | Network HCAs
-| Platform-dependent (see <<platform-connectivity,Platform connectivity>>)
+| 6 dual-port 200Gb HCAs (see <<platform-connectivity,HCA connectivity>>)
 
 | PCIe slots
-| EF80: 2× PCIe Gen5 x16 and 4× PCIe Gen5 x8 (see <<pcie-slots,PCIe slot requirements>>)
+| 2× PCIe Gen5 x16 and 4× PCIe Gen5 x8 (see <<pcie-slots,PCIe slot requirements>>)
 
 | Boot drives
 | 2× drives in RAID 1 (software or hardware RAID recommended)
@@ -49,27 +49,20 @@ The following table lists the minimum server requirements per OSS/MDS node.
 NetApp validated the solution using Lenovo ThinkSystem SR665 V3 servers. Equivalent servers from other vendors are supported when they meet these requirements.
 
 [[platform-connectivity]]
-=== Platform connectivity
+=== HCA connectivity
 
-The following table lists HCA, LNet frontend port, and NVMe-oF path requirements by E-Series platform.
+The following table lists HCA, LNet frontend port, and NVMe-oF path requirements per OSS/MDS server node.
 
 |===
-| Platform | HCAs per node | LNet ports per Lustre node | NVMe-oF paths per Lustre node | Example HCA
+| HCAs per node | LNet ports per Lustre node | NVMe-oF paths per Lustre node | Example HCA
 
-| EF80
 | 6 (12 ports)
 | 4
 | 8 total (4 to each array)
 | MCX755106AS-HEAT (Dual port 200Gb PCIe gen5 card)
-
-| EF600
-| 4 (8 ports)
-| 4
-| 4 total (2 to each array)
-| MCX755106AS-HEAT (Dual port 200Gb PCIe gen5 card)
 |===
 
-NetApp recommends six HCAs per node on EF80 and four HCAs per node on EF600 to maximize the bandwidth of the storage arrays. Both topologies are validated.
+NetApp recommends six HCAs per node to maximize the bandwidth of the EF80 storage arrays.
 
 [[pcie-slots]]
 === PCIe slot requirements
@@ -146,7 +139,7 @@ The following table lists EF80 array specifications for a building block (two ar
 
 The EF80 platform supports up to twelve host ports per array when three two-port host I/O modules are installed in each controller. The validated Lustre design uses host I/O modules in slots 1 and 2 for eight host ports per array.
 
-Each EF80 array also uses the dedicated slot 4 I/O module for inter-controller mirroring. Cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These connections provide cache mirroring and I/O shipping and are not used for host NVMe-oF traffic. EF600 arrays do not require external inter-controller mirroring cables. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
+Each EF80 array also uses the dedicated slot 4 I/O module for inter-controller mirroring. Cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These connections provide cache mirroring and I/O shipping and are not used for host NVMe-oF traffic. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
 
 For full EF-Series specifications across all models, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
 
@@ -247,10 +240,6 @@ The following table lists how the volumes are distributed across the two arrays 
 |
 |===
 
-== Other E-Series platforms
-
-NetApp EF50 and other EF-Series models are supported with the same building block architecture. Drive layout, connectivity, and performance characteristics vary by platform. Consult IMT and the EF-Series datasheet for model-specific requirements.
-
 == Storage pool selection: TLC vs QLC
 
 Choose the E-Series pool type based on the NVMe drive capacity in the arrays:
@@ -266,7 +255,7 @@ For per-building-block usable capacity estimates by drive size and layout, see l
 
 * NVMe/InfiniBand or NVMe/RoCE between each OSS/MDS node and each E-Series array
 * MTU 9000 on NVMe/RoCE backend interfaces (typical)
-* Eight paths from each Lustre node to the storage arrays on EF80 (four to each array), or four paths on EF600 (two to each array)
+* Eight paths from each Lustre node to the storage arrays (four to each array)
 * EF80 uses six HCAs per node (i2, i3, i5, and i6 for NVMe-oF; i1 and i4 for LNet). Cable Node A to controller ports whose labels end in `a`, such as `1a` and `2a`. Cable Node B to controller ports whose labels end in `b`, such as `1b` and `2b`. See link:ai-eseries-lustre-deploy-hardware.html[EF80 six-HCA backend cabling].
 
 === Frontend (LNet)

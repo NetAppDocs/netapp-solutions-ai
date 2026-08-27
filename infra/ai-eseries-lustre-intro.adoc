@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-intro.html
-keywords: Lustre, NetApp E-Series, EF80, EF600, HPC, AI, parallel file system, NVMe-oF, high-performance storage
+keywords: Lustre, NetApp E-Series, EF80, HPC, AI, parallel file system, NVMe-oF, high-performance storage
 summary: Lustre with NetApp E-Series Storage delivers a validated, scalable parallel file system for AI and HPC workloads using a repeatable building block architecture with NetApp E-Series all-flash arrays.
 ---
 

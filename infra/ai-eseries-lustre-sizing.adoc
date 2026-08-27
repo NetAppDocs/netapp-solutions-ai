@@ -35,8 +35,6 @@ A base building block with two EF80 arrays provides the following Lustre target 
 | Size varies by drive capacity and RAID layout
 |===
 
-EF600 building blocks use the same MGS and MDT counts but sixteen OSTs per building block. See link:ai-eseries-lustre-architecture.html[Solution architecture] for platform-specific target counts.
-
 Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. 1.92 TB drives are not currently recommended for this solution. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
 
 The following table lists approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
@@ -90,8 +88,8 @@ Adjust MDT and OST volume sizes in the inventory for the selected drive capacity
 
 Add building blocks when capacity or metadata load requires it:
 
-* *OST-only:* File count and metadata load are within existing MDT capacity, and you need more data capacity or aggregate throughput. Adds 32 OSTs on EF80 (16 on EF600) and two OSS/MDS server nodes.
-* *MDT+OST:* File count or metadata rate is approaching MDT capacity, or you need both more metadata throughput and data capacity. Adds 8 MDTs and 32 OSTs on EF80 (16 OSTs on EF600).
+* *OST-only:* File count and metadata load are within existing MDT capacity, and you need more data capacity or aggregate throughput. Adds 32 OSTs and two OSS/MDS server nodes.
+* *MDT+OST:* File count or metadata rate is approaching MDT capacity, or you need both more metadata throughput and data capacity. Adds 8 MDTs and 32 OSTs.
 
 Use `mdt.*.md_stats` on existing MDTs to confirm whether metadata is saturated. Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). For larger deployments, split building blocks evenly across multiple HA clusters. See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules.
 

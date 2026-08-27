@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: infra/ai-eseries-lustre-architecture.html
-keywords: Lustre, NetApp E-Series, EF80, EF600, building block, NVMe-oF, LNet, Pacemaker, HA, scaling, clients
+keywords: Lustre, NetApp E-Series, EF80, building block, NVMe-oF, LNet, Pacemaker, HA, scaling, clients
 summary: Understand the Lustre with NetApp E-Series Storage building block design, scaling rules, HA model, network topology, and client integration.
 ---
 
@@ -13,7 +13,7 @@ summary: Understand the Lustre with NetApp E-Series Storage building block desig
 :imagesdir: ../media/
 
 [.lead]
-Learn how Lustre with NetApp E-Series Storage uses building blocks, high availability, network topology, and clients so you can plan capacity, performance, and failover for EF80 and other supported platforms.
+Learn how Lustre with NetApp E-Series Storage uses building blocks, high availability, network topology, and clients so you can plan capacity, performance, and failover.
 
 == Building block design
 
@@ -29,27 +29,24 @@ NetApp recommends the following building block configuration profiles for most d
 The following table summarizes building block types and recommended target counts.
 
 |===
-| Type | MGS | MDTs | OSTs (EF80) | OSTs (EF600) | Use
+| Type | MGS | MDTs | OSTs | Use
 
 | Base
 | 1
 | 8
 | 32
-| 16
 | First building block in a file system. Hosts the MGS and initial MDT and OST capacity.
 
 | MDT+OST
 | 0
 | 8
 | 32
-| 16
 | Adds metadata and data capacity. Register against the base building block MGS.
 
 | OST-only
 | 0
 | 0
 | 32
-| 16
 | Adds data capacity only. Register against the base building block MGS.
 |===
 
