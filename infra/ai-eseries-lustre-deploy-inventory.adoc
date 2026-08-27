@@ -122,7 +122,7 @@ Set the site-specific values in the inventory, along with the local repository a
 | `mgs` / `mds_NN` / `oss_NN`
 | link:{bb-tmpl}/lustre_inventory.yml#L1[lustre_inventory.yml^]
 | Per building block
-| Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include MGS and MDS groups only in the first building block. For an OST-only expansion building block, include OSS groups only and register targets against the existing MGS with `mgsnode`.
+| Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include the MGS group only in the first building block. Include MDS groups in the base building block and each MDT+OST expansion building block; omit MDS groups only from OST-only expansion building blocks. Register expansion targets against the existing MGS with `mgsnode`.
 |===
 
 Repeat the settings for each host and building block. Create one `host_vars/lustre_NN.yml` file per Lustre server and one `host_vars/netapp_NN.yml` file per array, and repeat the inventory groups for each additional building block.
