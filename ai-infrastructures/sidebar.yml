@@ -46,8 +46,9 @@ entries:
       - title: "Sizing guidance"
         url: /infra/ai-eseries-lustre-sizing.html
       - title: "Deploy the solution"
-        url: /infra/ai-eseries-lustre-deploy.html
         entries:
+          - title: "Deploy the Lustre cluster"
+            url: /infra/ai-eseries-lustre-deploy.html
           - title: "Rack and cable hardware"
             url: /infra/ai-eseries-lustre-deploy-hardware.html
           - title: "Prepare the deployment environment"

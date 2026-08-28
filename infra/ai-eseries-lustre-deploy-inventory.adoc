@@ -11,8 +11,6 @@ summary: Customize the NetApp Ansible deployment inventory for Lustre servers, E
 :icons: font
 :linkattrs:
 :imagesdir: ../media/
-:bb-tmpl: https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1
-:bb-tmpl-ib: https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1
 
 [.lead]
 Create a working copy of an EF80 deployment template and customize its inventory for your servers, arrays, networks, and Lustre building blocks.
@@ -36,96 +34,97 @@ Set the site-specific values in the inventory, along with the local repository a
 
 | File system name
 | `eseries_lustre_filesystem_mgt.format_options.fsname`, `eseries_lustre_filesystem_mdt.format_options.fsname`, `eseries_lustre_filesystem_ost.format_options.fsname`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L76[ha_cluster.yml#L76^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L90[#L90^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L110[#L110^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L76[ha_cluster.yml#L76^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L90[#L90^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L110[#L110^]
 | Cluster-wide
 | Nested under `format_options` for the MGT, MDT, and OST maps. Maximum 8 characters. Use the same value in all three locations. A top-level `fsname` key has no effect.
 
 | MGS NIDs for target registration
 | `eseries_lustre_filesystem_mdt.format_options.mgsnode`, `eseries_lustre_filesystem_ost.format_options.mgsnode`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L98[ha_cluster.yml#L98^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L118[#L118^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L98[ha_cluster.yml#L98^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L118[#L118^]
 | Cluster-wide
 | Nested under MDT and OST `format_options`. Include the frontend LNet NIDs from both nodes in the HA pair. List the NIDs from the node configured as the preferred MGS owner first, followed by the partner node's NIDs.
 
 | Pacemaker cluster name
 | `eseries_lustre_pacemaker_cib_properties_overrides.cluster_properties.cluster-name`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L228[ha_cluster.yml#L228^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L228[ha_cluster.yml#L228^]
 | Cluster-wide
 | Nested under Pacemaker CIB property overrides. Unique name for the HA cluster.
 
 | BMC fencing addresses
 | `eseries_lustre_pacemaker_fencing_agents.fence_redfish.ip`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L211[ha_cluster.yml#L211^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L214[#L214^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L217[#L217^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L220[#L220^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L211[ha_cluster.yml#L211^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L214[#L214^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L217[#L217^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L220[#L220^]
 | Repeat per Lustre server
 | Redfish BMC IP address for each server node.
 
 | Alert email recipients
 | `eseries_lustre_alert_email_list`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L233[ha_cluster.yml#L233^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L233[ha_cluster.yml#L233^]
 | Cluster-wide
 | Recipients for HA resource and failure notifications.
 
 | Mail domain
 | `eseries_lustre_mail_service_overrides.conf.mydomain`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L240[ha_cluster.yml#L240^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L240[ha_cluster.yml#L240^]
 | Cluster-wide
 | Postfix domain used to send alert email.
 
 | NTP time sources
 | `eseries_lustre_time_sync_overrides.server_pools`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L250[ha_cluster.yml#L250^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L250[ha_cluster.yml#L250^]
 | Cluster-wide
 | Time sources for the cluster nodes. Specify an NTP pool or one or more individual NTP servers. Include the required `pool` or `server` directive and options such as `iburst`.
 
 | Interface PCI-to-name udev map
 | `eseries_ip_udev_rules`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L172[ha_cluster.yml#L172^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L172[ha_cluster.yml#L172^]
 | Repeat per HCA slot layout
 | Map each PCI slot to a persistent interface name (values at L182). Collect with `lspci -nnvmm`.
 
 | Local package repository (optional)
 | `eseries_common_yum_repos`
-| link:{bb-tmpl}/group_vars/ha_cluster.yml#L256[ha_cluster.yml#L256^], link:{bb-tmpl}/group_vars/ha_cluster.yml#L261[#L261^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L256[ha_cluster.yml#L256^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L261[#L261^]
 | Cluster-wide
 | For air-gapped installs, uncomment the block and set the repository `url` (L264).
 
 | Server management IP
 | `ansible_host`
-| link:{bb-tmpl}/host_vars/lustre_01.yml#L10[host_vars/lustre_01.yml#L10^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L10[host_vars/lustre_01.yml#L10^]
 | Repeat per Lustre server
 | One `host_vars/lustre_NN.yml` file per server.
 
 | NVMe-oF backend interfaces
 | `eseries_nvme_roce_interfaces` (RoCE) / `eseries_nvme_ib_interfaces` (InfiniBand)
-| link:{bb-tmpl}/host_vars/lustre_01.yml#L21[RoCE host_vars/lustre_01.yml#L21^], link:{bb-tmpl-ib}/host_vars/lustre_01.yml#L17[InfiniBand host_vars/lustre_01.yml#L17^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L21[RoCE host_vars/lustre_01.yml#L21^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L17[InfiniBand host_vars/lustre_01.yml#L17^]
 | Repeat per Lustre server
+| Backend interface addresses used for NVMe-oF storage traffic to the E-Series arrays.
 
 | LNet cluster interfaces
 | `eseries_roce_interfaces` (RoCE) / `eseries_ipoib_interfaces` (InfiniBand)
-| link:{bb-tmpl}/host_vars/lustre_01.yml#L47[RoCE host_vars/lustre_01.yml#L47^], link:{bb-tmpl-ib}/host_vars/lustre_01.yml#L38[InfiniBand host_vars/lustre_01.yml#L38^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L47[RoCE host_vars/lustre_01.yml#L47^], link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L38[InfiniBand host_vars/lustre_01.yml#L38^]
 | Repeat per Lustre server
 | Frontend LNet interface addresses (RoCE values at L56; InfiniBand values at L47).
 
 | Corosync node IPs
 | `eseries_lustre_corosync_node_ips`
-| link:{bb-tmpl}/host_vars/lustre_01.yml#L58[host_vars/lustre_01.yml#L58^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L58[host_vars/lustre_01.yml#L58^]
 | Repeat per Lustre server
 | List all node IPs in the HA cluster (values at L62).
 
 | Lustre target service NIDs
 | `lustre_target_service_nodes`
-| link:{bb-tmpl}/host_vars/lustre_01.yml#L64[host_vars/lustre_01.yml#L64^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L64[host_vars/lustre_01.yml#L64^]
 | Repeat per Lustre server
 | Include frontend LNet NIDs (`@o2ib`) from both nodes in the HA pair so that target services remain reachable after failover (values at L67).
 
 | Array management IP
 | `ansible_host`
-| link:{bb-tmpl}/host_vars/netapp_01.yml#L13[host_vars/netapp_01.yml#L13^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/netapp_01.yml#L13[host_vars/netapp_01.yml#L13^]
 | Repeat per E-Series array
 | Management IP of one controller; the API URL derives from it.
 
 | Building-block group membership
 | `mgs` / `mds_NN` / `oss_NN`
-| link:{bb-tmpl}/lustre_inventory.yml#L1[lustre_inventory.yml^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/lustre_inventory.yml#L1[lustre_inventory.yml^]
 | Per building block
 | Each inventory hostname must match the basename of its corresponding `host_vars` file. For example, host `lustre_01` uses `host_vars/lustre_01.yml`, and `netapp_01` uses `host_vars/netapp_01.yml`. Include the MGS group only in the first building block. Include MDS groups in the base building block and each MDT+OST expansion building block; omit MDS groups only from OST-only expansion building blocks. Register expansion targets against the existing MGS with `mgsnode`.
 |===

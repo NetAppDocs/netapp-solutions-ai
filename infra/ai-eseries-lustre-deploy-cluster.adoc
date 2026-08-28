@@ -94,7 +94,7 @@ Deploy Lustre clients on any system that requires file system access by customiz
 
 | Client hosts
 | `lustre_clients`
-| link:{client-tmpl}/lustre_client_inventory.yml#L4[lustre_client_inventory.yml#L4^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/lustre_client_inventory.yml#L4[lustre_client_inventory.yml#L4^]
 | Per client
 | List each client host name.
 
@@ -106,37 +106,37 @@ Deploy Lustre clients on any system that requires file system access by customiz
 
 | LNet interfaces
 | `eseries_lustre_lnet`
-| link:{client-tmpl}/group_vars/all.yml#L7[group_vars/all.yml#L7^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L7[group_vars/all.yml#L7^]
 | Cluster-wide
 | Client-side LNet interface names (values at L13).
 
 | Mount MGS NIDs
 | `lustre_client_mounts.mgsnode`
-| link:{client-tmpl}/group_vars/all.yml#L17[group_vars/all.yml#L17^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L17[group_vars/all.yml#L17^]
 | Cluster-wide
 | MGS NIDs used to mount the file system (values at L20).
 
 | File system name
 | `lustre_client_mounts.fsname`
-| link:{client-tmpl}/group_vars/all.yml#L21[group_vars/all.yml#L21^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L21[group_vars/all.yml#L21^]
 | Cluster-wide
 | Must match the cluster `fsname`.
 
 | Mount point
 | `lustre_client_mounts.mount_point`
-| link:{client-tmpl}/group_vars/all.yml#L22[group_vars/all.yml#L22^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L22[group_vars/all.yml#L22^]
 | Cluster-wide
 | Client mount directory.
 
 | Client management IP
 | `ansible_host`
-| link:{client-tmpl}/host_vars/client_01.yml#L4[host_vars/client_01.yml#L4^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/host_vars/client_01.yml#L4[host_vars/client_01.yml#L4^]
 | Repeat per client
 | One `host_vars/client_NN.yml` file per client.
 
 | Storage fabric interfaces
 | `eseries_roce_interfaces`
-| link:{client-tmpl}/host_vars/client_01.yml#L10[host_vars/client_01.yml#L10^]
+| link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/host_vars/client_01.yml#L10[host_vars/client_01.yml#L10^]
 | Repeat per client
 | Frontend interface addresses (values at L15). The InfiniBand template uses `eseries_ipoib_interfaces` here.
 |===
