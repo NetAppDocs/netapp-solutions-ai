@@ -1,0 +1,136 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-sizing.html
+keywords: Lustre, NetApp E-Series, EF80, sizing, scaling, building block, validation, performance, capacity
+summary: Size Lustre with NetApp E-Series Storage building blocks by capacity and metadata needs, decide when to scale, and review the factors that affect performance.
+---
+
+= Lustre with NetApp E-Series Storage - Sizing Guidance
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Size Lustre with NetApp E-Series Storage building blocks by capacity and metadata needs, decide when to add capacity, and review the factors that affect performance.
+
+== Capacity sizing
+
+A base building block with two EF80 arrays provides the following Lustre target layout. For preferred target placement and NVMe-oF paths, see link:ai-eseries-lustre-hw.html#_primary_building_block_volume_distribution[Primary building block volume distribution] in link:ai-eseries-lustre-hw.html[Hardware components].
+
+|===
+| Component | Count | Typical volume size (per target)
+
+| MGS
+| 1
+| 5-10 GiB
+
+| MDT
+| 8
+| Size varies by drive capacity and RAID layout
+
+| OST
+| 32
+| Size varies by drive capacity and RAID layout
+|===
+
+Each EF80 array uses twenty-four NVMe drives. Supported capacities are 3.84 TB, 7.68 TB, and 15.3 TB with traditional volume groups (RAID 1 for MGS/MDT and RAID 6 for OST) or DDP, and 30.7 TB or 61.4 TB Capacity Flash (QLC) drives with DDP only. 1.92 TB drives are not currently recommended for this solution. For drive slot layout and pool selection, see link:ai-eseries-lustre-hw.html[Hardware components].
+
+The following table lists approximate usable capacity for an EF80 building block (two arrays, 48 drives). Array usable capacity is not the same as final Lustre file system usable capacity. MDT inode allocation, journals, overprovisioning, and inventory volume percentages reduce capacity available to applications.
+
+[cols="2,4,2",options="header"]
+|===
+| Drive capacity | Layout (per array) | Approximate usable (building block)
+
+| 3.84 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 138.08 TB
+
+| 3.84 TB
+| DDP (24 drives, 2 reserved)
+| 133.63 TB
+
+| 7.68 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 276.35 TB
+
+| 7.68 TB
+| DDP (24)
+| 267.47 TB
+
+| 15.3 TB
+| RAID 1 (2+2) + RAID 6 (10) + RAID 6 (10)
+| 552.88 TB
+
+| 15.3 TB
+| DDP (24)
+| 535.15 TB
+
+| 30.7 TB
+| DDP only
+| 1,070.35 TB
+
+| 61.4 TB
+| DDP only
+| 2,162.70 TB
+|===
+
+Size metadata and data separately, then set volume sizes in the Ansible inventory. The deployment templates format targets with ldiskfs; MDT uses the Lustre default inode ratio, and OST templates set `-i 4096`.
+
+* *Metadata (MDT):* Size MDTs by expected file count. Plan roughly twice the expected file count for growth. An undersized MDT can prevent new file creates even when OST capacity remains.
+* *Data (OST):* Size OSTs from usable capacity and throughput needs.
+* *MGS:* Use a small management target (5-10 GiB) for file system configuration only.
+
+Adjust MDT and OST volume sizes in the inventory for the selected drive capacity. Change `format_options.mkfsoptions` in `eseries_lustre_filesystem_mdt` or `eseries_lustre_filesystem_ost` only when a site needs a different inode ratio. For background on inode ratios, see the link:https://wiki.lustre.org/Lustre_Tuning[Lustre Wiki: Lustre Tuning^]. For when to add building blocks, see <<Scaling>>.
+
+== Scaling
+
+Add building blocks when capacity or metadata load requires it:
+
+* *OST-only:* File count and metadata load are within existing MDT capacity, and you need more data capacity or aggregate throughput. Adds 32 OSTs and two OSS/MDS server nodes.
+* *MDT+OST:* File count or metadata rate is approaching MDT capacity, or you need both more metadata throughput and data capacity. Adds 8 MDTs and 32 OSTs.
+
+Use `mdt.*.md_stats` on existing MDTs to confirm whether metadata is saturated. Limit each Pacemaker/Corosync cluster to five building blocks (ten OSS/MDS server nodes). For larger deployments, split building blocks evenly across multiple HA clusters. See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules.
+
+The following example shows a file system with a base building block plus an OST-only building block in one HA cluster.
+
+|===
+| Building block | Type | Servers | Arrays | MGS | MDT | OST
+
+| BB1
+| Base
+| 2
+| 2
+| 1
+| 8
+| 32
+
+| BB2
+| OST-only
+| 2
+| 2
+| 0
+| 0
+| 32
+
+| Total
+|
+| 4
+| 4
+| 1
+| 8
+| 64
+|===
+
+BB2 registers its OST targets against the MGS in BB1 using `mgsnode=`. OST indices for BB2 are assigned globally (for example, OST0032 through OST0063) so that no index conflicts with BB1.
+
+== Performance
+
+Formal validation uses IOR, mdtest, and fio from Lustre clients to characterize relative throughput, IOPS, and metadata behavior, and to validate HA failover. These tests do not publish guaranteed performance numbers. Synthetic benchmarks measure best-case behavior and may not reflect real application performance.
+
+Performance scales approximately with the number of building blocks. Realized results depend on drive type and pool layout, NVMe-oF path count, LNet fabric and client count, and the mix of data versus metadata I/O.
+
+Contact your NetApp account team for workload-specific sizing and performance recommendations.
+
+For drive layout and volume counts, see link:ai-eseries-lustre-hw.html[Hardware components]. For deployment steps, see link:ai-eseries-lustre-deploy.html[Deploy the solution]. For field-level inventory guidance, see link:ai-eseries-lustre-deploy-inventory.html[Customize the Lustre Ansible inventory].

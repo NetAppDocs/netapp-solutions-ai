@@ -1,0 +1,38 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-deploy-hardware.html
+keywords: Lustre, NetApp E-Series, EF80, hardware deployment, NVMe-oF, LNet
+summary: Rack and cable the servers, EF80 arrays, backend NVMe-oF network, and frontend LNet fabric for a Lustre building block.
+---
+
+= Rack and Cable Lustre Hardware
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Rack the Lustre servers and NetApp EF80 arrays, then cable the backend NVMe-oF and frontend LNet fabrics for each building block.
+
+== Before you begin
+
+Review the HCA counts, PCIe slot requirements, path requirements, and MTU guidance in link:ai-eseries-lustre-hw.html[Hardware components].
+
+.Steps
+
+. Rack and cable all Lustre servers and E-Series storage arrays according to the building block topology.
++
+image:eseries-lustre-building-block-labeled.png["Labeled Lustre building block stacked with two OSS/MDS servers and two EF80 arrays"]
+
+. For each EF80 array, cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These dedicated connections provide inter-controller mirroring and are not used for host traffic. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
+. Cable the backend NVMe-oF network between servers and arrays according to the EF80 six-HCA topology.
++
+.EF80 six-HCA backend cabling (RoCE or InfiniBand)
+image:eseries-lustre-ef80-6hca-cabling.png["EF80 six-HCA backend NVMe-oF cabling between two OSS/MDS server nodes and two EF80 arrays"]
+. Connect the four frontend LNet interfaces (the i1 and i4 HCAs) on each Lustre server and the Lustre clients to the dedicated InfiniBand or RoCE switch fabric.
+. When using RoCE, configure the fabric for lossless operation with priority flow control (PFC). The Ansible playbooks configure lossless RoCE on all interfaces in the building block.
+
+== After you finish
+
+link:ai-eseries-lustre-deploy-prepare.html[Prepare the servers, arrays, and Ansible control node].

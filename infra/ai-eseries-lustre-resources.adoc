@@ -1,0 +1,36 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-resources.html
+keywords: Lustre, NetApp E-Series, EF80, documentation, references, Ansible
+summary: Find related documentation, tools, and software for Lustre with NetApp E-Series Storage.
+---
+
+= Lustre with NetApp E-Series Storage - Related resources
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Use these links for related documentation, tools, and software as you plan or expand a Lustre with NetApp E-Series Storage deployment. For sizing and deployment steps, see link:ai-eseries-lustre-sizing.html[Sizing guidance] and link:ai-eseries-lustre-deploy.html[Deploy the solution].
+
+== NetApp resources
+
+* link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^]. Search for *E-Series Lustre*.
+* link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^]
+* link:https://docs.netapp.com/us-en/e-series-santricity/[NetApp SANtricity System Manager documentation^]
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp ansible-lustre collection^]. For inventory field guidance, see link:ai-eseries-lustre-deploy-inventory.html[Customize the Lustre Ansible inventory].
+* link:https://github.com/NetApp/netapp-lustre/tree/master[NetApp Lustre source repository^]. NetApp provides prebuilt Lustre server RPMs for Rocky Linux 9.8 and Red Hat Enterprise Linux 9.8. Build Lustre client packages for the client operating system and kernel from the NetApp source.
+
+== Lustre community
+
+* link:https://www.lustre.org/[Lustre file system^]
+* link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix[Lustre Support Matrix^] for client operating systems and kernels
+* link:https://wiki.lustre.org/Lustre_Tuning[Lustre Wiki: Lustre Tuning^]
+
+== Related NetApp AI infrastructure solutions
+
+* link:ai-eseries-beegfs.html[BeeGFS on NetApp with E-Series Storage]
+* link:ai-eseries-spectrumscale.html[Deploying IBM Spectrum Scale with NetApp E-Series Storage]
+* link:ai-eseries-superpod.html[NVIDIA DGX SuperPOD with NetApp EF-Series]

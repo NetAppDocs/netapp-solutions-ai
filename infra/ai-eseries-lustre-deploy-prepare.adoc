@@ -1,0 +1,92 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-deploy-prepare.html
+keywords: Lustre, NetApp E-Series, Ansible control node, EF80, deployment
+summary: Prepare the EF80 arrays, Lustre servers, and Ansible control node for deployment.
+---
+
+= Prepare the Lustre Deployment Environment
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Configure management access and base settings on each EF80 array and Lustre server, then prepare an Ansible control node to deploy the solution.
+
+== Prepare E-Series arrays
+
+.Steps
+
+. Configure the management interface on each controller and verify that SANtricity System Manager is reachable.
+. Set the array name and administrative credentials that the Ansible inventory will use.
+. Confirm that the array is in an optimal state and that all drives are present and reporting correctly.
+
+For instructions on configuring the management connection, see the link:https://docs.netapp.com/us-en/e-series/[E-Series documentation^].
+
+== Prepare Lustre servers
+
+.Steps
+
+. Configure the baseboard management controller (BMC) on each server for out-of-band access, and set the UEFI system settings for maximum performance.
+. Install a supported operating system (RHEL or Rocky Linux), then configure the host name and the management network port.
+. Prepare all firmware and software packages to meet the requirements for the *E-Series Lustre* solution, as described in link:ai-eseries-lustre-sw.html[Software components].
+
+== Prepare the Ansible control node
+
+Designate a virtual or physical Linux system with management network access to all Lustre servers and E-Series arrays to be the Ansible control node.
+
+The following steps use Ubuntu 24.04. For instructions for another Linux distribution, see the link:https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html[Ansible installation documentation^].
+
+.Steps
+
+. Install Python, pip, and the Python virtual environment package:
++
+[source,console]
+----
+sudo apt-get install python3 python3-pip python3-setuptools python3-venv
+----
+. Create and activate a Python virtual environment:
++
+[source,console]
+----
+python3 -m venv ~/pyenv
+source ~/pyenv/bin/activate
+----
+. Install Ansible and the required Python packages in the activated virtual environment:
++
+[source,console]
+----
+pip install "ansible-core>=2.19" cryptography jinja2 ipaddr netaddr \
+  passlib pyyaml resolvelib
+----
+. Install the NetApp E-Series Lustre Ansible collection. The collection installation also installs its dependent collections, including the SANtricity and Host collections:
++
+[source,console]
+----
+ansible-galaxy collection install netapp_eseries.lustre
+----
+. Verify the installed Ansible, Python, and collection versions:
++
+[source,console]
+----
+ansible --version
+python3 --version
+ansible-galaxy collection list netapp_eseries.lustre
+----
+. Configure passwordless SSH from the control node to each Lustre server. Replace `<ip_or_hostname>` with the management IP address or host name of a server:
++
+[source,console]
+----
+ssh-keygen
+ssh-copy-id <ip_or_hostname>
+----
++
+Repeat `ssh-copy-id` for each Lustre server.
+
+NOTE: Do not configure passwordless SSH to the E-Series arrays. Ansible manages the arrays through the SANtricity Web Services API by using the credentials defined in the inventory.
+
+== After you finish
+
+link:ai-eseries-lustre-deploy-inventory.html[Customize the Ansible inventory].

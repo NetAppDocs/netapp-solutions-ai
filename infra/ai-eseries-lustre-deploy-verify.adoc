@@ -1,0 +1,56 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-deploy-verify.html
+keywords: Lustre, NetApp E-Series, deployment verification, Pacemaker, scaling
+summary: Verify Lustre cluster health, mounts, and capacity, and expand the file system with additional building blocks.
+---
+
+= Verify and Expand the Lustre Deployment
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Confirm cluster health, Lustre mounts, and file system capacity before production use, then use the same inventory to add building blocks when needed.
+
+== Verify the deployment
+
+.Steps
+
+. From a Lustre server, confirm that all Pacemaker resources are started on the expected nodes:
++
+[source,cli]
+----
+pcs status
+----
+
+. From a Lustre client, confirm that the Lustre file system is mounted:
++
+[source,cli]
+----
+mount -t lustre
+----
+
+. From a Lustre client, confirm file system capacity and that MDT and OST targets are visible:
++
+[source,cli]
+----
+lfs df -h
+----
+
+For performance validation with IOR, mdtest, and fio, see link:ai-eseries-lustre-sizing.html[Sizing guidance].
+
+For controlled target migration or HA failover testing, follow the procedures in the link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md[HA administration user guide^].
+
+== Expand the file system
+
+To add capacity or metadata performance, extend your existing inventory with an additional building block. Do not create a separate inventory for the new building block. The playbook automatically assigns unique MDT and OST indices and registers the new targets against the existing MGS.
+
+.Steps
+
+. Add the new building block hosts, arrays, and resource groups (MDT+OST or OST-only) to the same inventory and `host_vars` and `group_vars` files you used for the original deployment.
+. Rerun the main deployment playbook against the updated inventory.
+
+See link:ai-eseries-lustre-architecture.html[Solution architecture] for scaling rules and link:ai-eseries-lustre-sizing.html[Sizing guidance] for guidance on when to add each building block type.

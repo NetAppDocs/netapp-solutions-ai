@@ -74,7 +74,7 @@ This solution is not dependent on specific hardware. The solution is compatible 
 |===
 
 == Support
-NetApp does not offer enterprise support for Apache Airflow, JupyterHub, MLflow, Kubeflow, or Kubernetes. If you are interested in a fully supported MLOps platform, link:https://www.netapp.com/us/contact-us/index.aspx?for_cr=us[contact NetApp^] about fully supported MLOps solutions that NetApp offers jointly with partners.
+NetApp does not offer enterprise support for Apache Airflow, JupyterHub, MLflow, Kubeflow, or Kubernetes. If you are interested in a fully supported MLOps platform, link:https://www.netapp.com/company/contact-us/[contact NetApp^] about fully supported MLOps solutions that NetApp offers jointly with partners.
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from ai/aicp_hardware_and_software_requirements.adoc

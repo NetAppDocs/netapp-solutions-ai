@@ -27,6 +27,8 @@ indexpage:
           url: ../infra/ai-eseries-superpod.html
         - title: "BeeGFS parallel file system with E-Series"
           url: ../infra/ai-eseries-beegfs.html
+        - title: "Lustre parallel file system with E-Series"
+          url: ../infra/ai-eseries-lustre-intro.html
         - title: "IBM Spectrum Scale with E-Series storage"
           url: ../infra/ai-eseries-spectrumscale.html
         - title: "NetApp ONTAP with Lenovo ThinkSystem"

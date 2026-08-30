@@ -166,7 +166,7 @@ ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inven
 Note: 
 - If you do not have passwordless sudo set up on your nodes, then you will need to add `--ask-become-pass` to this command. When using `--ask-become-pass`, it is critical that the ssh user have the SAME password on each node.
 - Refer to the https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md[NetApp Trident CSI Integration for Enterprise RAG^] for details. 
-Refer to the https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html[Trident installation documentation^] for further details.
+Refer to the https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html[Trident installation documentation^] for further details.
 
 === 8. Change the number of iwatch open descriptors 
 Refer to the https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/docs/application_deployment_guide.md#change-number-of-iwatch-open-descriptors[iwatch open descriptors^] for details.
