@@ -1,0 +1,55 @@
+---
+sidebar: sidebar
+permalink: infra/ai-eseries-lustre-deploy.html
+keywords: Lustre, NetApp E-Series, EF80, deployment, Ansible, NVMe-oF
+summary: Follow the workflow to deploy Lustre with NetApp E-Series Storage by using NetApp Ansible automation.
+---
+
+= Deploy Lustre with NetApp E-Series Storage
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+Deploy Lustre with NetApp E-Series Storage by completing the hardware, environment preparation, inventory, Ansible deployment, and verification tasks in order.
+
+== Prerequisites
+
+Before you start the deployment, ensure the following:
+
+* You followed the sizing and building-block guidance in link:ai-eseries-lustre-sizing.html[Sizing guidance] and selected hardware that matches link:ai-eseries-lustre-hw.html[Hardware components].
+* You confirmed that the server, HCA, E-Series, operating system, Lustre, SANtricity OS, and DOCA-OFED combination is listed for *E-Series Lustre* in the link:https://imt.netapp.com/imt/#welcome[NetApp Interoperability Matrix Tool^].
+* All OSS/MDS server nodes and E-Series arrays for the planned building blocks are on site and ready to rack.
+* You have credentials and network access for server BMCs, array management ports, and the host that will serve as the Ansible control node.
+
+NOTE: NetApp supports deploying the Lustre HA cluster and Lustre clients with the link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp E-Series Lustre Ansible collection^]. Do not configure Lustre targets, LNet, NVMe-oF host connectivity, or Pacemaker resources manually.
+
+== Deployment workflow
+
+Complete the following tasks in order:
+
+. link:ai-eseries-lustre-deploy-hardware.html[Rack and cable Lustre hardware].
++
+Rack the Lustre servers and EF80 arrays, then cable the backend NVMe-oF and frontend LNet fabrics.
+. link:ai-eseries-lustre-deploy-prepare.html[Prepare the Lustre deployment environment].
++
+Configure the arrays and servers, then install Ansible and its dependencies on the control node.
+. link:ai-eseries-lustre-deploy-inventory.html[Customize the Lustre Ansible inventory].
++
+Select the template for the site's fabric and populate the servers, arrays, networks, building blocks, and credentials.
+. link:ai-eseries-lustre-deploy-cluster.html[Deploy the Lustre HA cluster and clients].
++
+Prepare the server operating system, install NVIDIA DOCA-OFED, run the main deployment playbook, and configure Lustre clients.
+. link:ai-eseries-lustre-deploy-verify.html[Verify and expand the Lustre deployment].
++
+Confirm cluster health, mounts, and capacity before production use. Extend the existing inventory when the file system needs another building block.
+
+== Related information
+
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0[NetApp E-Series Lustre Ansible collection^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master[NetApp Lustre source repository^]
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md[HA administration user guide^]
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/performance_tuning.md[Performance tuning guide^]
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients[Lustre client deployment templates^]

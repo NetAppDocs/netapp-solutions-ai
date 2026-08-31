@@ -32,7 +32,7 @@ FSx ONTAP (Amazon FSx ONTAP) is an AWS storage service. It includes a file syste
 === Data Access
 In real-world scenarios, data scientists typically utilize the existing data stored in FSx ONTAP to build their machine learning models. However, for demonstration purposes, since the FSx ONTAP file system is initially empty after creation, it is necessary to manually upload the training data. This can be achieved by mounting FSx ONTAP as a volume to SageMaker. Once the file system is successfully mounted, you can upload your dataset to the mounted location, making it accessible for training your models within the SageMaker environment. This approach allows you to leverage the storage capacity and capabilities of FSx ONTAP while working with SageMaker for model development and training.
 
-The data reading process involves configuring FSx ONTAP as a private S3 bucket. To learn the detailed configuration instructions, please refer to link:ai-mlops-fsxn-s3.html[Part 1 - Integrating Amazon FSx for NetApp ONTAP (FSx ONTAP)) as a private S3 bucket into AWS SageMaker]
+The data reading process involves configuring FSx ONTAP as a private S3 bucket. To learn the detailed configuration instructions, please refer to link:ai-mlops-fsxn-s3.html[Part 1 - Integrating Amazon FSx for NetApp ONTAP (FSx ONTAP) as a private S3 bucket into AWS SageMaker]
 
 == Integration Overview
 image:mlops-fsxn-sagemaker-integration-training-001.png[Training workflow]
