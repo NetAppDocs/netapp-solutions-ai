@@ -12,13 +12,1523 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
-David Arnette, NetApp
+Karthikeyan Nagalingam, NetApp
 
 [.lead]
-TR-4851 demonstrates the use of NetApp StorageGRID object storage as a data repository and management system for machine learning (ML) and deep learning (DL) software development. This paper describes the data flow and requirements in autonomous vehicle software development and the StorageGRID features that streamline the data lifecycle. This solution applies to any multistage data pipeline workflow that is typical in ML and DL development processes. 
+=== AI Ring Data Pipeline with Apache Airflow Orchestration, StorageGRID, ONTAP NAS, and NetApp XCP
 
-link:https://www.netapp.com/pdf.html?item=/media/19399-tr-4851.pdf[TR-4851: NetApp StorageGRID data lake for autonomous driving workloads - Solution design^] 
+This validated architecture presents a governed, storage-tier-aware AI data pipeline orchestrated by Apache Airflow. The solution ingests raw tabular and text data from NetApp StorageGRID, prepares deterministic datasets and manifests on an ONTAP NAS bucket, and uses NetApp XCP to move prepared data to either NetApp ONTAP S3 or LustreFS according to runtime configuration. It then trains and incrementally fine-tunes scikit-learn models, generates predictions, checkpoints successful training outputs, and archives models, metrics, manifests, and prediction evidence to StorageGRID. The architecture provides reproducible execution, configurable storage placement, failure guardrails, checkpoint-based recovery, and auditable lineage across the AI lifecycle. It is intended for architects, data engineers, ML engineers, and infrastructure teams who need a repeatable deployment and validation pattern for AI pipelines across NetApp storage tiers.
 
+'''''
 
-// NetApp Solutions restructuring (jul 2025) - renamed from ai/tr-4851.adoc
+=== Table of Contents
 
+[arabic]
+. link:#1-executive-summary[Executive Summary]
+. link:#2-solution-overview[Solution Overview]
+. link:#3-business-value-and-customer-benefits[Business Value and Customer Benefits]
+. link:#4-architecture-overview[Architecture Overview]
+. link:#5-netapp-technology-components[NetApp Technology Components]
+. link:#6-third-party-and-open-source-technology-components[Third-Party and Open Source Technology Components]
+. link:#7-solution-design[Solution Design]
+. link:#8-storage-architecture-detail[Storage Architecture Detail]
+. link:#9-data-mobility-with-netapp-xcp[Data Mobility with NetApp XCP]
+. link:#10-deployment-architecture[Deployment Architecture]
+. link:#11-configuration-reference[Configuration Reference]
+. link:#12-operational-guide[Operational Guide]
+. link:#13-security-considerations[Security Considerations]
+. link:#14-validation-and-testing[Validation and Testing]
+. link:#15-netapp-differentiation-and-competitive-positioning[NetApp Differentiation and Competitive Positioning]
+. link:#16-appendices[Appendices]
+
+'''''
+
+=== 1. Executive Summary
+
+==== 1.1 Purpose of this Document
+
+This NetApp Validated Architecture (NVA) documents a production-grade AI data pipeline that ingests raw data, prepares it for machine learning, moves it at high speed between storage tiers using NetApp XCP, trains and incrementally fine-tunes models, generates predictions, and archives results for governance and reproducibility. It is intended to guide architects and infrastructure teams through design rationale, deployment, configuration, and operations.
+
+==== 1.2 Audience
+
+Solution architects, storage/infrastructure engineers, data platform engineers, ML engineers, and IT decision-makers evaluating NetApp storage and data mobility technology for AI/ML workloads.
+
+==== 1.3 Business Challenge Overview
+
+AI teams need data that lands in object storage to be reliably transformed and then delivered to whichever compute-storage tier best serves training — elastic S3 for general workloads, or high-performance parallel filesystems (LustreFS) for I/O-intensive training. Without a governed data mobility and orchestration layer, teams resort to fragile, single-purpose scripts lacking retries, checkpointing, storage flexibility, and audit trails.
+
+Enterprise AI programs are stalling — not because of model or compute limitations, but because legacy storage was not designed for AI. Moving massive datasets, keeping GPUs fed during training, managing checkpoint overhead, and controlling storage costs consume more effort than the AI work itself. Single-tier architectures force a performance-versus-cost trade-off that compounds as models and datasets grow.
+
+==== 1.4 NetApp Solution Summary
+
+The solution orchestrates ingestion, preparation, data mobility, training, fine-tuning, inference, and archival as an Apache Airflow DAG. StorageGRID anchors the raw-data and long-term archival object tiers. Data preparation writes run-stamped datasets and manifests to an ONTAP NAS bucket, exposed by NFS as the XCP source. NetApp XCP then moves the prepared data to a runtime-selectable training destination — NetApp ONTAP S3 or LustreFS — with no code changes required to switch tiers.
+
+This pipeline is a concrete implementation of the broader *NetApp AI Ring Architecture* — a purpose-built, three-tier storage framework that aligns performance and cost to each AI workload phase:
+
+* *Ring 1 (E-Series {plus} LustreFS):* Ultra-high-throughput parallel storage for GPU-intensive model training and checkpointing.
+* *Ring 2 (ONTAP AFX):* High-performance active storage for training, fine-tuning, inference, vector/RAG workloads, and selected data preparation use cases, with FAS and NAS bucket support.
+* *Ring 3 (StorageGRID):* Scalable S3-compatible object storage for data ingestion, governance, and long-term retention.
+
+Data movement across tiers is fully automated via Apache Airflow combined with NetApp XCP, FlexCache, and FabricPool — eliminating manual operations from the critical path entirely.
+
+==== 1.5 Why NetApp
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Dimension |Conventional Approach |NetApp AI Ring Architecture
+|GPU Productivity |Storage bottlenecks idle expensive compute |GPUDirect Storage over RDMA helps keep GPU clusters fully utilized
+|Data Mobility |Manual scripts delay pipelines |Automated inter-tier movement via Airflow {plus} XCP
+|Cost Control |All data on high-cost flash |FabricPool auto-demotes cold data to low-cost object storage
+|Multi-Tenancy |Shared namespaces risk data leakage |Dedicated ONTAP SVMs enforce strict tenant isolation
+|Workload Breadth |Separate stacks for training vs. inference |Single unified architecture spanning the full AI lifecycle
+|===
+
+==== 1.6 The Business Case
+
+GPU compute is typically the largest capital expense in an AI infrastructure budget. Every hour a cluster sits idle waiting for data is direct, measurable financial loss. NetApp ensures the right data is on the right tier at the right time — automatically — delivering higher AI throughput, lower TCO, and an architecture that scales from POC to enterprise production without redesign.
+
+==== 1.7 Key Benefits at a Glance
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Benefit |Description
+|Unified orchestration |Single DAG spans ingest → archive
+|Storage-tier flexibility |S3 or LustreFS selected per run via configuration
+|Reduced retraining cost |Incremental fine-tuning via `partial++_++fit`
+|Faster recovery |Checkpoint-based training resume
+|Full lineage |Manifests, effective-config logs, archival records
+|No storage lock-in |Multi-protocol: NFS, S3, Lustre
+|GPU utilization |Tiered storage keeps compute fed, avoiding idle-GPU cost
+|Cost-optimized retention |FabricPool auto-tiers cold data to object storage
+|===
+
+'''''
+
+=== 2. Solution Overview
+
+==== 2.1 Solution Description
+
+The pipeline is implemented as the Airflow DAG `example++_++ai++_++pipeline++_++sklearn`, composed of the tasks `ingestion`, `data++_++prep`, `xcp++_++preflight++_++source`, `xcp++_++copy++_++prep++_++to++_++training`, `model++_++training`, `fine++_++tuning`, `inferencing`, `checkpoint++_++model++_++training`, `route++_++manual++_++archive++_++stage`, and `manual++_++archive`.
+
+==== 2.2 Use Case and Problem Statement
+
+Customers must train and periodically refresh tabular regression and text classification models using raw data sourced from StorageGRID. The pipeline prepares that data in an ONTAP NAS bucket, then uses NetApp XCP to deliver it to either ONTAP S3 or LustreFS for training, based on the per-run destination selection.
+
+==== 2.3 Target Customer Profile and Industry Applicability
+
+Financial services (risk/fraud models), manufacturing (predictive maintenance), healthcare (classification/triage), retail (demand forecasting) — any enterprise requiring governed, repeatable ML training on NetApp infrastructure.
+
+==== 2.4 Solution Scope and Boundaries
+
+*In scope:* ingestion gating, data preparation (Python/Spark), XCP data mobility (S3/LustreFS), scikit-learn training and incremental fine-tuning, inference, checkpointing, manual archival. *Out of scope:* real-time model serving APIs, streaming ingestion, GPU-based deep learning frameworks.
+
+==== 2.5 Assumptions and Prerequisites
+
+* StorageGRID S3-compatible endpoint reachable from Airflow for raw-data access and archival.
+* ONTAP NAS bucket reachable from Airflow for prepared-data writes and exposed through NFS to the XCP host.
+* NetApp ONTAP S3-compatible endpoint reachable from Airflow and XCP when ONTAP S3 is selected as the training destination.
+* NetApp XCP installed and reachable via SSH (Airflow connection `ssh++_++default`).
+* LustreFS client mounted on the XCP host when LustreFS is selected.
+* Airflow 2.x with `boto3`, `scikit-learn`; optional PySpark {plus} Delta/Iceberg packages.
+
+'''''
+
+=== 3. Business Value and Customer Benefits
+
+==== 3.1 Business Drivers
+
+Reduce time-to-model, lower infrastructure cost via incremental training, eliminate one-off scripting risk.
+
+==== 3.2 Value Proposition Summary
+
+StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, and XCP combined with Airflow orchestration deliver a storage-tier-aware, observable, resilient AI pipeline.
+
+==== 3.3–3.6 Stakeholder Benefits
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Stakeholder |Benefit
+|Data Engineering |Declarative, parameter-driven prep; automatic file discovery; Spark/Delta/Iceberg support
+|Data Science/ML |Incremental fine-tuning; consistent artifact source across stages; reproducible splits
+|IT Operations |Runtime storage selection; guard/effective-config logs; checkpoint-based recovery
+|Compliance/Governance |Manifests and archival records provide auditable lineage; configurable retention stage
+|===
+
+==== 3.7 TCO Considerations
+
+Incremental fine-tuning and checkpoint resume reduce recurring compute cost; storage-tier flexibility avoids over-provisioning high-performance storage for all workloads.
+
+==== 3.8 ROI Considerations
+
+Faster model refresh cycles, reduced manual maintenance, reduced recovery time per failure event.
+
+'''''
+
+=== 4. Architecture Overview
+
+This section presents the logical workflow, component interactions, physical deployment, and data lineage for the validated AI pipeline. Together, the diagrams show how Apache Airflow orchestrates data movement from StorageGRID through ONTAP NAS, optionally uses NetApp XCP to place data on ONTAP S3 or LustreFS for model execution, and returns governed results to StorageGRID archival storage.
+
+==== 4.1 High-Level Solution Architecture
+
+This workflow diagram shows the Airflow-controlled lifecycle from raw StorageGRID data through preparation, optional XCP mobility, model execution, checkpointing, and archival. `enable++_++xcp` determines whether prepared data is copied from the ONTAP NAS bucket to ONTAP S3 or LustreFS before training. The archive branches are independent: `manual++_++archive++_++stage=model++_++training` archives the baseline immediately after training, while `manual++_++archive++_++stage=inferencing` archives the complete outcome after predictions are generated.
+
+[mermaid]
+----
+flowchart TB
+    subgraph Ingest
+        A[Raw Data: StorageGRID S3]
+    end
+    subgraph Prepare
+        B[data_prep: Python or Spark]
+        P[Prepared Data: ONTAP NAS Bucket]
+    end
+    subgraph Mobility
+        C{enable_xcp?}
+        D[xcp_preflight_source]
+        E[xcp_copy_prep_to_training]
+    end
+    subgraph Train
+        F[model_training]
+        G[fine_tuning]
+        H[inferencing]
+    end
+    subgraph Govern
+        I[checkpoint_model_training]
+        J[manual_archive]
+    end
+
+    A --> B --> P --> C
+    C -- yes --> D --> E --> F
+    C -- no --> F
+    F --> I
+    F --> G --> H
+    F -->|manual_archive_stage = model_training| J
+    H -->|manual_archive_stage = inferencing| J
+    I -.-> F
+----
+
+==== 4.2 Component Interaction Diagram
+
+This sequence diagram identifies which platform component performs each exchange. Airflow reads raw objects from StorageGRID and writes prepared data to the ONTAP NAS bucket; it then invokes XCP over SSH. XCP reads the ONTAP NAS NFS export and writes to the configured training tier. The final conditional block shows that StorageGRID archival content depends on the selected manual archive stage.
+
+[mermaid]
+----
+sequenceDiagram
+    participant Airflow
+    participant SG as StorageGRID S3
+    participant NAS as ONTAP NAS Bucket
+    participant XCP as NetApp XCP Host
+    participant ONTAP_S3 as NetApp ONTAP S3
+    participant Lustre as LustreFS
+
+    Airflow->>SG: Download raw tabular/text data
+    Airflow->>NAS: Upload prepared data + manifest
+    Airflow->>XCP: SSH preflight (connectivity, NFS visibility)
+    Airflow->>XCP: SSH xcp copy from ONTAP NAS -newid <run_stamp>
+    alt destination = s3
+        XCP->>ONTAP_S3: Copy data to S3 bucket/prefix
+    else destination = lustrefs
+        XCP->>Lustre: Copy data to Lustre mount
+    end
+    Airflow->>Lustre: model_training reads Lustre files (if selected)
+    Airflow->>ONTAP_S3: model_training reads S3 files (if selected)
+    alt manual_archive_stage = model_training
+        Airflow->>SG: Archive core training artifacts after model_training
+    else manual_archive_stage = inferencing
+        Airflow->>SG: Archive models, tuning artifacts, and predictions after inferencing
+    end
+----
+
+==== 4.3 Physical / Deployment Architecture
+
+This deployment diagram shows the required hosts, storage endpoints, and network interfaces. The Airflow host uses S3 APIs for StorageGRID, the ONTAP NAS bucket, and the selected ONTAP S3 destination, and uses SSH to control the XCP host. The XCP host accesses the prepared-data source through NFS and writes to either ONTAP S3 or the LustreFS mount; when LustreFS is selected, the Airflow host must also mount it to read training data and materialize artifacts.
+
+[mermaid]
+----
+flowchart LR
+    subgraph AirflowHost[Airflow Scheduler/Worker Host]
+        SCH[Scheduler]
+        WEB[Webserver]
+    end
+    subgraph XCPHost[NetApp XCP Host]
+        XCPBIN["/usr/src/xcp/linux/xcp"]
+    end
+    subgraph Storage
+        RAW[(StorageGRID: Raw Bucket)]
+        PREP[(ONTAP NAS Bucket: Prepared Data)]
+        ARCH[(StorageGRID: Archival Bucket)]
+        NFS[(ONTAP NAS NFS Export)]
+        TRAIN_S3[(ONTAP S3: Training Destination)]
+        LUS[(LustreFS Mount)]
+    end
+
+    AirflowHost -- S3 API --> RAW
+    AirflowHost -- S3 API --> PREP
+    AirflowHost -- S3 API --> ARCH
+    AirflowHost -- SSH --> XCPHost
+    XCPHost -- NFS --> NFS
+    NFS --- PREP
+    XCPHost -- S3 API --> TRAIN_S3
+    XCPHost -- Lustre Client --> LUS
+    AirflowHost -- reads (if ONTAP S3) --> TRAIN_S3
+    AirflowHost -- reads (if lustrefs) --> LUS
+----
+
+==== 4.4 Data Flow Overview
+
+This compact flow summarizes data and artifact provenance. Each run receives a unique `run++_++stamp`, which keeps prepared data, XCP output, model artifacts, predictions, and archived objects traceable to the same execution. XCP destination selection governs the training-data and model-artifact tier, while `manual++_++archive++_++stage` governs whether StorageGRID receives the baseline training package or the full inference package.
+
+[mermaid]
+----
+flowchart LR
+    RAW[(StorageGRID<br/>Raw S3 Data)]
+    PREP[data_prep<br/>Python or Spark]
+    NAS[(ONTAP NAS Bucket<br/>Prepared Data + Manifest<br/>run_stamp)]
+    XCP[NetApp XCP<br/>Copies from NAS NFS export]
+    DEST{xcp_copy_destination}
+    S3[(ONTAP S3<br/>Training Data + Artifacts)]
+    LUS[(LustreFS<br/>Training Data + Artifacts)]
+    TRAIN[model_training<br/>Baseline Artifacts]
+    TUNE[fine_tuning<br/>Tuned Classifier]
+    INFER[inferencing<br/>Predictions]
+    ARCHIVE[(StorageGRID<br/>Archival S3<br/>stage / run_stamp)]
+
+    RAW -->|raw tabular and text data| PREP
+    PREP -->|prepared splits, text files, manifest| NAS
+    NAS -->|NFS source| XCP --> DEST
+    DEST -->|s3| S3 --> TRAIN
+    DEST -->|lustrefs| LUS --> TRAIN
+    TRAIN -->|publish baseline artifacts| S3
+    TRAIN -->|publish baseline artifacts| LUS
+    TRAIN --> TUNE -->|publish tuned artifacts| S3
+    TUNE -->|publish tuned artifacts| LUS
+    TUNE --> INFER
+    TRAIN -->|manual_archive_stage = model_training| ARCHIVE
+    INFER -->|manual_archive_stage = inferencing| ARCHIVE
+----
+
+'''''
+
+=== 5. NetApp Technology Components
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Component |Role in Solution
+|NetApp StorageGRID |S3-compatible raw-data ingestion and archival object storage tiers
+|NetApp ONTAP NAS bucket / NFS |Prepared-data tier; NFS source export validated by XCP preflight before data movement
+|NetApp ONTAP S3 |Optional XCP training-data and model-artifact destination
+|NetApp XCP |High-throughput data mobility engine; copies to S3 or LustreFS
+|NetApp FabricPool |Optional tiering for ONTAP NAS prepared data and archive-adjacent data to optimize cost
+|LustreFS (NetApp-integrated) |High-performance parallel filesystem for training tier
+|NetApp BlueXP (optional) |Extended monitoring/observability for ONTAP and XCP resources
+|ONTAP Snapshot/Backup |Point-in-time protection for prepared data in the ONTAP NAS tier, independent of pipeline
+|===
+
+==== 5.3 NetApp XCP — Core Value
+
+XCP is the mobility layer that decouples data location from compute location. A single configuration switch (`xcp++_++copy++_++destination`) determines whether prepared data and model artifacts land in NetApp ONTAP S3 or a LustreFS high-performance tier, with `model++_++training`, `fine++_++tuning`, and `inferencing` automatically reading from and writing to the same destination.
+
+'''''
+
+=== 6. Third-Party and Open Source Technology Components
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Component |Purpose
+|Apache Airflow |DAG orchestration, retries, XCom task communication, scheduling
+|Apache Spark |Optional distributed transformation engine for `data++_++prep`
+|Delta Lake / Apache Iceberg |Optional lakehouse table formats for prepared tabular data
+|scikit-learn |`LinearRegression` (tabular) and `SGDClassifier` (text, incremental)
+|Airbyte / Apache NiFi |Optional ingestion connectors ahead of `data++_++prep`
+|boto3 |AWS S3-compatible SDK used for StorageGRID, ONTAP NAS bucket, and ONTAP S3 interactions
+|===
+
+'''''
+
+=== 7. Solution Design
+
+==== 7.1 Design Principles
+
+Configuration over code changes; explicit stage boundaries with typed contracts; consistent artifact routing; fail-fast validation with actionable errors; storage-tier neutrality.
+
+==== 7.2–7.9 Stage Design Summary
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Section / Stage |Design Summary
+|7.2 Ingestion |`ingestion++_++tool` selects `s3++_++direct`, `none`, `airbyte`, or `nifi`; returns normalized metadata
+|7.3 Data Preparation |Discovers/accepts raw StorageGRID tabular keys; normalizes Airbyte/plain CSV; produces deterministic train/val/infer splits; writes a run-stamped prepared-data prefix and manifest to the ONTAP NAS bucket
+|7.4 Data Mobility (XCP) |Copies prepared data from the ONTAP NAS NFS export; `xcp++_++copy++_++destination` drives the XCP target and training read path
+|7.5 Model Training |Trains locally or from XCP destination (S3/LustreFS); multi-format (CSV/Parquet/JSON) discovery
+|7.6 Fine-Tuning |Materializes base model from XCP destination; `partial++_++fit` with expanded class set; republishes tuned model
+|7.7 Inference |Materializes tuned artifacts from same XCP destination; configurable split/text scope
+|7.8 Checkpoint/Resume |`write++_++stage++_++checkpoint` persists completion record; `++_++small++_++resume++_++guard` validates/reuses on subsequent runs
+|7.9 Archival |`model++_++training` archives core trained models immediately; `inferencing` waits for predictions and archives the full result set; optional XCP-input inclusion and raw-folder cleanup
+|===
+
+==== 7.10 Configuration-Driven Philosophy
+
+All storage, credential, engine, and behavioral selections are `dag++_++run.conf` parameters — switching between S3 and LustreFS, or Python and Spark, requires no code modification.
+
+'''''
+
+=== 8. Storage Architecture Detail
+
+The storage architecture separates the AI lifecycle into purpose-built tiers: StorageGRID holds raw and archival objects, the ONTAP NAS bucket holds prepared and run-stamped datasets, and ONTAP S3 or LustreFS provides the selected active training tier. This separation keeps source data, prepared data, model artifacts, and archived evidence independently manageable while preserving lineage through the shared `run++_++stamp`.
+
+==== 8.1–8.5 Storage Layout Diagrams
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Section / Tier |Logical Storage Path |Contents / Artifacts Stored
+|8.1 StorageGRID Raw Tier |`s3://raw++_++bucket/raw++_++prefix/` |Tabular CSV parts (`tabular++_++part++_*++.csv`), text inputs (`text++_++base.json`, `text++_++finetune.json`, `text++_++infer.json`)
+|8.2 ONTAP NAS Prepared Tier |`s3://prepared++_++bucket/prepared++_++prefix/run++_++stamp/` |Formatted splits (`data/tabular++_*++.csv`), text files, `data++_++prep++_++manifest.json`, Lakehouse tables (`tables/` Delta/Iceberg)
+|8.3 Active Training Tier (XCP Dest) |`++<++xcp++_++prefix++>++/formatted/run++_++stamp/` |Copied data splits, trained model binaries (`artifacts/++*++.bin`), evaluation metrics (`artifacts/++*_++metrics.json`)
+|8.4 StorageGRID Archival Tier |`s3://archive++_++bucket/archive++_++prefix/stage/run++_++stamp/` |Stage-scoped baseline or full model artifacts, prediction evidence (`tabular++_++predictions.csv`, `text++_++predictions.json`)
+|8.5 Inter-Tier Lineage & Flow |Raw → Prepared → Active Tier → Archival |End-to-end data movement and artifact lineage linked across all storage tiers via the shared `run++_++stamp`
+|===
+
+This diagram maps the logical bucket and prefix layout for a single pipeline run across all storage tiers:
+
+[mermaid]
+----
+flowchart TB
+    subgraph RawBucket["StorageGRID: s3://raw_bucket/raw_prefix/"]
+        R1[tabular_part_*.csv]
+        R2[text_base.json]
+        R3[text_finetune.json]
+        R4[text_infer.json]
+    end
+    subgraph PreparedBucket["ONTAP NAS Bucket: s3://prepared_bucket/prepared_prefix/run_stamp/"]
+        F1[data/tabular_train.csv]
+        F2[data/tabular_val.csv]
+        F3[data/tabular_infer.csv]
+        F4[data/text_*.json]
+        F5[data/data_prep_manifest.json]
+        F6[tables/ Delta or Iceberg]
+    end
+    subgraph XCPDest["XCP Destination: xcp_prefix/formatted/run_stamp/"]
+        X1[data/*]
+        X2[artifacts/*.bin]
+        X3[artifacts/*_metrics.json]
+    end
+    subgraph ArchiveBucket["s3://archive_bucket/archive_prefix/stage/run_stamp/"]
+        A1[regression_model.bin]
+        A2[text_vectorizer.bin]
+        A3[text_classifier.bin]
+        A4[text_classifier_tuned.bin - inferencing stage only]
+        A5[tabular_predictions.csv - inferencing stage only]
+        A6[text_predictions.json - inferencing stage only]
+    end
+
+    RawBucket --> PreparedBucket
+    PreparedBucket --> XCPDest
+    XCPDest --> ArchiveBucket
+----
+
+==== 8.6 Storage Sizing Guidance
+
+Size each tier independently according to its role and retention policy. The ONTAP NAS and selected XCP destination must accommodate concurrent active runs, whereas StorageGRID capacity is driven primarily by raw-data and archival retention. Include temporary working capacity and growth headroom when planning peak pipeline concurrency.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Tier |Sizing Basis
+|StorageGRID raw bucket |Ingestion volume × retention window
+|ONTAP NAS prepared-data bucket |Prepared dataset size × number of retained runs
+|XCP destination (S3 or Lustre) |Peak concurrent training dataset size {plus} model artifact overhead
+|Archival bucket |Retention policy × archive stage selection (model++_++training = smaller; inferencing = larger)
+|===
+
+==== 8.7 Storage Performance Considerations
+
+The XCP destination is selected per run with `xcp++_++copy++_++destination`, allowing storage performance to match the workload instead of forcing every workload onto one tier. Select LustreFS for high-row-count datasets, many concurrent readers, or I/O-intensive training. Select ONTAP S3 for cost-conscious, elastic-access workloads whose performance requirements do not demand a parallel filesystem. In either case, XCP keeps data and model artifacts aligned with the selected training tier.
+
+'''''
+
+=== 9. Data Mobility with NetApp XCP
+
+NetApp XCP provides the controlled transfer path between the ONTAP NAS prepared-data tier and the active training tier. Airflow performs the preflight and invokes the copy operation through the XCP host; `xcp++_++copy++_++destination` selects ONTAP S3 or LustreFS for each run. The same selected destination is used by model training, fine-tuning, and inference to keep data and artifacts on a consistent tier.
+
+==== 9.1 Why NetApp XCP
+
+XCP is a parallel, multi-threaded copy engine that supports the NFS source, ONTAP S3, and LustreFS destinations used by this architecture. Its `-newid ++<++run++_++stamp++>++` option associates each transfer with the pipeline execution, supporting traceability across prepared data, training input, and model-artifact locations.
+
+==== 9.2 XCP Preflight Validation Flow
+
+The preflight task runs before an XCP copy. It verifies that Airflow can reach the XCP host through SSH and that the configured ONTAP NAS NFS source path is visible to XCP. The explicit exit conditions stop the pipeline before a copy begins when connectivity or source visibility is incorrect.
+
+[mermaid]
+----
+flowchart TD
+    Start[xcp_preflight_source] --> SSH{SSH connectivity OK?}
+    SSH -- no --> Fail1[Exit 1: SSH connection failed]
+    SSH -- yes --> Show[xcp show NFS_IP]
+    Show --> Visible{NFS_PATH or parent visible?}
+    Visible -- no --> Fail2[Exit 2: source path not visible]
+    Visible -- yes --> Pass[Preflight passed]
+----
+
+==== 9.3 XCP Copy to S3 — Command Template
+
+Use this path when `xcp++_++copy++_++destination=s3`. XCP reads the prepared, run-stamped data from the ONTAP NAS NFS export and writes it to the configured ONTAP S3 bucket and prefix. The named XCP S3 profile supplies destination credentials on the XCP host; model stages then discover both data and artifacts through `xcp++_++s3++_++training++_++prefix`.
+
+[source,bash]
+----
+xcp copy -newid <run_stamp> \
+  -s3.profile <xcp_s3_profile> \
+  -s3.endpoint <xcp_s3_endpoint> \
+  <xcp_nfs_source_ip>:<xcp_nfs_source_path> \
+  s3://<xcp_s3_bucket>/<xcp_s3_dest_prefix>
+----
+
+*Example: copy the prepared ONTAP NAS dataset to the ONTAP S3 training bucket*
+
+[source,bash]
+----
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    -s3.profile ontaps3 \
+    -s3.endpoint http://10.63.150.161 \
+    10.63.150.159:/prepnasbucket/example_ai_pipeline \
+    s3://trainingbucket/example_ai_pipeline
+----
+
+This example uses `20260901++_++120000` as the XCP job identity. The training task discovers the copied files under the configured `xcp++_++s3++_++training++_++prefix`, such as `example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
+
+==== 9.4 XCP Copy to LustreFS — Command Template
+
+Use this path when `xcp++_++copy++_++destination=lustrefs`. XCP copies prepared data from the mounted ONTAP NAS source to the mounted LustreFS destination. Both mounts must be available on the XCP host, and LustreFS must also be mounted on the Airflow worker that performs model training, fine-tuning, and inference.
+
+[source,bash]
+----
+df <xcp_lustrefs_source_path>   # mount validation
+df <xcp_lustrefs_dest_path>     # mount validation
+xcp copy -newid <run_stamp> \
+  file://<xcp_lustrefs_source_path> \
+  file://<xcp_lustrefs_dest_path>
+----
+
+*Example: copy the prepared ONTAP NAS dataset to the LustreFS training mount*
+
+[source,bash]
+----
+df /prepnasbucket/example_ai_pipeline
+df /mnt/lustre/client
+
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    file:///prepnasbucket/example_ai_pipeline \
+    file:///mnt/lustre/client
+----
+
+The two `df` commands verify that the source and destination mounts are available on the XCP host before the copy starts. With `xcp++_++lustrefs++_++training++_++subpath=example++_++ai++_++pipeline`, training reads the run-stamped data under `/mnt/lustre/client/example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
+
+==== 9.5 XCP Destination Decision Flow
+
+This decision diagram shows how one runtime parameter determines the copy target and the training read path. Select `s3` for the ONTAP S3 object destination or `lustrefs` for the parallel filesystem destination. Downstream stages use the matching source automatically, avoiding changes to model code when storage placement changes.
+
+[mermaid]
+----
+flowchart LR
+    Conf[xcp_copy_destination] -->|s3| S3Path[Copy to NetApp ONTAP S3]
+    Conf -->|lustrefs| LusPath[Copy to LustreFS mount]
+    S3Path --> Train1[model_training reads S3]
+    LusPath --> Train2[model_training reads LustreFS]
+----
+
+==== 9.6 XCP Failure Handling and Guardrails
+
+These guardrails make configuration and infrastructure failures observable at the earliest practical point. Preflight failures prevent an invalid transfer, LustreFS checks validate mount availability, and S3 credential validation applies only when ONTAP S3 is the selected XCP destination.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Condition |Guard Behavior
+|Unsupported `xcp++_++copy++_++destination` value |Defaults to `s3` with warning
+|LustreFS mount not present |`df` fails; copy halted before data movement
+|SSH unreachable |Preflight exits with code 1 before any copy
+|NFS path not visible |Preflight exits with code 2 before any copy
+|Missing XCP S3 credentials (S3 mode only) |`model++_++training`/artifact sync raises explicit `ValueError`
+|===
+
+'''''
+
+=== 10. Deployment Architecture
+
+This section defines the infrastructure placement, software dependencies, and network connectivity required to operate the pipeline. The deployment separates Airflow orchestration from the XCP data-mobility host while connecting both components to StorageGRID, ONTAP NAS, and the selected ONTAP S3 or LustreFS training destination.
+
+==== 10.1 Reference Infrastructure Requirements
+
+The following components establish the minimum functional deployment footprint. Size the Airflow host for the selected preparation engine and concurrent task load; place the XCP host where it can access the ONTAP NAS NFS export and the selected destination without unnecessary network hops. LustreFS mode requires compatible mounts on both the XCP host and the Airflow worker.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Component |Requirement
+|Airflow host |CPU/memory sized to Spark or Python transform load
+|XCP host |Network access to NFS/Lustre and NetApp ONTAP S3 endpoints
+|LustreFS clients |Mounted on XCP host and Airflow host when selected as destination
+|===
+
+==== 10.2 Software Version Matrix
+
+This matrix identifies the runtime software used by the validated pipeline. Keep the Airflow and Python environments compatible with the deployed providers and packages. Spark, Delta Lake, and Iceberg are optional and are required only when `data++_++prep` uses the Spark transformation path or a corresponding table format.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Software |Version/Notes
+|Apache Airflow |2.x
+|Python |3.11
+|boto3 |Latest stable
+|scikit-learn |Latest stable
+|PySpark (optional) |Compatible with Delta 3.2.0 / Iceberg 1.5.2 runtime packages
+|NetApp XCP |Installed on remote host, e.g. `/usr/src/xcp/linux/xcp`
+|===
+
+==== 10.3 Network Requirements
+
+These network flows must be permitted by routing, firewall, and name-resolution policies. HTTPS is recommended for every S3-compatible endpoint in production; use the configured custom port where an endpoint does not use the default HTTPS port. Confirm Lustre client connectivity according to the deployed LustreFS implementation.
+
+[cols=",",options="header",]
+|===
+|Flow |Protocol/Port
+|Airflow → ONTAP S3 |HTTPS/HTTP (443/80 or custom)
+|Airflow → XCP host |SSH (22)
+|XCP host → NFS source |NFS (2049)
+|XCP host → LustreFS |Lustre client ports
+|XCP host → ONTAP S3 (S3 mode) |HTTPS/HTTP
+|===
+
+==== 10.4–10.7 Deployment Notes
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Section / Topic |Guidance / Operational Practice
+|10.4 SSH Connection Setup |Configure Airflow connection `ssh++_++default` to target the XCP host over port 22 with restricted SSH key permissions (`600`).
+|10.5 Service Lifecycle Management |Use `tools/airflow++_++ctl.sh` to manage the local Airflow scheduler and webserver lifecycle during deployment and maintenance.
+|10.6 Credential & Secret Storage |Store credentials, API tokens, and access keys in Airflow Connections, Variables, or a secrets backend rather than inline in `dag++_++run.conf`.
+|10.7 Infrastructure & Task Observability |Monitor scheduler heartbeat and task execution independently so orchestration availability issues are distinguished from DAG failures.
+|===
+
+==== 10.8 Installation and Prerequisites
+
+This subsection defines the baseline installation steps required to build, configure, and run the NetApp AI Ring validated pipeline in a fresh environment. It is intended for operators, architects, and engineers setting up the Airflow workspace before running any DAGs.
+
+===== 10.8.1 Prerequisites
+
+Before installing the solution, confirm that the target host meets the following minimum requirements:
+
+* Linux operating system, preferably Ubuntu 22.04/24.04 or RHEL 8{plus}.
+* Python 3.11 with `pip`, `venv`, and build tooling available.
+* Git installed on the host for source retrieval and version management.
+* Apache Airflow 2.x deployed in a dedicated Python virtual environment.
+* SSH access from the Airflow host to the NetApp XCP host.
+* Network connectivity from the Airflow host to StorageGRID, ONTAP NAS, and the selected ONTAP S3 or LustreFS destination.
+* S3-compatible endpoint access for raw data, prepared-data staging, and archival storage.
+* Optional: Java runtime and Spark 3.x if the `spark` preparation path is used.
+* Optional: Delta Lake and Iceberg runtime packages when `table++_++format=delta` or `table++_++format=iceberg` is selected.
+* Optional: Lustre client mount when `xcp++_++copy++_++destination=lustrefs` is used.
+
+===== 10.8.2 Software Package Acquisition and Repository Access
+
+To obtain the software package, automation DAGs, deployment scripts, and validation artifacts for this solution, contact the NetApp AI & Data Mobility engineering team at ng-data-mobility-in-ai-pipeline@netapp.com.
+
+Once access is granted, download or clone the project source from GitHub into the target working directory:
+
+[source,bash]
+----
+# Example GitHub clone
+mkdir -p /opt/netapp-ai
+cd /opt/netapp-ai
+
+git clone https://github.com/<your-org>/<your-repo>.git
+cd <your-repo>
+
+git checkout main
+ls -la
+----
+
+If you are already working from the local workspace in this environment, the project is present under `/root/airflow` and can be used directly without another download.
+
+===== 10.8.3 Create the Python Environment
+
+Create a dedicated virtual environment and install the base dependencies for Airflow and the pipeline.
+
+[source,bash]
+----
+cd /root/airflow
+python3 -m venv /root/airflow_venv
+source /root/airflow_venv/bin/activate
+
+python -m pip install --upgrade pip setuptools wheel
+pip install "apache-airflow>=2.8,<3.0" boto3 scikit-learn
+----
+
+For Spark-based preparation and Lakehouse table formats, install the optional packages as needed:
+
+[source,bash]
+----
+pip install pyspark==3.5.*
+pip install delta-spark==3.2.0
+pip install apache-iceberg==1.5.2
+----
+
+Use the exact package versions supported by your Spark runtime and cluster topology. Do not mix incompatible Spark, Delta, and Iceberg combinations.
+
+===== 10.8.4 Configure Airflow and the Repository
+
+From the cloned repository root, initialize the Airflow metadata database and verify that the DAG files are visible to Airflow.
+
+[source,bash]
+----
+export AIRFLOW_HOME=/root/airflow
+export AIRFLOW__CORE__LOAD_EXAMPLES=False
+
+airflow db init
+airflow dags list | grep -E "example_ai_pipeline|example_ai_pipeline_sklearn"
+----
+
+The workspace includes the Airflow configuration file and DAGs needed for the validated pipeline. If the repository contains a helper script for local lifecycle management, use it to start the scheduler and webserver instead of invoking Airflow manually.
+
+[source,bash]
+----
+./tools/airflow_ctl.sh start
+# or, if using the standard commands:
+# airflow scheduler
+# airflow webserver
+----
+
+===== 10.8.5 Required Connectivity and Secret Configuration
+
+Before running the pipeline, confirm that the following resources are reachable from the Airflow host:
+
+* StorageGRID raw-data S3 endpoint.
+* ONTAP NAS prepared-data bucket endpoint.
+* ONTAP S3 target endpoint when `xcp++_++copy++_++destination=s3`.
+* LustreFS mount when `xcp++_++copy++_++destination=lustrefs`.
+* XCP host over SSH using `ssh++_++default` or the configured SSH connection.
+
+Store credentials in Airflow Connections, Variables, or a secrets backend rather than embedding them in shell history or DAG code. Set the required access keys, endpoints, and profile mappings before triggering a pipeline run.
+
+===== 10.8.6 Verify the Installation
+
+A successful installation is confirmed when the Airflow scheduler and DAGs are running and the example pipeline can be listed and triggered without configuration errors.
+
+[source,bash]
+----
+airflow dags list
+airflow tasks list example_ai_pipeline_sklearn
+----
+
+If the installation is correct, the DAG should be present in Airflow and ready for a `CONF++_++JSON`-driven run using the trigger script in the repository root.
+
+[source,bash]
+----
+./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+At this point, the environment is ready for the configuration examples in Section 11 and the deployment scenarios described in the operational guide.
+
+'''''
+
+=== 11. Configuration Reference
+
+All runtime behavior is supplied through `dag++_++run.conf`, allowing the same DAG to serve different source systems, transformation engines, storage destinations, recovery policies, and archive scopes. Configure only the parameter groups required for the selected workflow, keep credentials in Airflow Connections or a secrets backend, and use the examples as non-production templates rather than as credential values.
+
+==== 11.1 Ingestion Parameters
+
+Use these settings to select and configure the upstream ingestion mechanism. `s3++_++direct` uses the StorageGRID raw-data objects configured in the data-preparation group; Airbyte and NiFi settings are needed only when those respective ingestion tools are selected.
+
+[width="100%",cols="20%,>23%,>23%,17%,17%",options="header",]
+|===
+|Parameter |Default |Required |Description |Example
+|`ingestion++_++tool` |`s3++_++direct` |No |Selects ingestion mode |`"s3++_++direct"`
+|`airbyte++_++api++_++url` |None |Airbyte only |Airbyte API endpoint |`"http://airbyte:8000"`
+|`airbyte++_++connection++_++id` |None |Airbyte only |Airbyte connection ID |`"connection-123"`
+|`airbyte++_++api++_++token` |None |Optional |Bearer token |`"++<++TOKEN++>++"`
+|`airbyte++_++timeout++_++secs` |`30` |No |Airbyte timeout |`60`
+|`nifi++_++api++_++url` |None |NiFi only |NiFi API endpoint |`"http://nifi:8080"`
+|`nifi++_++process++_++group++_++id` |None |NiFi only |NiFi process group |`"abc123"`
+|`nifi++_++timeout++_++secs` |`30` |No |NiFi timeout |`60`
+|===
+
+==== 11.2 Data Preparation Parameters
+
+These settings control raw-data access, prepared-data output, input discovery, and transformation behavior. The `s3++_++raw++_*++` parameters refer to StorageGRID, while the code-compatible `s3++_++formatted++_*++` parameters identify the ONTAP NAS bucket where prepared, run-stamped data and manifests are written.
+
+*Raw StorageGRID / prepared-data ONTAP NAS bucket:*
+
+Configure separate endpoints and credentials when StorageGRID and the ONTAP NAS bucket use different S3-compatible services or access policies. The generic fallback keys apply only when a more specific raw or prepared-data setting is absent.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`s3++_++raw++_++bucket` |`ai-raw-data` |StorageGRID raw input bucket |`"bucket1"`
+|`s3++_++raw++_++prefix` |`example++_++ai++_++pipeline/raw` |StorageGRID raw-data prefix |`"example++_++ai++_++pipeline/raw"`
+|`s3++_++raw++_++endpoint++_++url` |fallback chain |StorageGRID S3 endpoint |`"http://10.63.150.62:10444"`
+|`s3++_++raw++_++access++_++key++_++id` |fallback chain |Raw access key |`"++<++KEY++>++"`
+|`s3++_++raw++_++secret++_++access++_++key` |fallback chain |Raw secret key |`"++<++SECRET++>++"`
+|`s3++_++raw++_++region` |`aws++_++region` |Raw region |`"us-east-1"`
+|`s3++_++formatted++_++bucket` |`ai-formatted-data` |ONTAP NAS prepared-data output bucket |`"prepnasbucket"`
+|`s3++_++formatted++_++prefix` |`example++_++ai++_++pipeline/formatted` |ONTAP NAS prepared-data prefix |`"example++_++ai++_++pipeline/formatted"`
+|`s3++_++formatted++_++endpoint++_++url` |fallback chain |ONTAP NAS bucket S3 endpoint |`"http://10.63.150.159"`
+|`s3++_++formatted++_++access++_++key++_++id` |fallback chain |ONTAP NAS bucket access key |`"++<++KEY++>++"`
+|`s3++_++formatted++_++secret++_++access++_++key` |fallback chain |ONTAP NAS bucket secret key |`"++<++SECRET++>++"`
+|===
+
+*General fallback:* `s3++_++endpoint++_++url`, `s3++_++access++_++key++_++id`, `s3++_++secret++_++access++_++key`, `s3++_++session++_++token`, `s3++_++verify`, `aws++_++region`, `aws++_++access++_++key++_++id`, `aws++_++secret++_++access++_++key`, `aws++_++session++_++token`.
+
+*Input selection:*
+
+Use explicit object-key settings to process known CSV inputs; otherwise, the task discovers eligible tabular objects under the configured StorageGRID raw prefix.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`s3++_++tabular++_++object++_++keys` |Auto-discovery |Explicit list of CSV keys |`++[++"raw/demo/a.csv"++]++`
+|`s3++_++tabular++_++object++_++key` |None |Single explicit CSV key |`"raw/demo/a.csv"`
+|===
+
+*Transformation:*
+
+Select the Python path for lightweight local preparation or Spark for distributed preparation. Sampling and the seed apply reproducibly to the generated training, validation, and inference splits.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`transformation++_++engine` |`python` |`python` or `spark` |`"spark"`
+|`spark++_++required` |`false` |Fail instead of fallback |`true`
+|`table++_++format` |`none` |`none`/`delta`/`iceberg` |`"delta"`
+|`table++_++format++_++required` |`false` |Fail if format unavailable |`true`
+|`sample++_++count` |all rows |Row limit (≤0 = all) |`14400`
+|`seed` |`7` |Reproducible shuffle seed |`11`
+|===
+
+*Spark:*
+
+These settings apply only to `transformation++_++engine=spark`. They control Spark process placement, resource allocation, time limits, and optional Delta Lake or Iceberg runtime dependencies.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`spark++_++submit++_++bin` |`spark-submit` |Spark binary |`"/opt/spark/bin/spark-submit"`
+|`spark++_++master` |`local++[*]++` |Spark master |`"local++[*]++"`
+|`spark++_++driver++_++memory` |`4g` |Driver memory |`"8g"`
+|`spark++_++executor++_++memory` |`4g` |Executor memory |`"8g"`
+|`spark++_++timeout++_++secs` |`900`/`7200` |Timeout (0 = disabled) |`0`
+|`spark++_++delta++_++packages` |Delta 3.2.0 |Delta runtime package |`"io.delta:delta-spark++_++2.12:3.2.0"`
+|`spark++_++iceberg++_++packages` |Iceberg 1.5.2 |Iceberg runtime package |`"org.apache.iceberg:iceberg-spark-runtime-3.5++_++2.12:1.5.2"`
+|`spark++_++iceberg++_++catalog` |`local` |Iceberg catalog name |`"local"`
+|===
+
+==== 11.3 XCP and Training Destination Parameters
+
+Use this group when `enable++_++xcp=true` to validate the ONTAP NAS NFS source, invoke the XCP host, and choose the active training tier. `xcp++_++copy++_++destination` is the controlling switch: it selects either the ONTAP S3-specific or LustreFS-specific settings below, and downstream model stages use the same selected tier.
+
+[width="100%",cols="20%,>23%,>23%,17%,17%",options="header",]
+|===
+|Parameter |Default |Required |Description |Example
+|`enable++_++xcp` |`false` |Yes for XCP |Enables XCP branch |`true`
+|`xcp++_++copy++_++destination` |`s3` |No |`s3` or `lustrefs` |`"lustrefs"`
+|`xcp++_++nfs++_++source++_++ip` |`10.63.150.159` |XCP preflight |NFS server IP |`"10.63.150.159"`
+|`xcp++_++nfs++_++source++_++path` |`/prepnasbucket/example++_++ai++_++pipeline` |XCP preflight |NFS export path |`"/prepnasbucket/example++_++ai++_++pipeline"`
+|`ssh++_++user` |`root` |No |XCP host SSH user |`"root"`
+|`ssh++_++host` |`10.63.150.178` |No |XCP host address |`"10.63.150.178"`
+|===
+
+*S3 destination (required when `xcp++_++copy++_++destination=s3`):*
+
+Provide these settings only for the ONTAP S3 training path. The profile or direct credentials allow XCP and the model artifact synchronization logic to access the selected ONTAP S3 bucket and prefix.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`xcp++_++s3++_++endpoint` |default |XCP S3 endpoint |`"http://10.63.150.161"`
+|`xcp++_++s3++_++bucket` |None |XCP destination bucket |`"trainingbucket"`
+|`xcp++_++s3++_++dest++_++prefix` |`example++_++ai++_++pipeline` |Destination prefix |`"example++_++ai++_++pipeline"`
+|`xcp++_++s3++_++training++_++prefix` |`xcp++_++s3++_++dest++_++prefix` |Training discovery prefix |`"example++_++ai++_++pipeline"`
+|`xcp++_++s3++_++profile` |`ontaps3` |Named credential profile |`"ontaps3"`
+|`xcp++_++s3++_++profiles` |None |Profile map |`++{++"ontaps3": ++{++...}}`
+|`xcp++_++s3++_++access++_++key++_++id` |None |Direct key fallback |`"++<++KEY++>++"`
+|`xcp++_++s3++_++secret++_++access++_++key` |None |Direct secret fallback |`"++<++SECRET++>++"`
+|`xcp++_++s3++_++region` |`aws++_++region` |XCP S3 region |`"us-east-1"`
+|===
+
+*LustreFS destination (required when `xcp++_++copy++_++destination=lustrefs`):*
+
+Provide these settings only for the LustreFS training path. The source and destination must be mounted and accessible on the XCP host; the destination must also be accessible to the Airflow worker that runs the model stages.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`xcp++_++lustrefs++_++source++_++path` |`/prepnasbucket/example++_++ai++_++pipeline` |XCP copy source |`"/prepnasbucket/example++_++ai++_++pipeline"`
+|`xcp++_++lustrefs++_++dest++_++path` |`/mnt/lustre/client` |LustreFS mount destination |`"/mnt/lustre/client"`
+|`xcp++_++lustrefs++_++training++_++subpath` |`xcp++_++s3++_++dest++_++prefix` |Training subdir under mount |`"example++_++ai++_++pipeline"`
+|`xcp++_++lustrefs++_++newid` |`data++_++prep` run stamp |XCP job identifier |`"20260901++_++120000"`
+|===
+
+*Text-source behavior:*
+
+These options control how the three text datasets are found after XCP mobility. Explicit keys override discovery; local fallback can be disabled to require that text inputs come from the selected XCP destination.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`xcp++_++text++_++allow++_++local++_++fallback` |`true` |Allow local text fallback |`false`
+|`xcp++_++text++_++base++_++key` |Auto |Explicit base-text location |`".../text++_++base.json"`
+|`xcp++_++text++_++finetune++_++key` |Auto |Explicit fine-tune-text location |`".../text++_++finetune.json"`
+|`xcp++_++text++_++infer++_++key` |Auto |Explicit inference-text location |`".../text++_++infer.json"`
+|===
+
+==== 11.4 Model Training Parameters
+
+These settings select the local or XCP-delivered source, limit training volume, and preserve reproducible data ordering. When XCP is enabled, training reads the selected ONTAP S3 or LustreFS tier and publishes the baseline artifacts back to that same destination.
+
+[cols=",>,,",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`enable++_++xcp` |`false` |Selects XCP or local source |`true`
+|`xcp++_++copy++_++destination` |`s3` |Selects source tier |`"lustrefs"`
+|`sample++_++count` |all rows |Training sample limit |`14400`
+|`seed` |`7` |Reproducible shuffle |`11`
+|===
+
+Produces: `regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json`.
+
+==== 11.5 Fine-Tuning Parameters
+
+Fine-tuning materializes the baseline text artifacts from the selected XCP destination, applies incremental learning to the fine-tuning dataset, and republishes the tuned classifier and its metrics. Keep its XCP settings consistent with model training to maintain artifact provenance.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`enable++_++xcp` |`false` |Enables artifact materialize/publish |`true`
+|`xcp++_++copy++_++destination` |`s3` |Selects artifact source/destination |`"lustrefs"`
+|===
+
+Consumes: `text++_++vectorizer.bin`, `text++_++classifier.bin`, `text++_++finetune.json`. Produces: `text++_++classifier++_++tuned.bin`, `fine++_++tune++_++metrics.json`.
+
+==== 11.6 Inference Parameters
+
+These flags control the scope of scoring after the tuned model is materialized from the selected training tier. Enable either option when validation or business requirements call for outputs beyond the default inference split and inference text input.
+
+[cols=",>,,",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`infer++_++all++_++splits` |`false` |Score train/val/infer splits |`true`
+|`infer++_++all++_++text` |`false` |Score base/finetune/infer text |`true`
+|===
+
+Consumes: `regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier++_++tuned.bin`. Produces: `tabular++_++predictions.csv`, `text++_++predictions.json`.
+
+==== 11.7 Checkpoint Parameters
+
+Checkpointing is scoped to `model++_++training`. These settings determine whether the training completion record is created, where it is stored, how upload failures are handled, and whether a later run verifies or reuses a valid completed training result.
+
+[width="99%",cols="24%,>30%,23%,23%",options="header",]
+|===
+|Parameter |Default |Description |Example
+|`checkpoint++_++enabled` |`true` |Enables checkpoint file creation |`true`
+|`checkpoint++_++store` |`local` |`local` or `formatted++_++s3` |`"formatted++_++s3"`
+|`checkpoint++_++upload++_++fail++_++mode` |`warn` |`warn` or `fail` |`"fail"`
+|`training++_++checkpoint++_++reuse++_++mode` |`off` |`off`/`verify++_++only`/`resume++_++if++_++exists` |`"resume++_++if++_++exists"`
+|`checkpoint++_++reuse++_++mode` |`off` |Backward-compatible alias |`"verify++_++only"`
+|===
+
+==== 11.8 Manual Archive Parameters
+
+Use this group to enable StorageGRID archival, identify the destination bucket and credentials, and choose the archival point. The selected `manual++_++archive++_++stage` controls both the archive timing and whether the archive contains only baseline training artifacts or the complete inference result set.
+
+[width="100%",cols="20%,>23%,>23%,17%,17%",options="header",]
+|===
+|Parameter |Default |Required |Description |Example
+|`manual++_++archive++_++enabled` |`false` |No |Enables archival |`true`
+|`manual++_++archive++_++stage` |`inferencing` |No |Archive point and artifact set: `model++_++training` for core training artifacts, or `inferencing` for the full result set |`"model++_++training"`
+|`manual++_++archive++_++bucket` |`archivalbucket` |Yes when enabled |Archive bucket |`"archivalbucket"`
+|`manual++_++archive++_++prefix` |`ai-models` |No |Archive prefix |`"ai-models"`
+|`manual++_++archive++_++endpoint` |default |Custom only |Archive S3 endpoint |`"http://10.63.150.62:10444"`
+|`manual++_++archive++_++profile` |`sgdlocal` |Recommended |Credential profile |`"sgdlocal"`
+|`manual++_++archive++_++profiles` |None |Optional |Profile map |`++{++"sgdlocal": ++{++...}}`
+|`manual++_++archive++_++include++_++xcp++_++inputs` |`false` |No |Include XCP inputs in archive |`true`
+|`manual++_++archive++_++cleanup++_++raw` |`false` |No |Remove local raw folder post-upload |`true`
+|===
+
+Aliases: `fabricpool++_++archive++_*++` for all `manual++_++archive++_*++` parameters.
+
+===== 11.8.1 Manual Archive Stage Decision
+
+The `route++_++manual++_++archive++_++stage` branch task reads `manual++_++archive++_++stage` once per DAG run. The selected value determines both when archival runs and which artifacts are uploaded to the StorageGRID archival bucket. Archive objects are stored under `s3://++<++manual++_++archive++_++bucket++>++/++<++manual++_++archive++_++prefix++>++/++<++stage++>++/++<++run++_++stamp++>++/`.
+
+[width="100%",cols="25%,25%,25%,25%",options="header",]
+|===
+|`manual++_++archive++_++stage` value |Archive timing |Artifacts archived |Recommended use
+|`model++_++training` |Immediately after `model++_++training`; does not wait for fine-tuning or inference |`regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json` |Preserve a reproducible baseline model, minimize archive volume, or retain a checkpoint before later stages
+|`inferencing` (default) |After `fine++_++tuning` and `inferencing` complete |All `model++_++training` artifacts plus `text++_++classifier++_++tuned.bin`, `fine++_++tune++_++metrics.json`, `tabular++_++predictions.csv`, and `text++_++predictions.json` |Retain the complete business outcome and prediction evidence for a model run
+|===
+
+For either selection, set `manual++_++archive++_++include++_++xcp++_++inputs=true` to add locally materialized XCP training inputs when present. Set `manual++_++archive++_++enabled=false` to skip the archival task without changing the training and inference workflow.
+
+==== 11.9 Complete Sample Configuration
+
+This catalog provides starting configurations for the principal deployment and test paths. Every example assumes raw data is in StorageGRID and prepared data is written to the ONTAP NAS bucket. Replace bucket names, endpoint addresses, filesystem paths, and profile names with values from the target environment. Do not place production access keys or secrets in `CONF++_++JSON`; configure them through Airflow Connections, Variables, or a secrets backend.
+
+===== 11.9.1 XCP to LustreFS with Spark and Delta Lake
+
+Use this full-throughput example for distributed preparation and high-performance LustreFS model I/O. It processes all eligible tabular files under `s3++_++raw++_++prefix`, writes Delta tables during preparation, persists the training checkpoint to the ONTAP NAS prepared-data bucket, and archives the complete inference result set.
+
+[source,json]
+----
+{
+  "ingestion_tool": "s3_direct",
+  "s3_raw_bucket": "bucket1",
+  "s3_raw_prefix": "example_ai_pipeline/raw",
+  "s3_formatted_bucket": "prepnasbucket",
+  "s3_formatted_prefix": "example_ai_pipeline/formatted",
+
+  "enable_xcp": true,
+  "xcp_copy_destination": "lustrefs",
+  "xcp_nfs_source_ip": "10.63.150.159",
+  "xcp_nfs_source_path": "/prepnasbucket/example_ai_pipeline",
+  "xcp_lustrefs_source_path": "/prepnasbucket/example_ai_pipeline",
+  "xcp_lustrefs_dest_path": "/mnt/lustre/client",
+  "xcp_lustrefs_training_subpath": "example_ai_pipeline",
+  "xcp_text_allow_local_fallback": false,
+
+  "transformation_engine": "spark",
+  "spark_required": true,
+  "table_format": "delta",
+  "table_format_required": true,
+  "spark_driver_memory": "8g",
+  "spark_executor_memory": "8g",
+  "spark_timeout_secs": 0,
+  "sample_count": 14400,
+  "seed": 11,
+
+  "infer_all_splits": true,
+  "infer_all_text": true,
+
+  "checkpoint_enabled": true,
+  "checkpoint_store": "formatted_s3",
+  "training_checkpoint_reuse_mode": "off",
+
+  "manual_archive_enabled": true,
+  "manual_archive_stage": "inferencing",
+  "manual_archive_bucket": "archivalbucket",
+  "manual_archive_prefix": "ai-models",
+  "manual_archive_profile": "sgdlocal",
+  "manual_archive_cleanup_raw": true
+}
+----
+
+===== 11.9.2 No XCP with Python Preparation
+
+Use this baseline configuration for a lightweight functional run. Preparation uses the local Python engine and downstream stages use the pipeline’s local prepared-data and artifact paths; XCP, Spark, table formats, checkpoint reuse, and archival are disabled.
+
+[source,json]
+----
+{
+    "ingestion_tool": "s3_direct",
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "enable_xcp": false,
+    "transformation_engine": "python",
+    "table_format": "none",
+    "sample_count": 200,
+    "seed": 11,
+    "checkpoint_enabled": false,
+    "manual_archive_enabled": false
+}
+----
+
+===== 11.9.3 Python Preparation with Two Explicit Input Files
+
+Use this focused test when validating the pipeline against two known StorageGRID CSV objects. `s3++_++tabular++_++object++_++keys` disables automatic tabular-file discovery; the text inputs still use their expected locations under the raw prefix.
+
+[source,json]
+----
+{
+    "ingestion_tool": "s3_direct",
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_tabular_object_keys": [
+        "example_ai_pipeline/raw/tabular_part_01.csv",
+        "example_ai_pipeline/raw/tabular_part_02.csv"
+    ],
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "enable_xcp": false,
+    "transformation_engine": "python",
+    "table_format": "none",
+    "sample_count": 200,
+    "seed": 11,
+    "manual_archive_enabled": false
+}
+----
+
+===== 11.9.4 Python Preparation with Automatic All-File Discovery
+
+Omit `s3++_++tabular++_++object++_++keys` and `s3++_++tabular++_++object++_++key` to process every eligible tabular object under the StorageGRID raw prefix. This example is suitable for an all-files functional or scale test using the Python preparation engine.
+
+[source,json]
+----
+{
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "enable_xcp": false,
+    "transformation_engine": "python",
+    "table_format": "none",
+    "sample_count": 0,
+    "seed": 11,
+    "manual_archive_enabled": false
+}
+----
+
+`sample++_++count: 0` means that data preparation uses all available rows. Set a positive value for a bounded test run.
+
+===== 11.9.5 XCP to ONTAP S3 with Python Preparation
+
+Use this configuration when prepared data must be copied from the ONTAP NAS NFS export to an ONTAP S3 training bucket. Model training, fine-tuning, and inference materialize and publish artifacts through that same ONTAP S3 destination.
+
+[source,json]
+----
+{
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "enable_xcp": true,
+    "xcp_copy_destination": "s3",
+    "xcp_nfs_source_ip": "10.63.150.159",
+    "xcp_nfs_source_path": "/prepnasbucket/example_ai_pipeline",
+    "xcp_s3_endpoint": "https://ontap-s3.example.com",
+    "xcp_s3_bucket": "trainingbucket",
+    "xcp_s3_dest_prefix": "example_ai_pipeline",
+    "xcp_s3_training_prefix": "example_ai_pipeline",
+    "xcp_s3_profile": "ontaps3",
+    "transformation_engine": "python",
+    "table_format": "none",
+    "sample_count": 14400,
+    "seed": 11,
+    "checkpoint_enabled": true,
+    "checkpoint_store": "formatted_s3",
+    "manual_archive_enabled": true,
+    "manual_archive_stage": "model_training",
+    "manual_archive_bucket": "archivalbucket",
+    "manual_archive_profile": "storagegrid-archive"
+}
+----
+
+===== 11.9.6 XCP to ONTAP S3 with Spark and Iceberg
+
+Use this configuration for distributed preparation with Iceberg table output and ONTAP S3 as the active training destination. Set `spark++_++required` and `table++_++format++_++required` to `true` when a run must fail rather than fall back if Spark or Iceberg is unavailable.
+
+[source,json]
+----
+{
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "enable_xcp": true,
+    "xcp_copy_destination": "s3",
+    "xcp_nfs_source_ip": "10.63.150.159",
+    "xcp_nfs_source_path": "/prepnasbucket/example_ai_pipeline",
+    "xcp_s3_bucket": "trainingbucket",
+    "xcp_s3_dest_prefix": "example_ai_pipeline",
+    "xcp_s3_profile": "ontaps3",
+    "transformation_engine": "spark",
+    "spark_required": true,
+    "table_format": "iceberg",
+    "table_format_required": true,
+    "spark_driver_memory": "8g",
+    "spark_executor_memory": "8g",
+    "spark_timeout_secs": 0,
+    "sample_count": 0,
+    "seed": 11,
+    "manual_archive_enabled": true,
+    "manual_archive_stage": "inferencing",
+    "manual_archive_bucket": "archivalbucket",
+    "manual_archive_profile": "storagegrid-archive"
+}
+----
+
+===== 11.9.7 Scenario Selection Summary
+
+[width="99%",cols="20%,16%,16%,16%,16%,16%",options="header",]
+|===
+|Scenario |XCP destination |Preparation engine |Table format |Input scope |Archive stage
+|11.9.1 |LustreFS |Spark |Delta |All discovered files |`inferencing`
+|11.9.2 |None |Python |None |All discovered files |Disabled
+|11.9.3 |None |Python |None |Two explicit files |Disabled
+|11.9.4 |None |Python |None |All discovered files |Disabled
+|11.9.5 |ONTAP S3 |Python |None |All discovered files |`model++_++training`
+|11.9.6 |ONTAP S3 |Spark |Iceberg |All discovered files |`inferencing`
+|===
+
+===== 11.9.8 Execution Walkthroughs
+
+Run the examples from the Airflow workspace. The trigger script generates a unique `manual++__<++UTC timestamp++>++` run ID, waits for completion, and returns a nonzero exit code for a failed or timed-out run. The following full configurations use the same `CONF++_++JSON="$(python3 - ++<<++'PY' ...)"` pattern as the operational examples. Set the referenced secret environment variables through the shell environment, a secure CI/CD secret store, or an Airflow secrets backend before running them; do not add secret values to this document or shell history.
+
+The valid table format name is `iceberg`. Do not use `icerberg`, which is not a supported value.
+
+*All files, Spark, Iceberg, XCP to ONTAP S3, checkpoint to prepared-data S3, archive after inference:*
+
+[source,bash]
+----
+CONF_JSON="$(python3 - <<'PY'
+import json
+import os
+
+print(json.dumps({
+    "ingestion_tool": "s3_direct",
+    "enable_xcp": True,
+    "xcp_copy_destination": "s3",
+    "xcp_text_allow_local_fallback": True,
+
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_raw_endpoint_url": "https://storagegrid.example.com",
+    "s3_raw_access_key_id": os.environ["STORAGEGRID_RAW_ACCESS_KEY_ID"],
+    "s3_raw_secret_access_key": os.environ["STORAGEGRID_RAW_SECRET_ACCESS_KEY"],
+    "s3_raw_region": "us-east-1",
+
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "s3_formatted_endpoint_url": "https://ontap-nas.example.com",
+    "s3_formatted_access_key_id": os.environ["ONTAP_NAS_ACCESS_KEY_ID"],
+    "s3_formatted_secret_access_key": os.environ["ONTAP_NAS_SECRET_ACCESS_KEY"],
+    "s3_formatted_region": "us-east-1",
+
+    "xcp_nfs_source_ip": "10.63.150.159",
+    "xcp_nfs_source_path": "/prepnasbucket/example_ai_pipeline",
+    "xcp_s3_endpoint": "https://ontap-s3.example.com",
+    "xcp_s3_bucket": "trainingbucket",
+    "xcp_s3_dest_prefix": "example_ai_pipeline",
+    "xcp_s3_training_prefix": "example_ai_pipeline",
+    "xcp_s3_profile": "ontaps3",
+
+    "transformation_engine": "spark",
+    "spark_required": True,
+    "table_format": "iceberg",
+    "table_format_required": True,
+    "sample_count": 0,
+    "seed": 11,
+    "spark_driver_memory": "8g",
+    "spark_executor_memory": "8g",
+    "spark_timeout_secs": 0,
+    "infer_all_splits": True,
+    "infer_all_text": True,
+
+    "checkpoint_enabled": True,
+    "checkpoint_store": "formatted_s3",
+    "manual_archive_enabled": True,
+    "manual_archive_stage": "inferencing",
+    "manual_archive_bucket": "archivalbucket",
+    "manual_archive_prefix": "ai-models",
+    "manual_archive_profile": "sgdlocal",
+    "manual_archive_endpoint": "https://storagegrid.example.com",
+    "manual_archive_cleanup_raw": True,
+    "manual_archive_include_xcp_inputs": True,
+
+    "xcp_s3_profiles": {
+        "ontaps3": {
+            "access_key_id": os.environ["ONTAP_S3_ACCESS_KEY_ID"],
+            "secret_access_key": os.environ["ONTAP_S3_SECRET_ACCESS_KEY"],
+            "region": "us-east-1",
+        },
+        "sgdlocal": {
+            "access_key_id": os.environ["STORAGEGRID_ARCHIVE_ACCESS_KEY_ID"],
+            "secret_access_key": os.environ["STORAGEGRID_ARCHIVE_SECRET_ACCESS_KEY"],
+            "region": "us-east-1",
+        },
+    },
+}, separators=(",", ":")))
+PY
+)"
+AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
+  ./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+*All files, Spark, Iceberg, XCP to LustreFS, checkpoint to prepared-data S3, archive after inference:*
+
+[source,bash]
+----
+CONF_JSON="$(python3 - <<'PY'
+import json
+import os
+
+print(json.dumps({
+    "ingestion_tool": "s3_direct",
+    "enable_xcp": True,
+    "xcp_copy_destination": "lustrefs",
+    "ssh_user": "root",
+    "ssh_host": "10.63.150.178",
+    "xcp_text_allow_local_fallback": True,
+
+    "s3_raw_bucket": "bucket1",
+    "s3_raw_prefix": "example_ai_pipeline/raw",
+    "s3_raw_endpoint_url": "https://storagegrid.example.com",
+    "s3_raw_access_key_id": os.environ["STORAGEGRID_RAW_ACCESS_KEY_ID"],
+    "s3_raw_secret_access_key": os.environ["STORAGEGRID_RAW_SECRET_ACCESS_KEY"],
+    "s3_raw_region": "us-east-1",
+
+    "s3_formatted_bucket": "prepnasbucket",
+    "s3_formatted_prefix": "example_ai_pipeline/formatted",
+    "s3_formatted_endpoint_url": "https://ontap-nas.example.com",
+    "s3_formatted_access_key_id": os.environ["ONTAP_NAS_ACCESS_KEY_ID"],
+    "s3_formatted_secret_access_key": os.environ["ONTAP_NAS_SECRET_ACCESS_KEY"],
+    "s3_formatted_region": "us-east-1",
+
+    "xcp_nfs_source_ip": "10.63.150.159",
+    "xcp_nfs_source_path": "/prepnasbucket/example_ai_pipeline",
+    "xcp_lustrefs_source_path": "/prepnasbucket/example_ai_pipeline",
+    "xcp_lustrefs_dest_path": "/mnt/lustre/client",
+    "xcp_lustrefs_training_subpath": "example_ai_pipeline",
+
+    "transformation_engine": "spark",
+    "spark_required": True,
+    "table_format": "iceberg",
+    "table_format_required": True,
+    "sample_count": 0,
+    "seed": 11,
+    "spark_driver_memory": "8g",
+    "spark_executor_memory": "8g",
+    "spark_timeout_secs": 0,
+    "infer_all_splits": True,
+    "infer_all_text": True,
+
+    "checkpoint_enabled": True,
+    "checkpoint_store": "formatted_s3",
+    "manual_archive_enabled": True,
+    "manual_archive_stage": "inferencing",
+    "manual_archive_bucket": "archivalbucket",
+    "manual_archive_prefix": "ai-models",
+    "manual_archive_profile": "sgdlocal",
+    "manual_archive_endpoint": "https://storagegrid.example.com",
+    "manual_archive_cleanup_raw": True,
+    "manual_archive_include_xcp_inputs": True,
+
+    "manual_archive_profiles": {
+        "sgdlocal": {
+            "access_key_id": os.environ["STORAGEGRID_ARCHIVE_ACCESS_KEY_ID"],
+            "secret_access_key": os.environ["STORAGEGRID_ARCHIVE_SECRET_ACCESS_KEY"],
+            "region": "us-east-1",
+        },
+    },
+}, separators=(",", ":")))
+PY
+)"
+AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
+  ./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+For LustreFS mode, the `xcp++_++s3++_++profiles` map is intentionally omitted because the training route does not resolve ONTAP S3 credentials. For both examples, omitting `s3++_++tabular++_++object++_++keys` and setting `sample++_++count` to `0` requests automatic discovery of all eligible tabular files and use of all available rows.
+
+*Python, no XCP, two-file test:*
+
+[source,bash]
+----
+CONF_JSON='{"s3_raw_bucket":"bucket1","s3_raw_prefix":"example_ai_pipeline/raw","s3_tabular_object_keys":["example_ai_pipeline/raw/tabular_part_01.csv","example_ai_pipeline/raw/tabular_part_02.csv"],"s3_formatted_bucket":"prepnasbucket","s3_formatted_prefix":"example_ai_pipeline/formatted","enable_xcp":false,"transformation_engine":"python","table_format":"none","sample_count":200,"manual_archive_enabled":false}' \
+./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+*Spark, Delta Lake, XCP to LustreFS:*
+
+[source,bash]
+----
+CONF_JSON='{"enable_xcp":true,"xcp_copy_destination":"lustrefs","xcp_nfs_source_ip":"10.63.150.159","xcp_nfs_source_path":"/prepnasbucket/example_ai_pipeline","xcp_lustrefs_source_path":"/prepnasbucket/example_ai_pipeline","xcp_lustrefs_dest_path":"/mnt/lustre/client","xcp_lustrefs_training_subpath":"example_ai_pipeline","transformation_engine":"spark","spark_required":true,"table_format":"delta","table_format_required":true,"sample_count":14400,"manual_archive_enabled":true,"manual_archive_stage":"inferencing"}' \
+./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+*Spark, Iceberg, XCP to ONTAP S3:*
+
+[source,bash]
+----
+CONF_JSON='{"enable_xcp":true,"xcp_copy_destination":"s3","xcp_nfs_source_ip":"10.63.150.159","xcp_nfs_source_path":"/prepnasbucket/example_ai_pipeline","xcp_s3_bucket":"trainingbucket","xcp_s3_dest_prefix":"example_ai_pipeline","xcp_s3_profile":"ontaps3","transformation_engine":"spark","spark_required":true,"table_format":"iceberg","table_format_required":true,"sample_count":0,"manual_archive_enabled":true,"manual_archive_stage":"inferencing"}' \
+./trigger_and_wait_ai_pipeline_sklearn.sh
+----
+
+Before an XCP run, verify the configured ONTAP NAS NFS path and destination accessibility from the XCP host. After a successful run, review task logs for `++[++data++_++prep++]++ effective++_++config`, `++[++xcp++_++copy++]++ effective++_++config`, `++[++model++_++training++]++ effective++_++config`, and `++[++manual++_++archive++]++` to confirm the selected engine, input scope, destination, and archive stage.
+
+'''''
+
+=== 12. Operational Guide
+
+This guide covers routine execution, monitoring, incident triage, training recovery, archive verification, capacity tuning, and data protection. Use it with the configuration scenarios in Section 11 to operate the same pipeline consistently across local, ONTAP S3, and LustreFS training modes.
+
+==== 12.1 Execution Walkthrough
+
+Trigger a run through `trigger++_++and++_++wait++_++ai++_++pipeline++_++sklearn.sh` with a `CONF++_++JSON` payload. The script submits one uniquely named manual run, polls until it reaches a terminal state, and prints local log tails for failed tasks when available. Each primary task emits an `effective++_++config` record at startup so operators can verify the evaluated configuration rather than relying on the submitted payload alone.
+
+==== 12.2 Monitoring and Observability
+
+Monitor DAG state in the Airflow UI or CLI and correlate it with the run ID and `run++_++stamp`. The guard logs are grep-friendly: `++[++data++_++prep++]++ effective++_++config`, `++[++model++_++training++]++ effective++_++config`, `++[++xcp++_++copy++]++ effective++_++config`, and `++[++checkpoint++]++ resume++_++summary`. Review these entries to validate the transformation engine, selected XCP destination, training source, and checkpoint reuse decision for each run.
+
+==== 12.3 Troubleshooting Quick Reference
+
+Use this table to connect common task failures to the first corrective action. Resolve source connectivity and mount problems before retrying a run; retrying without correcting an invalid configuration or unavailable endpoint will reproduce the same failure.
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Symptom |Likely Cause |Resolution
+|`Could not resolve XCP S3 credentials` |Missing/incorrect `xcp++_++s3++_++profile` in `xcp++_++s3++_++profiles` |Verify profile name and credentials map
+|`no readable Lustre source directory` |LustreFS not mounted or wrong `xcp++_++lustrefs++_++dest++_++path` |Verify mount with `df`; correct path
+|`Missing required text dataset files` |Text JSONs absent in raw S3 prefix |Upload `text++_++base.json`, `text++_++finetune.json`, `text++_++infer.json`
+|Preflight exit code 1 |SSH unreachable |Verify `ssh++_++default` connection and host/user
+|Preflight exit code 2 |NFS path not exported/visible |Verify export with `xcp show ++<++ip++>++`
+|===
+
+==== 12.4 Checkpoint Operations
+
+Checkpointing applies only to `model++_++training`. Set `training++_++checkpoint++_++reuse++_++mode=resume++_++if++_++exists` to reuse a valid completed training result and skip redundant model training, or use `verify++_++only` to validate checkpoint eligibility without skipping. Keep reuse disabled (`off`) during initial testing or whenever training inputs, configuration, or expected artifacts have changed.
+
+==== 12.5 Manual Archive Operations
+
+Set `manual++_++archive++_++enabled=true` and choose `manual++_++archive++_++stage` deliberately. Use `model++_++training` when governance requires the core model baseline as soon as training succeeds; use `inferencing` when the archive must include final predictions. A run with `model++_++training` selected continues to fine-tuning and inference after the archival branch; it simply does not archive their later outputs. Verify uploads under the run-stamped StorageGRID prefix and review `++[++manual++_++archive++]++` logs for the selected stage, files found, and upload count.
+
+==== 12.6 Scaling Guidance
+
+Tune `sample++_++count`, `spark++_++driver++_++memory`, `spark++_++executor++_++memory`, and `spark++_++timeout++_++secs` to the input volume and service-level objective. Start with bounded samples to validate data shape and routing, then use `sample++_++count=0` for all-row runs after StorageGRID, ONTAP NAS, XCP, and the selected training tier have sufficient capacity and throughput.
+
+==== 12.7 Backup and Recovery
+
+Protect the ONTAP NAS prepared-data bucket with ONTAP Snapshot and backup. Apply StorageGRID protection and retention policies to raw and archival buckets; the archival bucket retains history independent of pipeline re-execution. Combine these storage protections with the training checkpoint record to recover the correct run-scoped data and baseline artifacts after a task, host, or site-level interruption.
+
+'''''
+
+=== 13. Security Considerations
+
+Security controls should isolate each storage tier and pipeline function while preserving the lineage required for audit. Use separate least-privilege credentials for StorageGRID raw data, ONTAP NAS prepared data, the selected XCP destination, and StorageGRID archival. Encrypt network traffic and store all secrets outside the DAG definition, examples, and shell history.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Area |Recommendation
+|Credential management |Use Airflow Connections/Variables or a secrets manager; avoid inline plaintext in `dag++_++run.conf`
+|Data in transit |Use TLS-enabled S3 endpoints; encrypted NFS/Lustre transport where supported
+|Access control |Scope S3 credentials per role (StorageGRID raw, ONTAP NAS prepared data, XCP destination, StorageGRID archival) to minimum required permissions
+|Secrets in configs |Rotate any credentials exposed during testing; treat trigger scripts/shell history as sensitive
+|Audit trail |Rely on data-prep manifests, checkpoint records, and archival manifests for compliance evidence
+|===
+
+'''''
+
+=== 14. Validation and Testing
+
+Validation confirms that the pipeline’s configurable behavior works reliably across its routing, failure-handling, data-mobility, and multi-file discovery paths. Each validation test area was executed in a representative environment using actual Airflow DAG triggers, with log outputs and storage manifests verified for correctness.
+
+==== 14.1 Functional Routing Validation
+
+This test area validates end-to-end data and artifact routing when `enable++_++xcp=true`.
+
+* *Objective:* Verify that data preparation, XCP mobility, model training, fine-tuning, and inference consistently use the selected XCP destination (`s3` or `lustrefs`).
+* *Test Procedure:* Triggered DAG runs with `xcp++_++copy++_++destination="s3"` and `xcp++_++copy++_++destination="lustrefs"`. Inspected XCom outputs, effective-config logs, and storage locations.
+* *Validation Outcome:*
+** In `data++_++prep`, formatted tabular splits and text files were staged to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/data/` on the chosen destination.
+** In `model++_++training`, model inputs were loaded from the XCP destination, and baseline artifacts (`regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json`) were published back to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/artifacts/`.
+** In `fine++_++tuning`, base vectorizer/classifier artifacts were materialized from the XCP destination, incrementally tuned, and published back as `text++_++classifier++_++tuned.bin` and `fine++_++tune++_++metrics.json`.
+** In `inferencing`, all three tuned artifacts were materialized from the XCP destination to generate predictions.
+
+==== 14.2 Local Fallback and Non-XCP Execution Validation
+
+This test area validates pipeline behavior when XCP data mobility is disabled (`enable++_++xcp=false`).
+
+* *Objective:* Ensure the pipeline operates seamlessly using direct local prepared-data paths without requiring SSH connectivity, remote XCP hosts, or XCP credential profiles.
+* *Test Procedure:* Triggered pipeline runs with `enable++_++xcp=false` and default S3/local paths.
+* *Validation Outcome:*
+** XCP preflight and copy tasks were safely bypassed.
+** `model++_++training`, `fine++_++tuning`, and `inferencing` read directly from local prepared-data directories and published artifacts locally.
+** Verified that no XCP S3 credential resolution or SSH preflight errors occurred when XCP was disabled.
+
+==== 14.3 Performance and Tier Comparison (ONTAP S3 vs. LustreFS)
+
+This test area evaluates I/O latency, discovery overhead, and training throughput between ONTAP S3 object storage and LustreFS parallel filesystem tiers.
+
+* *Objective:* Quantify performance characteristics of Ring 1 (E-Series {plus} LustreFS) versus Ring 2 (ONTAP AFX / ONTAP S3) active training tiers.
+* *Test Procedure:* Measured file discovery time, training dataset load latency, and artifact publish/materialize duration across identical dataset sizes (14,400{plus} rows, multi-file text/tabular inputs).
+* *Validation Outcome:*
+** *LustreFS Tier:* Demonstrated lower file-discovery overhead and faster random-access read latency during model training, making it ideal for high-file-count, GPU-intensive parallel training workloads.
+** *ONTAP S3 Tier:* Provided high throughput with simpler multi-protocol management, making it optimal for cost-conscious, elastic-access active storage without requiring client-side filesystem mounts.
+
+==== 14.4 Failure Recovery and Training Checkpoint Validation
+
+This test area validates the checkpoint resume system scoped to `model++_++training`.
+
+* *Objective:* Verify that pipeline recovery accurately detects prior successful training runs and skips redundant computation while preserving artifact integrity.
+* *Test Procedure:*
+[arabic]
+. Ran pipeline with `checkpoint++_++enabled=true` and `checkpoint++_++store="formatted++_++s3"`.
+. Simulated task failure or re-execution with `training++_++checkpoint++_++reuse++_++mode="resume++_++if++_++exists"`.
+. Tested `verify++_++only` and `off` reuse modes.
+* *Validation Outcome:*
+** When `resume++_++if++_++exists` was set and a valid checkpoint JSON {plus} all core artifacts existed in S3/LustreFS, `model++_++training` exited immediately with decision `RESUMED++_++FROM++_++CHECKPOINT`, logging `++[++checkpoint++]++ resume++_++summary: decision=RESUMED++_++FROM++_++CHECKPOINT`.
+** Downstream `fine++_++tuning` and `inferencing` successfully materialized the verified checkpoint artifacts.
+** When `verify++_++only` was set, the guard validated artifact existence without skipping training.
+
+==== 14.5 Scalability and Multi-File Dataset Validation
+
+This test area validates pipeline scalability across large, multi-file tabular and text datasets.
+
+* *Objective:* Confirm automatic dataset discovery, Spark transformation engine execution, and Lakehouse table format support (`delta` and `iceberg`).
+* *Test Procedure:*
+[arabic]
+. Ran ingestion and preparation across dozens of CSV/Parquet files under the StorageGRID raw prefix (`s3++_++raw++_++prefix`).
+. Tested explicit file selection using `s3++_++tabular++_++object++_++keys` vs automatic all-file discovery (`sample++_++count=0`).
+. Executed preparation using PySpark with `table++_++format="delta"` and `table++_++format="iceberg"`.
+* *Validation Outcome:*
+** Spark distributed preparation successfully ingested, filtered, split, and formatted large multi-part tabular datasets.
+** Automatic discovery accurately identified all valid tabular CSV/Parquet objects while ignoring non-tabular artifacts.
+** Both Delta Lake and Iceberg table formats were correctly created and registered under `tables/`, with downstream model training discovering and reading the formatted splits.
+
+'''''
+
+=== 15. NetApp Differentiation and Competitive Positioning
+
+This comparison positions the architecture against common alternatives. Its differentiator is not a single storage endpoint; it is the policy-controlled combination of StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, XCP, and Airflow that lets each AI lifecycle phase use an appropriate tier without rebuilding the workflow.
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Alternative Approach |Limitation |NetApp Solution Advantage
+|Cloud-native-only pipelines |Locked to one storage paradigm |Interchangeable S3/LustreFS via configuration
+|DIY script-based pipelines |No retry, checkpoint, or lineage |Airflow orchestration {plus} checkpoint/resume natively
+|Single-tier storage architectures |One performance/cost profile for all workloads |Per-run tier selection via `xcp++_++copy++_++destination`
+|Full retraining on every update |High recurring compute cost |Incremental fine-tuning via `partial++_++fit`
+|===
+
+'''''
+
+=== 16. Appendices
+
+The appendices provide shared terminology and document-control context for readers who operate, review, or adapt this NVA. Keep the revision history current when changing documented behavior, parameters, storage layouts, or validation evidence.
+
+==== 16.1 Glossary
+
+These definitions establish consistent meanings for the architecture’s storage, orchestration, and lineage terms.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Term |Definition
+|XCP |NetApp’s high-speed parallel data copy/migration tool
+|ONTAP S3 |NetApp’s S3-compatible object storage service on ONTAP
+|LustreFS |High-performance parallel distributed filesystem
+|DAG |Directed Acyclic Graph — Airflow’s workflow definition
+|XCom |Airflow’s mechanism for passing data between tasks
+|run++_++stamp |Unique per-execution timestamp identifier used for lineage
+|Manifest |JSON record describing a stage’s inputs, outputs, and configuration
+|===
+
+==== 16.2 Revision History
+
+Record each published change to preserve the document’s review and approval trail.
+
+[width="100%",cols="25%,25%,25%,25%",options="header",]
+|===
+|Version |Date |Author |Change
+|1.0 |2026-09-01 |Solution Architecture Team |Initial publication-ready NVA with full parameter tables and diagrams
+|===
+
+==== 16.3 Contact Us and Software Requests
+
+To request the software package, automation DAGs, deployment scripts, or validation artifacts to deploy and validate this architecture, or to provide feedback and technical inquiries, contact the NetApp AI & Data Mobility team:
+
+* *Email:* ng-data-mobility-in-ai-pipeline@netapp.com
+* *Purpose:* Software package requests, deployment guidance, architecture validation support, and technical feedback.
