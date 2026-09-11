@@ -178,68 +178,13 @@ image::ai-pipeline-overview.png[ "High-level solution architecture", pdfwidth=90
 
 This sequence diagram identifies which platform component performs each exchange. Airflow reads raw objects from StorageGRID and writes prepared data to the ONTAP NAS bucket; it then invokes XCP over SSH. XCP reads the ONTAP NAS NFS export and writes to the configured training tier. The final conditional block shows that StorageGRID archival content depends on the selected manual archive stage.
 
-[mermaid]
-----
-sequenceDiagram
-    participant Airflow
-    participant SG as StorageGRID S3
-    participant NAS as ONTAP NAS Bucket
-    participant XCP as NetApp XCP Host
-    participant ONTAP_S3 as NetApp ONTAP S3
-    participant Lustre as LustreFS
-
-    Airflow->>SG: Download raw tabular/text data
-    Airflow->>NAS: Upload prepared data + manifest
-    Airflow->>XCP: SSH preflight (connectivity, NFS visibility)
-    Airflow->>XCP: SSH xcp copy from ONTAP NAS -newid <run_stamp>
-    alt destination = s3
-        XCP->>ONTAP_S3: Copy data to S3 bucket/prefix
-    else destination = lustrefs
-        XCP->>Lustre: Copy data to Lustre mount
-    end
-    Airflow->>Lustre: model_training reads Lustre files (if selected)
-    Airflow->>ONTAP_S3: model_training reads S3 files (if selected)
-    alt manual_archive_stage = model_training
-        Airflow->>SG: Archive core training artifacts after model_training
-    else manual_archive_stage = inferencing
-        Airflow->>SG: Archive models, tuning artifacts, and predictions after inferencing
-    end
-----
+image::ai-pipeline-component-interaction.png[ "Component Interaction Diagram", pdfwidth=90% ]
 
 ==== 4.3 Physical / Deployment Architecture
 
 This deployment diagram shows the required hosts, storage endpoints, and network interfaces. The Airflow host uses S3 APIs for StorageGRID, the ONTAP NAS bucket, and the selected ONTAP S3 destination, and uses SSH to control the XCP host. The XCP host accesses the prepared-data source through NFS and writes to either ONTAP S3 or the LustreFS mount; when LustreFS is selected, the Airflow host must also mount it to read training data and materialize artifacts.
 
-[mermaid]
-----
-flowchart LR
-    subgraph AirflowHost[Airflow Scheduler/Worker Host]
-        SCH[Scheduler]
-        WEB[Webserver]
-    end
-    subgraph XCPHost[NetApp XCP Host]
-        XCPBIN["/usr/src/xcp/linux/xcp"]
-    end
-    subgraph Storage
-        RAW[(StorageGRID: Raw Bucket)]
-        PREP[(ONTAP NAS Bucket: Prepared Data)]
-        ARCH[(StorageGRID: Archival Bucket)]
-        NFS[(ONTAP NAS NFS Export)]
-        TRAIN_S3[(ONTAP S3: Training Destination)]
-        LUS[(LustreFS Mount)]
-    end
-
-    AirflowHost -- S3 API --> RAW
-    AirflowHost -- S3 API --> PREP
-    AirflowHost -- S3 API --> ARCH
-    AirflowHost -- SSH --> XCPHost
-    XCPHost -- NFS --> NFS
-    NFS --- PREP
-    XCPHost -- S3 API --> TRAIN_S3
-    XCPHost -- Lustre Client --> LUS
-    AirflowHost -- reads (if ONTAP S3) --> TRAIN_S3
-    AirflowHost -- reads (if lustrefs) --> LUS
-----
+image::ai-pipeline-physical-deployment.png[ "Physical / Deployment Architecture", pdfwidth=90% ]
 
 ==== 4.4 Data Flow Overview
 
