@@ -190,34 +190,7 @@ image::ai-pipeline-physical-deployment.png[ "Physical / Deployment Architecture"
 
 This compact flow summarizes data and artifact provenance. Each run receives a unique `run++_++stamp`, which keeps prepared data, XCP output, model artifacts, predictions, and archived objects traceable to the same execution. XCP destination selection governs the training-data and model-artifact tier, while `manual++_++archive++_++stage` governs whether StorageGRID receives the baseline training package or the full inference package.
 
-[mermaid]
-----
-flowchart LR
-    RAW[(StorageGRID<br/>Raw S3 Data)]
-    PREP[data_prep<br/>Python or Spark]
-    NAS[(ONTAP NAS Bucket<br/>Prepared Data + Manifest<br/>run_stamp)]
-    XCP[NetApp XCP<br/>Copies from NAS NFS export]
-    DEST{xcp_copy_destination}
-    S3[(ONTAP S3<br/>Training Data + Artifacts)]
-    LUS[(LustreFS<br/>Training Data + Artifacts)]
-    TRAIN[model_training<br/>Baseline Artifacts]
-    TUNE[fine_tuning<br/>Tuned Classifier]
-    INFER[inferencing<br/>Predictions]
-    ARCHIVE[(StorageGRID<br/>Archival S3<br/>stage / run_stamp)]
-
-    RAW -->|raw tabular and text data| PREP
-    PREP -->|prepared splits, text files, manifest| NAS
-    NAS -->|NFS source| XCP --> DEST
-    DEST -->|s3| S3 --> TRAIN
-    DEST -->|lustrefs| LUS --> TRAIN
-    TRAIN -->|publish baseline artifacts| S3
-    TRAIN -->|publish baseline artifacts| LUS
-    TRAIN --> TUNE -->|publish tuned artifacts| S3
-    TUNE -->|publish tuned artifacts| LUS
-    TUNE --> INFER
-    TRAIN -->|manual_archive_stage = model_training| ARCHIVE
-    INFER -->|manual_archive_stage = inferencing| ARCHIVE
-----
+image::ai-pipeline-data-flow.png[ "Data Flow Overview", pdfwidth=90% ]
 
 '''''
 
@@ -302,41 +275,7 @@ The storage architecture separates the AI lifecycle into purpose-built tiers: St
 
 This diagram maps the logical bucket and prefix layout for a single pipeline run across all storage tiers:
 
-[mermaid]
-----
-flowchart TB
-    subgraph RawBucket["StorageGRID: s3://raw_bucket/raw_prefix/"]
-        R1[tabular_part_*.csv]
-        R2[text_base.json]
-        R3[text_finetune.json]
-        R4[text_infer.json]
-    end
-    subgraph PreparedBucket["ONTAP NAS Bucket: s3://prepared_bucket/prepared_prefix/run_stamp/"]
-        F1[data/tabular_train.csv]
-        F2[data/tabular_val.csv]
-        F3[data/tabular_infer.csv]
-        F4[data/text_*.json]
-        F5[data/data_prep_manifest.json]
-        F6[tables/ Delta or Iceberg]
-    end
-    subgraph XCPDest["XCP Destination: xcp_prefix/formatted/run_stamp/"]
-        X1[data/*]
-        X2[artifacts/*.bin]
-        X3[artifacts/*_metrics.json]
-    end
-    subgraph ArchiveBucket["s3://archive_bucket/archive_prefix/stage/run_stamp/"]
-        A1[regression_model.bin]
-        A2[text_vectorizer.bin]
-        A3[text_classifier.bin]
-        A4[text_classifier_tuned.bin - inferencing stage only]
-        A5[tabular_predictions.csv - inferencing stage only]
-        A6[text_predictions.json - inferencing stage only]
-    end
-
-    RawBucket --> PreparedBucket
-    PreparedBucket --> XCPDest
-    XCPDest --> ArchiveBucket
-----
+image::ai-pipeline-storage-layout.png[ "Logical Storage Layout for a Single Pipeline Run", pdfwidth=90% ]
 
 ==== 8.6 Storage Sizing Guidance
 
@@ -369,16 +308,7 @@ XCP is a parallel, multi-threaded copy engine that supports the NFS source, ONTA
 
 The preflight task runs before an XCP copy. It verifies that Airflow can reach the XCP host through SSH and that the configured ONTAP NAS NFS source path is visible to XCP. The explicit exit conditions stop the pipeline before a copy begins when connectivity or source visibility is incorrect.
 
-[mermaid]
-----
-flowchart TD
-    Start[xcp_preflight_source] --> SSH{SSH connectivity OK?}
-    SSH -- no --> Fail1[Exit 1: SSH connection failed]
-    SSH -- yes --> Show[xcp show NFS_IP]
-    Show --> Visible{NFS_PATH or parent visible?}
-    Visible -- no --> Fail2[Exit 2: source path not visible]
-    Visible -- yes --> Pass[Preflight passed]
-----
+image::ai-pipeline-xcp-preflight-validation.png[ "XCP Preflight Validation Flow", pdfwidth=90% ]
 
 ==== 9.3 XCP Copy to S3 — Command Template
 
@@ -437,14 +367,7 @@ The two `df` commands verify that the source and destination mounts are availabl
 
 This decision diagram shows how one runtime parameter determines the copy target and the training read path. Select `s3` for the ONTAP S3 object destination or `lustrefs` for the parallel filesystem destination. Downstream stages use the matching source automatically, avoiding changes to model code when storage placement changes.
 
-[mermaid]
-----
-flowchart LR
-    Conf[xcp_copy_destination] -->|s3| S3Path[Copy to NetApp ONTAP S3]
-    Conf -->|lustrefs| LusPath[Copy to LustreFS mount]
-    S3Path --> Train1[model_training reads S3]
-    LusPath --> Train2[model_training reads LustreFS]
-----
+image::ai-pipeline-xcp-destination-decision.png[ "XCP Destination Decision Flow", pdfwidth=90% ]
 
 ==== 9.6 XCP Failure Handling and Guardrails
 
