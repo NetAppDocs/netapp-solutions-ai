@@ -172,40 +172,7 @@ This section presents the logical workflow, component interactions, physical dep
 
 This workflow diagram shows the Airflow-controlled lifecycle from raw StorageGRID data through preparation, optional XCP mobility, model execution, checkpointing, and archival. `enable++_++xcp` determines whether prepared data is copied from the ONTAP NAS bucket to ONTAP S3 or LustreFS before training. The archive branches are independent: `manual++_++archive++_++stage=model++_++training` archives the baseline immediately after training, while `manual++_++archive++_++stage=inferencing` archives the complete outcome after predictions are generated.
 
-[mermaid]
-----
-flowchart TB
-    subgraph Ingest
-        A[Raw Data: StorageGRID S3]
-    end
-    subgraph Prepare
-        B[data_prep: Python or Spark]
-        P[Prepared Data: ONTAP NAS Bucket]
-    end
-    subgraph Mobility
-        C{enable_xcp?}
-        D[xcp_preflight_source]
-        E[xcp_copy_prep_to_training]
-    end
-    subgraph Train
-        F[model_training]
-        G[fine_tuning]
-        H[inferencing]
-    end
-    subgraph Govern
-        I[checkpoint_model_training]
-        J[manual_archive]
-    end
-
-    A --> B --> P --> C
-    C -- yes --> D --> E --> F
-    C -- no --> F
-    F --> I
-    F --> G --> H
-    F -->|manual_archive_stage = model_training| J
-    H -->|manual_archive_stage = inferencing| J
-    I -.-> F
-----
+image::ai-pipeline-overview.png[ "High-level solution architecture", pdfwidth=90% ]
 
 ==== 4.2 Component Interaction Diagram
 
