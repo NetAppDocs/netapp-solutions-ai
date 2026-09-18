@@ -5,7 +5,7 @@ keywords:
 summary: 
 ---
 
-= AI Pipeline with NetApp Ring Architecture (StorageGRID, ONTAP and E-Series)
+= AI Pipeline with NetApp Storage Architecture (StorageGRID, ONTAP and E-Series)
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -15,7 +15,7 @@ summary:
 Karthikeyan Nagalingam, NetApp
 
 [.lead]
-=== AI (NetApp Ring) Data Pipeline with Apache Airflow Orchestration, StorageGRID, ONTAP NAS, and NetApp XCP
+=== AI Data Pipeline with Apache Airflow Orchestration, StorageGRID, ONTAP NAS, and NetApp XCP
 
 This validated architecture presents a governed, storage-tier-aware AI data pipeline orchestrated by Apache Airflow. The solution ingests raw tabular and text data from NetApp StorageGRID, prepares deterministic datasets and manifests on an ONTAP NAS bucket, and uses NetApp XCP to move prepared data to either NetApp ONTAP S3 or LustreFS according to runtime configuration. It then trains and incrementally fine-tunes scikit-learn models, generates predictions, checkpoints successful training outputs, and archives models, metrics, manifests, and prediction evidence to StorageGRID. The architecture provides reproducible execution, configurable storage placement, failure guardrails, checkpoint-based recovery, and auditable lineage across the AI lifecycle. It is intended for architects, data engineers, ML engineers, and infrastructure teams who need a repeatable deployment and validation pattern for AI pipelines across NetApp storage tiers.
 
@@ -63,21 +63,21 @@ Enterprise AI programs are stalling — not because of model or compute limitati
 
 The solution orchestrates ingestion, preparation, data mobility, training, fine-tuning, inference, and archival as an Apache Airflow DAG. StorageGRID anchors the raw-data and long-term archival object tiers. Data preparation writes run-stamped datasets and manifests to an ONTAP NAS bucket, exposed by NFS as the XCP source. NetApp XCP then moves the prepared data to a runtime-selectable training destination — NetApp ONTAP S3 or LustreFS — with no code changes required to switch tiers.
 
-This pipeline is a concrete implementation of the broader *NetApp AI Ring Architecture* — a purpose-built, three-tier storage framework that aligns performance and cost to each AI workload phase:
+This pipeline is a concrete implementation of the broader *NetApp AI Storage Architecture* — a purpose-built, three-tier storage framework that aligns performance and cost to each AI workload phase:
 
-* *Ring 1 (E-Series {plus} LustreFS):* Ultra-high-throughput parallel storage for GPU-intensive model training and checkpointing.
-* *Ring 2 (ONTAP AFX):* High-performance active storage for training, fine-tuning, inference, vector/RAG workloads, and selected data preparation use cases, with FAS and NAS bucket support.
-* *Ring 3 (StorageGRID):* Scalable S3-compatible object storage for data ingestion, governance, and long-term retention.
+* *E-Series (LustreFS):* Ultra-high-throughput parallel storage for GPU-intensive model training and checkpointing.
+* *ONTAP (AFF/AFX):* High-performance active storage for training, fine-tuning, inference, vector/RAG workloads, and selected data preparation use cases, with FAS and NAS bucket support.
+* *StorageGRID:* Scalable S3-compatible object storage for data ingestion, governance, and long-term retention.
 
 Data movement across tiers is fully automated via Apache Airflow combined with NetApp XCP, FlexCache, and FabricPool — eliminating manual operations from the critical path entirely.
 
-The ring model helps enterprises support distributed data preparation, model training, fine-tuning, inferencing, and lifecycle governance without forcing all data into a single centralized lake. By reducing unnecessary data movement, it is a natural fit for hybrid AI workflows.
+The NetApp storage architecture helps enterprises support distributed data preparation, model training, fine-tuning, inferencing, and lifecycle governance without forcing all data into a single centralized lake. By reducing unnecessary data movement, it is a natural fit for hybrid AI workflows.
 
 ==== 1.5 Why NetApp
 
 [width="100%",cols="34%,33%,33%",options="header",]
 |===
-|Dimension |Conventional Approach |NetApp AI Ring Architecture
+|Dimension |Conventional Approach |NetApp AI Storage Architecture
 |GPU Productivity |Storage bottlenecks idle expensive compute |GPUDirect Storage over RDMA helps keep GPU clusters fully utilized
 |Data Mobility |Manual scripts delay pipelines |Automated inter-tier movement via Airflow {plus} XCP
 |Cost Control |All data on high-cost flash |FabricPool auto-demotes cold data to low-cost object storage
@@ -170,11 +170,11 @@ Faster model refresh cycles, reduced manual maintenance, reduced recovery time p
 
 This section presents the logical workflow, component interactions, physical deployment, and data lineage for the validated AI pipeline. Together, the diagrams show how Apache Airflow orchestrates data movement from StorageGRID through ONTAP NAS, optionally uses NetApp XCP to place data on ONTAP S3 or LustreFS for model execution, and returns governed results to StorageGRID archival storage.
 
-### 4.1 High-Level Three-Tier AI Ring Architecture
+### 4.1 High-Level Three-Tier AI Storage Architecture
 
-The AI Ring architecture places data on the storage tier that best matches each lifecycle phase. Ring 3 uses StorageGRID for scalable, cost-optimized raw-data ingestion and governed archival. Ring 2 uses ONTAP NAS and ONTAP S3 for active preparation, data mobility staging, and object-based training workflows. Ring 1 uses E-Series with LustreFS when high-throughput, parallel training I/O is required. Apache Airflow orchestrates the lifecycle, while NetApp XCP moves prepared data from the ONTAP NAS tier to the selected active training tier.
+The NetApp AI storage architecture places data on the storage tier that best matches each lifecycle phase. StorageGRID is used for scalable, cost-optimized raw-data ingestion and governed archival. ONTAP NAS and ONTAP S3 are used as the active preparation, data mobility staging, and object-based training workflows. E-Series with LustreFS is used when high-throughput, parallel training I/O is required. Apache Airflow orchestrates the lifecycle, while NetApp XCP moves prepared data from the ONTAP NAS tier to the selected active training tier.
 
-image::ai-pipeline-three-tier-ring-arch.png[ "High-Level Three-Tier AI Ring Architecture", pdfwidth=90% ]
+image::ai-pipeline-three-tier-storage-arch.png[ "High-Level Three-Tier AI Storage Architecture", pdfwidth=90% ]
 
 ### 4.2 High-Level Solution Architecture
 
@@ -466,7 +466,7 @@ These network flows must be permitted by routing, firewall, and name-resolution 
 
 ==== 10.8 Installation and Prerequisites
 
-This subsection defines the baseline installation steps required to build, configure, and run the NetApp AI Ring validated pipeline in a fresh environment. It is intended for operators, architects, and engineers setting up the Airflow workspace before running any DAGs.
+This subsection defines the baseline installation steps required to build, configure, and run the NetApp AI validated pipeline in a fresh environment. It is intended for operators, architects, and engineers setting up the Airflow workspace before running any DAGs.
 
 ===== 10.8.1 Prerequisites
 
@@ -1301,7 +1301,7 @@ This test area validates pipeline behavior when XCP data mobility is disabled (`
 
 This test area evaluates I/O latency, discovery overhead, and training throughput between ONTAP S3 object storage and LustreFS parallel filesystem tiers.
 
-* *Objective:* Quantify performance characteristics of Ring 1 (E-Series {plus} LustreFS) versus Ring 2 (ONTAP AFX / ONTAP S3) active training tiers.
+* *Objective:* Quantify performance characteristics of E-Series (LustreFS) versus ONTAP ( (AFF/AFX) / ONTAP S3) active training tiers.
 * *Test Procedure:* Measured file discovery time, training dataset load latency, and artifact publish/materialize duration across identical dataset sizes (14,400{plus} rows, multi-file text/tabular inputs).
 * *Validation Outcome:*
 ** *LustreFS Tier:* Demonstrated lower file-discovery overhead and faster random-access read latency during model training, making it ideal for high-file-count, GPU-intensive parallel training workloads.
@@ -1399,7 +1399,7 @@ Record each published change to preserve the document’s review and approval tr
 [width="100%",cols="25%,25%,25%,25%",options="header",]
 |===
 |Version |Date |Author |Change
-|1.0 |2026-09-01 |Solution Architecture Team |Initial publication-ready NVA with full parameter tables and diagrams
+|1.0 |2026-09-25 |Solution Architecture Team |Initial publication-ready NVA with full parameter tables and diagrams
 |===
 
 ==== 16.3 Contact Us and Software Requests
