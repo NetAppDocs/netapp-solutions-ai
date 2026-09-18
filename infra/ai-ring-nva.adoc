@@ -5,7 +5,7 @@ keywords:
 summary: 
 ---
 
-= AI Pipeline with NetApp Storage Architecture (StorageGRID, ONTAP and E-Series)
+= Streamlining AI Pipeline Across NetApp Storage Platforms (StorageGRID, ONTAP, and E-Series)
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -62,6 +62,11 @@ Enterprise AI programs are stalling — not because of model or compute limitati
 ==== 1.4 NetApp Solution Summary
 
 The solution orchestrates ingestion, preparation, data mobility, training, fine-tuning, inference, and archival as an Apache Airflow DAG. StorageGRID anchors the raw-data and long-term archival object tiers. Data preparation writes run-stamped datasets and manifests to an ONTAP NAS bucket, exposed by NFS as the XCP source. NetApp XCP then moves the prepared data to a runtime-selectable training destination — NetApp ONTAP S3 or LustreFS — with no code changes required to switch tiers.
+
+[NOTE]
+====
+In this design, the ONTAP NAS bucket is used primarily from an XCP supportability and validation perspective, because it provides a consistent NFS source for the mobility workflow. In real production environments, the same active data can also be served directly over high-performance RDMA-capable paths, so the ONTAP NAS layer should be viewed as an operationally convenient and supportable staging pattern rather than the only runtime access method.
+====
 
 This pipeline is a concrete implementation of the broader *NetApp AI Storage Architecture* — a purpose-built, three-tier storage framework that aligns performance and cost to each AI workload phase:
 
