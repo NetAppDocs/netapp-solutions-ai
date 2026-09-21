@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar
-permalink: infra/ai-ring-nva.html
+permalink: infra/ai-pipeline-nva.html
 keywords: 
 summary: 
 ---
