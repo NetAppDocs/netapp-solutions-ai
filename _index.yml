@@ -43,8 +43,8 @@ indexpage:
           url: /infra/ai-storagegrid-datalake-adas.html
         - title: "Quantum StorNext with E-Series"
           url: /infra/ai-eseries-nva1150-design.html
-        - title: "NetApp AI Ring Validated Architecture (NVA)"
-          url: /infra/ai-ring-nva.html
+        - title: "Streamlining AI Pipeline Across NetApp Storage Platforms (StorageGRID, ONTAP, and E-Series)"
+          url: /infra/ai-pipeline-nva.html
 #
     - title: "MLOps and data management"
       links:
