@@ -2,12 +2,6 @@ section: ai-data-pipelines
 title: "MLOps and data management"
 url: /ai-data-pipelines/index.html
 entries:
-  - title: "Streamlining AI Pipeline Across NetApp Storage Platforms"
-    pdf-filename: "Streamlining AI Pipeline Across NetApp Storage Platforms"
-    entries:
-      - title: "Executive summary"
-        url: /infra/ai-pipeline-executive-summary.html
-#
   - title: "Open Source MLOps with NetApp"
     pdf-filename: "Open Source MLOps with NetApp"
     entries:
