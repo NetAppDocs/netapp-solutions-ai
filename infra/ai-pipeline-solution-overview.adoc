@@ -1,0 +1,40 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-solution-overview.html
+keywords: 
+summary: 
+---
+
+= Solution Overview
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+== Solution Description
+
+The pipeline is implemented as the Airflow DAG `example++_++ai++_++pipeline++_++sklearn`, composed of the tasks `ingestion`, `data++_++prep`, `xcp++_++preflight++_++source`, `xcp++_++copy++_++prep++_++to++_++training`, `model++_++training`, `fine++_++tuning`, `inferencing`, `checkpoint++_++model++_++training`, `route++_++manual++_++archive++_++stage`, and `manual++_++archive`.
+
+== Use Case and Problem Statement
+
+Customers must train and periodically refresh tabular regression and text classification models using raw data sourced from StorageGRID. The pipeline prepares that data in an ONTAP NAS bucket, then uses NetApp XCP to deliver it to either ONTAP S3 or LustreFS for training, based on the per-run destination selection.
+
+== Target Customer Profile and Industry Applicability
+
+Financial services (risk/fraud models), manufacturing (predictive maintenance), healthcare (classification/triage), retail (demand forecasting) — any enterprise requiring governed, repeatable ML training on NetApp infrastructure.
+
+== Solution Scope and Boundaries
+
+*In scope:* ingestion gating, data preparation (Python/Spark), XCP data mobility (S3/LustreFS), scikit-learn training and incremental fine-tuning, inference, checkpointing, manual archival. *Out of scope:* real-time model serving APIs, streaming ingestion, GPU-based deep learning frameworks.
+
+== Assumptions and Prerequisites
+
+* StorageGRID S3-compatible endpoint reachable from Airflow for raw-data access and archival.
+* ONTAP NAS bucket reachable from Airflow for prepared-data writes and exposed through NFS to the XCP host.
+* NetApp ONTAP S3-compatible endpoint reachable from Airflow and XCP when ONTAP S3 is selected as the training destination.
+* NetApp XCP installed and reachable via SSH (Airflow connection `ssh++_++default`).
+* LustreFS client mounted on the XCP host when LustreFS is selected.
+* Airflow 2.x with `boto3`, `scikit-learn`; optional PySpark {plus} Delta/Iceberg packages.

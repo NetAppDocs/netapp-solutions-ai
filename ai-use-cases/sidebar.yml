@@ -9,6 +9,8 @@ entries:
         url: /infra/ai-pipeline-overview.html
       - title: "Executive summary"
         url: /infra/ai-pipeline-executive-summary.html
+      - title: "Solution overview"
+        url: /infra/ai-pipeline-solution-overview.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
