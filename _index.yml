@@ -44,7 +44,7 @@ indexpage:
         - title: "Quantum StorNext with E-Series"
           url: /infra/ai-eseries-nva1150-design.html
         - title: "Streamlining AI Pipeline Across NetApp Storage Platforms"
-          url: /infra/ai-pipeline-nva.html
+          url: /infra/ai-pipeline-overview.html
 #
     - title: "MLOps and data management"
       links:

@@ -15,3 +15,25 @@ summary:
 Karthikeyan Nagalingam, NetApp
 
 This validated architecture presents a governed, storage-tier-aware AI data pipeline orchestrated by Apache Airflow. The solution ingests raw tabular and text data from NetApp StorageGRID, prepares deterministic datasets and manifests on an ONTAP NAS bucket, and uses NetApp XCP to move prepared data to either NetApp ONTAP S3 or LustreFS according to runtime configuration. It then trains and incrementally fine-tunes scikit-learn models, generates predictions, checkpoints successful training outputs, and archives models, metrics, manifests, and prediction evidence to StorageGRID. The architecture provides reproducible execution, configurable storage placement, failure guardrails, checkpoint-based recovery, and auditable lineage across the AI lifecycle. It is intended for architects, data engineers, ML engineers, and infrastructure teams who need a repeatable deployment and validation pattern for AI pipelines across NetApp storage tiers.
+
+'''''
+
+=== Table of Contents
+
+[arabic]
+. link:#1-executive-summary[Executive Summary]
+. link:#2-solution-overview[Solution Overview]
+. link:#3-business-value-and-customer-benefits[Business Value and Customer Benefits]
+. link:#4-architecture-overview[Architecture Overview]
+. link:#5-netapp-technology-components[NetApp Technology Components]
+. link:#6-third-party-and-open-source-technology-components[Third-Party and Open Source Technology Components]
+. link:#7-solution-design[Solution Design]
+. link:#8-storage-architecture-detail[Storage Architecture Detail]
+. link:#9-data-mobility-with-netapp-xcp[Data Mobility with NetApp XCP]
+. link:#10-deployment-architecture[Deployment Architecture]
+. link:#11-configuration-reference[Configuration Reference]
+. link:#12-operational-guide[Operational Guide]
+. link:#13-security-considerations[Security Considerations]
+. link:#14-validation-and-testing[Validation and Testing]
+. link:#15-netapp-differentiation-and-competitive-positioning[NetApp Differentiation and Competitive Positioning]
+. link:#16-appendices[Appendices]
