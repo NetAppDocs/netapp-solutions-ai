@@ -13,6 +13,8 @@ entries:
         url: /infra/ai-pipeline-solution-overview.html
       - title: "Architecture overview"
         url: /infra/ai-pipeline-architecture.html
+      - title: "NetApp, third-party and open source technology components"
+        url: /infra/ai-pipeline-netapp-components.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"

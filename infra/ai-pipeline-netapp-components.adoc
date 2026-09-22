@@ -1,0 +1,45 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-netapp-components.html
+keywords: 
+summary: 
+---
+
+= NetApp , Third-Party and Open Source Technology Components
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Component |Role in Solution
+|NetApp StorageGRID |S3-compatible raw-data ingestion and archival object storage tiers
+|NetApp ONTAP NAS bucket / NFS |Prepared-data tier; NFS source export validated by XCP preflight before data movement
+|NetApp ONTAP S3 |Optional XCP training-data and model-artifact destination
+|NetApp XCP |High-throughput data mobility engine; copies to S3 or LustreFS
+|NetApp FabricPool |Optional tiering for ONTAP NAS prepared data and archive-adjacent data to optimize cost
+|LustreFS (NetApp-integrated) |High-performance parallel filesystem for training tier
+|NetApp Console (optional) |Extended monitoring/observability for ONTAP and XCP resources
+|ONTAP Snapshot/Backup |Point-in-time protection for prepared data in the ONTAP NAS tier, independent of pipeline
+|===
+
+== NetApp XCP — Core Value
+
+XCP is the mobility layer that decouples data location from compute location. A single configuration switch (`xcp++_++copy++_++destination`) determines whether prepared data and model artifacts land in NetApp ONTAP S3 or a LustreFS high-performance tier, with `model++_++training`, `fine++_++tuning`, and `inferencing` automatically reading from and writing to the same destination.
+
+== Third-Party and Open Source Technology Components
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Component |Purpose
+|Apache Airflow |DAG orchestration, retries, XCom task communication, scheduling
+|Apache Spark |Optional distributed transformation engine for `data++_++prep`
+|Delta Lake / Apache Iceberg |Optional lakehouse table formats for prepared tabular data
+|scikit-learn |`LinearRegression` (tabular) and `SGDClassifier` (text, incremental)
+|Airbyte / Apache NiFi |Optional ingestion connectors ahead of `data++_++prep`
+|boto3 |AWS S3-compatible SDK used for StorageGRID, ONTAP NAS bucket, and ONTAP S3 interactions
+|===
