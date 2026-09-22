@@ -11,6 +11,8 @@ entries:
         url: /infra/ai-pipeline-executive-summary.html
       - title: "Solution overview, Business Value and Customer Benefits"
         url: /infra/ai-pipeline-solution-overview.html
+      - title: "Architecture overview"
+        url: /infra/ai-pipeline-architecture.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
