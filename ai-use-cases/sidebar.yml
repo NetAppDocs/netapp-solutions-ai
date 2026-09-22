@@ -5,6 +5,8 @@ entries:
   - title: "Streamlining AI Pipeline Across NetApp Storage Platforms"
     pdf-filename: "Streamlining AI Pipeline Across NetApp Storage Platforms"
     entries:
+      - title: "Overview"
+        url: /infra/ai-pipeline-overview.html
       - title: "Executive summary"
         url: /infra/ai-pipeline-executive-summary.html
 #
