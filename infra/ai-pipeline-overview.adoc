@@ -28,7 +28,7 @@ This validated architecture presents a governed, storage-tier-aware AI data pipe
 . link:#6-solution-design-and-storage-architecture-detail[Solution Design and Storage Architecture Detail]
 . link:#7-data-mobility-with-netapp-xcp[Data Mobility with NetApp XCP]
 . link:#8-deployment-architecture[Deployment Architecture]
-. link:#9-configuration-reference[Configuration Reference]
+. link:ai-pipeline-configuration-reference.html[Configuration Reference^]
 . link:#10-operational-guide[Operational Guide]
 . link:#11-security-considerations[Security Considerations]
 . link:#12-validation-and-testing[Validation and Testing]

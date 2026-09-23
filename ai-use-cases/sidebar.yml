@@ -21,6 +21,8 @@ entries:
         url: /infra/ai-pipeline-data-mobility.html
       - title: "Deployment architecture"
         url: /infra/ai-pipeline-deployment-architecture.html
+      - title: "Configuration reference"
+        url: /infra/ai-pipeline-configuration-reference.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
