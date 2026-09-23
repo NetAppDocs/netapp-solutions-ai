@@ -1,0 +1,100 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-data-mobility.html
+keywords: 
+summary: 
+---
+
+= Data Mobility with NetApp XCP
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+NetApp XCP provides the controlled transfer path between the ONTAP NAS prepared-data tier and the active training tier. Airflow performs the preflight and invokes the copy operation through the XCP host; `xcp++_++copy++_++destination` selects ONTAP S3 or LustreFS for each run. The same selected destination is used by model training, fine-tuning, and inference to keep data and artifacts on a consistent tier.
+
+== Why NetApp XCP
+
+XCP is a parallel, multi-threaded copy engine that supports the NFS source, ONTAP S3, and LustreFS destinations used by this architecture. Its `-newid ++<++run++_++stamp++>++` option associates each transfer with the pipeline execution, supporting traceability across prepared data, training input, and model-artifact locations.
+
+== XCP Preflight Validation Flow
+
+The preflight task runs before an XCP copy. It verifies that Airflow can reach the XCP host through SSH and that the configured ONTAP NAS NFS source path is visible to XCP. The explicit exit conditions stop the pipeline before a copy begins when connectivity or source visibility is incorrect.
+
+image::ai-pipeline-xcp-preflight-validation.png[ "XCP Preflight Validation Flow", pdfwidth=90% ]
+
+== XCP Copy to S3 — Command Template
+
+Use this path when `xcp++_++copy++_++destination=s3`. XCP reads the prepared, run-stamped data from the ONTAP NAS NFS export and writes it to the configured ONTAP S3 bucket and prefix. The named XCP S3 profile supplies destination credentials on the XCP host; model stages then discover both data and artifacts through `xcp++_++s3++_++training++_++prefix`.
+
+[source,bash]
+----
+xcp copy -newid <run_stamp> \
+  -s3.profile <xcp_s3_profile> \
+  -s3.endpoint <xcp_s3_endpoint> \
+  <xcp_nfs_source_ip>:<xcp_nfs_source_path> \
+  s3://<xcp_s3_bucket>/<xcp_s3_dest_prefix>
+----
+
+*Example: copy the prepared ONTAP NAS dataset to the ONTAP S3 training bucket*
+
+[source,bash]
+----
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    -s3.profile ontaps3 \
+    -s3.endpoint http://10.63.150.161 \
+    10.63.150.159:/prepnasbucket/example_ai_pipeline \
+    s3://trainingbucket/example_ai_pipeline
+----
+
+This example uses `20260901++_++120000` as the XCP job identity. The training task discovers the copied files under the configured `xcp++_++s3++_++training++_++prefix`, such as `example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
+
+== XCP Copy to LustreFS — Command Template
+
+Use this path when `xcp++_++copy++_++destination=lustrefs`. XCP copies prepared data from the mounted ONTAP NAS source to the mounted LustreFS destination. Both mounts must be available on the XCP host, and LustreFS must also be mounted on the Airflow worker that performs model training, fine-tuning, and inference.
+
+[source,bash]
+----
+df <xcp_lustrefs_source_path>   # mount validation
+df <xcp_lustrefs_dest_path>     # mount validation
+xcp copy -newid <run_stamp> \
+  file://<xcp_lustrefs_source_path> \
+  file://<xcp_lustrefs_dest_path>
+----
+
+*Example: copy the prepared ONTAP NAS dataset to the LustreFS training mount*
+
+[source,bash]
+----
+df /prepnasbucket/example_ai_pipeline
+df /mnt/lustre/client
+
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    file:///prepnasbucket/example_ai_pipeline \
+    file:///mnt/lustre/client
+----
+
+The two `df` commands verify that the source and destination mounts are available on the XCP host before the copy starts. With `xcp++_++lustrefs++_++training++_++subpath=example++_++ai++_++pipeline`, training reads the run-stamped data under `/mnt/lustre/client/example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
+
+== XCP Destination Decision Flow
+
+This decision diagram shows how one runtime parameter determines the copy target and the training read path. Select `s3` for the ONTAP S3 object destination or `lustrefs` for the parallel filesystem destination. Downstream stages use the matching source automatically, avoiding changes to model code when storage placement changes.
+
+image::ai-pipeline-xcp-destination-decision.png[ "XCP Destination Decision Flow", pdfwidth=90% ]
+
+== XCP Failure Handling and Guardrails
+
+These guardrails make configuration and infrastructure failures observable at the earliest practical point. Preflight failures prevent an invalid transfer, LustreFS checks validate mount availability, and S3 credential validation applies only when ONTAP S3 is the selected XCP destination.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Condition |Guard Behavior
+|Unsupported `xcp++_++copy++_++destination` value |Defaults to `s3` with warning
+|LustreFS mount not present |`df` fails; copy halted before data movement
+|SSH unreachable |Preflight exits with code 1 before any copy
+|NFS path not visible |Preflight exits with code 2 before any copy
+|Missing XCP S3 credentials (S3 mode only) |`model++_++training`/artifact sync raises explicit `ValueError`
+|===
