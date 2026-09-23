@@ -446,12 +446,12 @@ Use this configuration for distributed preparation with Iceberg table output and
 [width="99%",cols="20%,16%,16%,16%,16%,16%",options="header",]
 |===
 |Scenario |XCP destination |Preparation engine |Table format |Input scope |Archive stage
-|10.9.1 |LustreFS |Spark |Delta |All discovered files |`inferencing`
-|10.9.2 |None |Python |None |All discovered files |Disabled
-|10.9.3 |None |Python |None |Two explicit files |Disabled
-|10.9.4 |None |Python |None |All discovered files |Disabled
-|10.9.5 |ONTAP S3 |Python |None |All discovered files |`model++_++training`
-|10.9.6 |ONTAP S3 |Spark |Iceberg |All discovered files |`inferencing`
+|8.9.1 |LustreFS |Spark |Delta |All discovered files |`inferencing`
+|8.9.2 |None |Python |None |All discovered files |Disabled
+|8.9.3 |None |Python |None |Two explicit files |Disabled
+|8.9.4 |None |Python |None |All discovered files |Disabled
+|8.9.5 |ONTAP S3 |Python |None |All discovered files |`model++_++training`
+|8.9.6 |ONTAP S3 |Spark |Iceberg |All discovered files |`inferencing`
 |===
 
 === 8.9.8 Execution Walkthroughs
