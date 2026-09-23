@@ -164,7 +164,7 @@ The workspace includes the Airflow configuration file and DAGs needed for the va
 
 [source,bash]
 ----
-./tools/airflow_ctl.sh start
+# Start the Airflow scheduler and webserver with the deployment's service manager.
 # or, if using the standard commands:
 # airflow scheduler
 # airflow webserver
