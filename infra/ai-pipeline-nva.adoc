@@ -65,54 +65,7 @@ This section has moved to the dedicated page: link:ai-pipeline-operational-guide
 
 This section has moved to the dedicated page: link:ai-pipeline-security-considerations-validation-testing.html[Security Considerations, Validation and Testing^].
 
-=== 14. NetApp Differentiation and Competitive Positioning
+=== 14. NetApp Differentiation and Competitive Positioning, Appendices
 
-This comparison positions the architecture against common alternatives. Its differentiator is not a single storage endpoint; it is the policy-controlled combination of StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, XCP, and Airflow that lets each AI lifecycle phase use an appropriate tier without rebuilding the workflow.
+This section has moved to the dedicated page: link:ai-pipeline-differentiation-appendices.html[NetApp Differentiation and Competitive Positioning, Appendices^].
 
-[width="100%",cols="34%,33%,33%",options="header",]
-|===
-|Alternative Approach |Limitation |NetApp Solution Advantage
-|Cloud-native-only pipelines |Locked to one storage paradigm |Interchangeable S3/LustreFS via configuration
-|DIY script-based pipelines |No retry, checkpoint, or lineage |Airflow orchestration {plus} checkpoint/resume natively
-|Single-tier storage architectures |One performance/cost profile for all workloads |Per-run tier selection via `xcp++_++copy++_++destination`
-|Full retraining on every update |High recurring compute cost |Incremental fine-tuning via `partial++_++fit`
-|===
-
-'''''
-
-=== 15. Appendices
-
-The appendices provide shared terminology and document-control context for readers who operate, review, or adapt this NVA. Keep the revision history current when changing documented behavior, parameters, storage layouts, or validation evidence.
-
-==== 15.1 Glossary
-
-These definitions establish consistent meanings for the architecture’s storage, orchestration, and lineage terms.
-
-[width="100%",cols="50%,50%",options="header",]
-|===
-|Term |Definition
-|XCP |NetApp’s high-speed parallel data copy/migration tool
-|ONTAP S3 |NetApp’s S3-compatible object storage service on ONTAP
-|LustreFS |High-performance parallel distributed filesystem
-|DAG |Directed Acyclic Graph — Airflow’s workflow definition
-|XCom |Airflow’s mechanism for passing data between tasks
-|run++_++stamp |Unique per-execution timestamp identifier used for lineage
-|Manifest |JSON record describing a stage’s inputs, outputs, and configuration
-|===
-
-==== 15.2 Revision History
-
-Record each published change to preserve the document’s review and approval trail.
-
-[width="100%",cols="25%,25%,25%,25%",options="header",]
-|===
-|Version |Date |Author |Change
-|1.0 |2026-09-25 |Solution Architecture Team |Initial publication-ready NVA with full parameter tables and diagrams
-|===
-
-==== 15.3 Contact Us and Software Requests
-
-To request the software package, automation DAGs, deployment scripts, or validation artifacts to deploy and validate this architecture, or to provide feedback and technical inquiries, contact the NetApp AI & Data Mobility team:
-
-* *Email:* ng-data-mobility-in-ai-pipeline@netapp.com
-* *Purpose:* Software package requests, deployment guidance, architecture validation support, and technical feedback.

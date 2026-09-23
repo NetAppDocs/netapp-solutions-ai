@@ -27,6 +27,8 @@ entries:
         url: /infra/ai-pipeline-operational-guide.html
       - title: "Security considerations, validation and testing"
         url: /infra/ai-pipeline-security-considerations-validation-testing.html
+      - title: "NetApp differentiation and competitive positioning, appendices"
+        url: /infra/ai-pipeline-differentiation-appendices.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
