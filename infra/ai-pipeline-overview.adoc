@@ -30,7 +30,7 @@ This validated architecture presents a governed, storage-tier-aware AI data pipe
 . link:#8-deployment-architecture[Deployment Architecture]
 . link:ai-pipeline-configuration-reference.html[Configuration Reference^]
 . link:ai-pipeline-operational-guide.html[Operational Guide^]
-. link:#11-security-considerations[Security Considerations]
-. link:#12-validation-and-testing[Validation and Testing]
+. link:ai-pipeline-security-considerations-validation-testing.html[Security Considerations, Validation and Testing^]
+
 . link:#13-netapp-differentiation-and-competitive-positioning[NetApp Differentiation and Competitive Positioning]
 . link:#14-appendices[Appendices]

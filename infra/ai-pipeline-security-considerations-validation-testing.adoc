@@ -1,0 +1,115 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-security-considerations-validation-testing.html
+keywords:
+summary:
+---
+
+= Security Considerations, Validation and Testing
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+This combined section addresses the controls required to operate the AI pipeline securely and the validation activities used to prove the design behaves as expected in representative environments. The same storage-tier separation, least-privilege access model, checkpoint logic, and run-scoped lineage used in the pipeline also inform the validation plan and operational guardrails.
+
+== Security Considerations
+
+Security controls should isolate each storage tier and pipeline function while preserving the lineage required for audit. Use separate least-privilege credentials for StorageGRID raw data, ONTAP NAS prepared data, the selected XCP destination, and StorageGRID archival. Encrypt network traffic and store all secrets outside the DAG definition, examples, and shell history.
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Area |Recommendation
+|Credential management |Use Airflow Connections/Variables or a secrets manager; avoid inline plaintext in `dag++_++run.conf`
+|Data in transit |Use TLS-enabled S3 endpoints; encrypted NFS/Lustre transport where supported
+|Access control |Scope S3 credentials per role (StorageGRID raw, ONTAP NAS prepared data, XCP destination, StorageGRID archival) to minimum required permissions
+|Secrets in configs |Rotate any credentials exposed during testing; treat trigger scripts/shell history as sensitive
+|Audit trail |Rely on data-prep manifests, checkpoint records, and archival manifests for compliance evidence
+|===
+
+== Validation and Testing
+
+Validation confirms that the pipeline’s configurable behavior works reliably across its routing, failure-handling, data-mobility, and multi-file discovery paths. Each validation test area was executed in a representative environment using actual Airflow DAG triggers, with log outputs and storage manifests verified for correctness.
+
+=== 13.1 Functional Routing Validation
+
+This test area validates end-to-end data and artifact routing when `enable++_++xcp=true`.
+
+* *Objective:* Verify that data preparation, XCP mobility, model training, fine-tuning, and inference consistently use the selected XCP destination (`s3` or `lustrefs`).
+* *Test Procedure:* Triggered DAG runs with `xcp++_++copy++_++destination="s3"` and `xcp++_++copy++_++destination="lustrefs"`. Inspected XCom outputs, effective-config logs, and storage locations.
+* *Validation Outcome:*
+** In `data++_++prep`, formatted tabular splits and text files were staged to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/data/` on the chosen destination.
+** In `model++_++training`, model inputs were loaded from the XCP destination, and baseline artifacts (`regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json`) were published back to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/artifacts/`.
+** In `fine++_++tuning`, base vectorizer/classifier artifacts were materialized from the XCP destination, incrementally tuned, and published back as `text++_++classifier++_++tuned.bin` and `fine++_++tune++_++metrics.json`.
+** In `inferencing`, all three tuned artifacts were materialized from the XCP destination to generate predictions.
+
+=== 13.2 Local Fallback and Non-XCP Execution Validation
+
+This test area validates pipeline behavior when XCP data mobility is disabled (`enable++_++xcp=false`).
+
+* *Objective:* Ensure the pipeline operates seamlessly using direct local prepared-data paths without requiring SSH connectivity, remote XCP hosts, or XCP credential profiles.
+* *Test Procedure:* Triggered pipeline runs with `enable++_++xcp=false` and default S3/local paths.
+* *Validation Outcome:*
+** XCP preflight and copy tasks were safely bypassed.
+** `model++_++training`, `fine++_++tuning`, and `inferencing` read directly from local prepared-data directories and published artifacts locally.
+** Verified that no XCP S3 credential resolution or SSH preflight errors occurred when XCP was disabled.
+
+=== 13.3 Performance and Tier Comparison (ONTAP S3 vs. LustreFS)
+
+This test area evaluates I/O latency, discovery overhead, and training throughput between ONTAP S3 object storage and LustreFS parallel filesystem tiers.
+
+* *Objective:* Quantify performance characteristics of E-Series (LustreFS) versus ONTAP ( (AFF/AFX) / ONTAP S3) active training tiers.
+* *Test Procedure:* Measured file discovery time, training dataset load latency, and artifact publish/materialize duration across identical dataset sizes (14,400{plus} rows, multi-file text/tabular inputs).
+* *Validation Outcome:*
+** *LustreFS Tier:* Demonstrated lower file-discovery overhead and faster random-access read latency during model training, making it ideal for high-file-count, GPU-intensive parallel training workloads.
+** *ONTAP S3 Tier:* Provided high throughput with simpler multi-protocol management, making it optimal for cost-conscious, elastic-access active storage without requiring client-side filesystem mounts.
+
+=== 13.4 Failure Recovery and Training Checkpoint Validation
+
+This test area validates the checkpoint resume system scoped to `model++_++training`.
+
+* *Objective:* Verify that pipeline recovery accurately detects prior successful training runs and skips redundant computation while preserving artifact integrity.
+* *Test Procedure:*
+[arabic]
+. Ran pipeline with `checkpoint++_++enabled=true` and `checkpoint++_++store="formatted++_++s3"`.
+. Simulated task failure or re-execution with `training++_++checkpoint++_++reuse++_++mode="resume++_++if++_++exists"`.
+. Tested `verify++_++only` and `off` reuse modes.
+* *Validation Outcome:*
+** When `resume++_++if++_++exists` was set and a valid checkpoint JSON {plus} all core artifacts existed in S3/LustreFS, `model++_++training` exited immediately with decision `RESUMED++_++FROM++_++CHECKPOINT`, logging `++[++checkpoint++]++ resume++_++summary: decision=RESUMED++_++FROM++_++CHECKPOINT`.
+** Downstream `fine++_++tuning` and `inferencing` successfully materialized the verified checkpoint artifacts.
+** When `verify++_++only` was set, the guard validated artifact existence without skipping training.
+
+=== 13.5 Scalability and Multi-File Dataset Validation
+
+This test area validates pipeline scalability across large, multi-file tabular and text datasets.
+
+* *Objective:* Confirm automatic dataset discovery, Spark transformation engine execution, and Lakehouse table format support (`delta` and `iceberg`).
+* *Test Procedure:*
+[arabic]
+. Ran ingestion and preparation across dozens of CSV/Parquet files under the StorageGRID raw prefix (`s3++_++raw++_++prefix`).
+. Tested explicit file selection using `s3++_++tabular++_++object++_++keys` vs automatic all-file discovery (`sample++_++count=0`).
+. Executed preparation using PySpark with `table++_++format="delta"` and `table++_++format="iceberg"`.
+* *Validation Outcome:*
+** Spark distributed preparation successfully ingested, filtered, split, and formatted large multi-part tabular datasets.
+** Automatic discovery accurately identified all valid tabular CSV/Parquet objects while ignoring non-tabular artifacts.
+** Both Delta Lake and Iceberg table formats were correctly created and registered under `tables/`, with downstream model training discovering and reading the formatted splits.
+
+=== 13.6 Example Customer Evaluation Workflow, Sizing Assumptions, and Validation Metrics
+
+This workflow helps customers evaluate whether the design fits their AI pipeline maturity, data-sovereignty requirements, and performance targets. Begin with a representative dataset and one pipeline run, then increase data volume, file count, model complexity, and concurrent runs only after each acceptance criterion is met. Record results by `run_stamp` so comparisons between ONTAP S3 and LustreFS use the same input data and configuration.
+
+[width="100%",cols="25%,25%,25%,25%",options="header"]
+|===
+| Evaluaton Step | Example Workflow | Sizing Assumption / Decision | Validation Metrics and Acceptance Evidence 
+
+| 1. Establish a baseline | Run the Python preparation path with `enable_xcp=false` on a bounded sample. | Use the reference validation environment in Section 10.1.1 as an initial functional baseline. | Successful DAG completion; input-row and output-split counts; model metrics; task duration; CPU, memory, and local-disk utilization. 
+| 2. Validate data sovereignty | Keep raw data, prepared data, active training data, and archives in approved storage endpoints and regions. Review credentials and retention policies per tier. | Define the allowed locations, access roles, encryption requirements, and retention policy before moving data. | Endpoint, bucket, prefix, and region recorded in the effective configuration and manifests; least-privilege access verification; archive and deletion-policy evidence. 
+| 3. Validate data mobility | Enable XCP and copy the same prepared run to ONTAP S3, then repeat to LustreFS. | Ensure 10 GbE connectivity and sufficient destination capacity for the prepared run, artifacts, working space, and concurrent runs. | XCP completion status; bytes and files copied; copy duration and throughput; source/destination file-count and checksum or manifest comparison; preflight success. 
+| 4. Validate training-tier fit | Train, fine-tune, and infer against each selected destination using the same datasets and model settings. | Use ONTAP S3 for object-based workflows; use E-Series with LustreFS when parallel training I/O or high file counts justify it. | Dataset discovery and load time; training, fine-tuning, and inference duration; artifact publish/materialize duration; CPU/GPU utilization where applicable; model-quality consistency. 
+| 5. Validate scale and recovery | Increase `sample_count` to all rows, increase file count and concurrent runs, then test checkpoint reuse and archival. | Size capacity for retained run-scoped datasets and artifacts, plus growth headroom; size CPU and memory for Spark and concurrent Airflow tasks. | End-to-end elapsed time; successful run rate; queue time; checkpoint resume decision and elapsed time; archive completeness; storage growth per run; recovery time objective (RTO) attainment. 
+|===
+
+Before starting the evaluation, customers should define quantitative targets for end-to-end runtime, XCP throughput, training-data load time, maximum concurrent runs, recovery time, and storage retention. The measured baseline and each scaled test should be compared with those targets to determine whether the architecture meets the intended workload and operational requirements.
