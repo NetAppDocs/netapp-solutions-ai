@@ -59,47 +59,7 @@ This section has moved to the dedicated page: link:ai-pipeline-configuration-ref
 
 === 11. Operational Guide
 
-This guide covers routine execution, monitoring, incident triage, training recovery, archive verification, capacity tuning, and data protection. Use it with the configuration scenarios in Section 11 to operate the same pipeline consistently across local, ONTAP S3, and LustreFS training modes.
-
-==== 11.1 Execution Walkthrough
-
-Trigger a run through `trigger++_++and++_++wait++_++ai++_++pipeline++_++sklearn.sh` with a `CONF++_++JSON` payload. The script submits one uniquely named manual run, polls until it reaches a terminal state, and prints local log tails for failed tasks when available. Each primary task emits an `effective++_++config` record at startup so operators can verify the evaluated configuration rather than relying on the submitted payload alone.
-
-==== 11.2 Monitoring and Observability
-
-Monitor DAG state in the Airflow UI or CLI and correlate it with the run ID and `run++_++stamp`. The guard logs are grep-friendly: `++[++data++_++prep++]++ effective++_++config`, `++[++model++_++training++]++ effective++_++config`, `++[++xcp++_++copy++]++ effective++_++config`, and `++[++checkpoint++]++ resume++_++summary`. Review these entries to validate the transformation engine, selected XCP destination, training source, and checkpoint reuse decision for each run.
-
-==== 11.3 Troubleshooting Quick Reference
-
-Use this table to connect common task failures to the first corrective action. Resolve source connectivity and mount problems before retrying a run; retrying without correcting an invalid configuration or unavailable endpoint will reproduce the same failure.
-
-[width="100%",cols="34%,33%,33%",options="header",]
-|===
-|Symptom |Likely Cause |Resolution
-|`Could not resolve XCP S3 credentials` |Missing/incorrect `xcp++_++s3++_++profile` in `xcp++_++s3++_++profiles` |Verify profile name and credentials map
-|`no readable Lustre source directory` |LustreFS not mounted or wrong `xcp++_++lustrefs++_++dest++_++path` |Verify mount with `df`; correct path
-|`Missing required text dataset files` |Text JSONs absent in raw S3 prefix |Upload `text++_++base.json`, `text++_++finetune.json`, `text++_++infer.json`
-|Preflight exit code 1 |SSH unreachable |Verify `ssh++_++default` connection and host/user
-|Preflight exit code 2 |NFS path not exported/visible |Verify export with `xcp show ++<++ip++>++`
-|===
-
-==== 11.4 Checkpoint Operations
-
-Checkpointing applies only to `model++_++training`. Set `training++_++checkpoint++_++reuse++_++mode=resume++_++if++_++exists` to reuse a valid completed training result and skip redundant model training, or use `verify++_++only` to validate checkpoint eligibility without skipping. Keep reuse disabled (`off`) during initial testing or whenever training inputs, configuration, or expected artifacts have changed.
-
-==== 11.5 Manual Archive Operations
-
-Set `manual++_++archive++_++enabled=true` and choose `manual++_++archive++_++stage` deliberately. Use `model++_++training` when governance requires the core model baseline as soon as training succeeds; use `inferencing` when the archive must include final predictions. A run with `model++_++training` selected continues to fine-tuning and inference after the archival branch; it simply does not archive their later outputs. Verify uploads under the run-stamped StorageGRID prefix and review `++[++manual++_++archive++]++` logs for the selected stage, files found, and upload count.
-
-==== 11.6 Scaling Guidance
-
-Tune `sample++_++count`, `spark++_++driver++_++memory`, `spark++_++executor++_++memory`, and `spark++_++timeout++_++secs` to the input volume and service-level objective. Start with bounded samples to validate data shape and routing, then use `sample++_++count=0` for all-row runs after StorageGRID, ONTAP NAS, XCP, and the selected training tier have sufficient capacity and throughput.
-
-==== 11.7 Backup and Recovery
-
-Protect the ONTAP NAS prepared-data bucket with ONTAP Snapshot and backup. Apply StorageGRID protection and retention policies to raw and archival buckets; the archival bucket retains history independent of pipeline re-execution. Combine these storage protections with the training checkpoint record to recover the correct run-scoped data and baseline artifacts after a task, host, or site-level interruption.
-
-'''''
+This section has moved to the dedicated page: link:ai-pipeline-operational-guide.html[Operational Guide^].
 
 === 12. Security Considerations
 
