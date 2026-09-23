@@ -29,84 +29,21 @@ This validated architecture presents a governed, storage-tier-aware AI data pipe
 . link:#4-architecture-overview[Architecture Overview]
 . link:#5-netapp-technology-components[NetApp Technology Components]
 . link:#6-third-party-and-open-source-technology-components[Third-Party and Open Source Technology Components]
-. link:#7-solution-design[Solution Design]
-. link:#8-storage-architecture-detail[Storage Architecture Detail]
-. link:#9-data-mobility-with-netapp-xcp[Data Mobility with NetApp XCP]
-. link:#10-deployment-architecture[Deployment Architecture]
-. link:#11-configuration-reference[Configuration Reference]
-. link:#12-operational-guide[Operational Guide]
-. link:#13-security-considerations[Security Considerations]
-. link:#14-validation-and-testing[Validation and Testing]
-. link:#15-netapp-differentiation-and-competitive-positioning[NetApp Differentiation and Competitive Positioning]
-. link:#16-appendices[Appendices]
+. link:#7-solution-design-and-storage-architecture-detail[Solution Design and Storage Architecture Detail]
+. link:#8-data-mobility-with-netapp-xcp[Data Mobility with NetApp XCP]
+. link:#9-deployment-architecture[Deployment Architecture]
+. link:#10-configuration-reference[Configuration Reference]
+. link:#11-operational-guide[Operational Guide]
+. link:#12-security-considerations[Security Considerations]
+. link:#13-validation-and-testing[Validation and Testing]
+. link:#14-netapp-differentiation-and-competitive-positioning[NetApp Differentiation and Competitive Positioning]
+. link:#15-appendices[Appendices]
 
 '''''
 
-=== 7. Solution Design
+=== 7. Solution Design and Storage Architecture Detail
 
-==== 7.1 Design Principles
-
-Configuration over code changes; explicit stage boundaries with typed contracts; consistent artifact routing; fail-fast validation with actionable errors; storage-tier neutrality.
-
-==== 7.2–7.9 Stage Design Summary
-
-[width="100%",cols="50%,50%",options="header",]
-|===
-|Section / Stage |Design Summary
-|7.2 Ingestion |`ingestion++_++tool` selects `s3++_++direct`, `none`, `airbyte`, or `nifi`; returns normalized metadata
-|7.3 Data Preparation |Discovers/accepts raw StorageGRID tabular keys; normalizes Airbyte/plain CSV; produces deterministic train/val/infer splits; writes a run-stamped prepared-data prefix and manifest to the ONTAP NAS bucket
-|7.4 Data Mobility (XCP) |Copies prepared data from the ONTAP NAS NFS export; `xcp++_++copy++_++destination` drives the XCP target and training read path
-|7.5 Model Training |Trains locally or from XCP destination (S3/LustreFS); multi-format (CSV/Parquet/JSON) discovery
-|7.6 Fine-Tuning |Materializes base model from XCP destination; `partial++_++fit` with expanded class set; republishes tuned model
-|7.7 Inference |Materializes tuned artifacts from same XCP destination; configurable split/text scope
-|7.8 Checkpoint/Resume |`write++_++stage++_++checkpoint` persists completion record; `++_++small++_++resume++_++guard` validates/reuses on subsequent runs
-|7.9 Archival |`model++_++training` archives core trained models immediately; `inferencing` waits for predictions and archives the full result set; optional XCP-input inclusion and raw-folder cleanup
-|===
-
-==== 7.10 Configuration-Driven Philosophy
-
-All storage, credential, engine, and behavioral selections are `dag++_++run.conf` parameters — switching between S3 and LustreFS, or Python and Spark, requires no code modification.
-
-'''''
-
-=== 8. Storage Architecture Detail
-
-The storage architecture separates the AI lifecycle into purpose-built tiers: StorageGRID holds raw and archival objects, the ONTAP NAS bucket holds prepared and run-stamped datasets, and ONTAP S3 or LustreFS provides the selected active training tier. This separation keeps source data, prepared data, model artifacts, and archived evidence independently manageable while preserving lineage through the shared `run++_++stamp`.
-
-==== 8.1–8.5 Storage Layout Diagrams
-
-[width="100%",cols="34%,33%,33%",options="header",]
-|===
-|Section / Tier |Logical Storage Path |Contents / Artifacts Stored
-|8.1 StorageGRID Raw Tier |`s3://raw++_++bucket/raw++_++prefix/` |Tabular CSV parts (`tabular++_++part++_*++.csv`), text inputs (`text++_++base.json`, `text++_++finetune.json`, `text++_++infer.json`)
-|8.2 ONTAP NAS Prepared Tier |`s3://prepared++_++bucket/prepared++_++prefix/run++_++stamp/` |Formatted splits (`data/tabular++_*++.csv`), text files, `data++_++prep++_++manifest.json`, Lakehouse tables (`tables/` Delta/Iceberg)
-|8.3 Active Training Tier (XCP Dest) |`++<++xcp++_++prefix++>++/formatted/run++_++stamp/` |Copied data splits, trained model binaries (`artifacts/++*++.bin`), evaluation metrics (`artifacts/++*_++metrics.json`)
-|8.4 StorageGRID Archival Tier |`s3://archive++_++bucket/archive++_++prefix/stage/run++_++stamp/` |Stage-scoped baseline or full model artifacts, prediction evidence (`tabular++_++predictions.csv`, `text++_++predictions.json`)
-|8.5 Inter-Tier Lineage & Flow |Raw → Prepared → Active Tier → Archival |End-to-end data movement and artifact lineage linked across all storage tiers via the shared `run++_++stamp`
-|===
-
-This diagram maps the logical bucket and prefix layout for a single pipeline run across all storage tiers:
-
-image::ai-pipeline-storage-layout.png[ "Logical Storage Layout for a Single Pipeline Run", pdfwidth=90% ]
-
-==== 8.6 Storage Sizing Guidance
-
-Size each tier independently according to its role and retention policy. The ONTAP NAS and selected XCP destination must accommodate concurrent active runs, whereas StorageGRID capacity is driven primarily by raw-data and archival retention. Include temporary working capacity and growth headroom when planning peak pipeline concurrency.
-
-[width="100%",cols="50%,50%",options="header",]
-|===
-|Tier |Sizing Basis
-|StorageGRID raw bucket |Ingestion volume × retention window
-|ONTAP NAS prepared-data bucket |Prepared dataset size × number of retained runs
-|XCP destination (S3 or Lustre) |Peak concurrent training dataset size {plus} model artifact overhead
-|Archival bucket |Retention policy × archive stage selection (model++_++training = smaller; inferencing = larger)
-|===
-
-==== 8.7 Storage Performance Considerations
-
-The XCP destination is selected per run with `xcp++_++copy++_++destination`, allowing storage performance to match the workload instead of forcing every workload onto one tier. Select LustreFS for high-row-count datasets, many concurrent readers, or I/O-intensive training. Select ONTAP S3 for cost-conscious, elastic-access workloads whose performance requirements do not demand a parallel filesystem. In either case, XCP keeps data and model artifacts aligned with the selected training tier.
-
-'''''
+This section has moved to the dedicated page: link:ai-pipeline-solution-design-and-storage-architecture.html[Solution Design and Storage Architecture Detail^].
 
 === 9. Data Mobility with NetApp XCP
 
