@@ -19,6 +19,8 @@ entries:
         url: /infra/ai-pipeline-solution-design-and-storage-architecture.html
       - title: "Data mobility with NetApp XCP"
         url: /infra/ai-pipeline-data-mobility.html
+      - title: "Deployment architecture"
+        url: /infra/ai-pipeline-deployment-architecture.html
 #
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
