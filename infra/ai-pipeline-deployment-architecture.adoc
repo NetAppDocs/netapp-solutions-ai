@@ -5,7 +5,7 @@ keywords:
 summary: 
 ---
 
-= Deployment Architecture
+= 7. Deployment Architecture
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -16,7 +16,7 @@ Karthikeyan Nagalingam, NetApp
 
 This section defines the infrastructure placement, software dependencies, and network connectivity required to operate the pipeline. The deployment separates Airflow orchestration from the XCP data-mobility host while connecting both components to StorageGRID, ONTAP NAS, and the selected ONTAP S3 or LustreFS training destination.
 
-== Reference Infrastructure Requirements
+== 7.1 Reference Infrastructure Requirements
 
 The following components establish the minimum functional deployment footprint. Size the Airflow host for the selected preparation engine and concurrent task load; place the XCP host where it can access the ONTAP NAS NFS export and the selected destination without unnecessary network hops. LustreFS mode requires compatible mounts on both the XCP host and the Airflow worker.
 
@@ -28,7 +28,7 @@ The following components establish the minimum functional deployment footprint. 
 |LustreFS clients |Mounted on XCP host and Airflow host when selected as destination
 |===
 
-=== Reference Validation Environment
+=== 7.1.1 Reference Validation Environment
 
 The following environment was used as a representative single-node validation profile. It is a starting point for functional and performance evaluation, not a production sizing recommendation; customers must size compute, network, storage capacity, and protection according to their dataset volume, concurrency, retention, recovery, and service-level requirements.
 
@@ -42,7 +42,7 @@ The following environment was used as a representative single-node validation pr
 | Platform software | Kubernetes, Apache Airflow, Apache Airbyte, single-node Apache Spark, NetApp XCP, and LustreFS 
 |===
 
-== Software Version Matrix
+== 7.2 Software Version Matrix
 
 This matrix identifies the runtime software used by the validated pipeline. Keep the Airflow and Python environments compatible with the deployed providers and packages. Spark, Delta Lake, and Iceberg are optional and are required only when `data++_++prep` uses the Spark transformation path or a corresponding table format.
 
@@ -57,7 +57,7 @@ This matrix identifies the runtime software used by the validated pipeline. Keep
 |NetApp XCP |Installed on remote host, e.g. `/usr/src/xcp/linux/xcp`
 |===
 
-== Network Requirements
+== 7.3 Network Requirements
 
 These network flows must be permitted by routing, firewall, and name-resolution policies. HTTPS is recommended for every S3-compatible endpoint in production; use the configured custom port where an endpoint does not use the default HTTPS port. Confirm Lustre client connectivity according to the deployed LustreFS implementation.
 
@@ -71,7 +71,7 @@ These network flows must be permitted by routing, firewall, and name-resolution 
 |XCP host → ONTAP S3 (S3 mode) |HTTPS/HTTP
 |===
 
-== Deployment Notes
+== 7.4 Deployment Notes
 
 [width="100%",cols="50%,50%",options="header",]
 |===
@@ -82,11 +82,11 @@ These network flows must be permitted by routing, firewall, and name-resolution 
 |Infrastructure & Task Observability |Monitor scheduler heartbeat and task execution independently so orchestration availability issues are distinguished from DAG failures.
 |===
 
-== Installation and Prerequisites
+== 7.5 Installation and Prerequisites
 
 This subsection defines the baseline installation steps required to build, configure, and run the NetApp AI validated pipeline in a fresh environment. It is intended for operators, architects, and engineers setting up the Airflow workspace before running any DAGs.
 
-=== Prerequisites
+=== 7.5.1 Prerequisites
 
 Before installing the solution, confirm that the target host meets the following minimum requirements:
 
@@ -101,7 +101,7 @@ Before installing the solution, confirm that the target host meets the following
 * Optional: Delta Lake and Iceberg runtime packages when `table++_++format=delta` or `table++_++format=iceberg` is selected.
 * Optional: Lustre client mount when `xcp++_++copy++_++destination=lustrefs` is used.
 
-=== Software Package Acquisition and Repository Access
+=== 7.5.2 Software Package Acquisition and Repository Access
 
 To obtain the software package, automation DAGs, deployment scripts, and validation artifacts for this solution, contact the NetApp AI & Data Mobility engineering team at ng-data-mobility-in-ai-pipeline@netapp.com.
 
@@ -122,7 +122,7 @@ ls -la
 
 If you are already working from the local workspace in this environment, the project is present under `/root/airflow` and can be used directly without another download.
 
-=== Create the Python Environment
+=== 7.5.3 Create the Python Environment
 
 Create a dedicated virtual environment and install the base dependencies for Airflow and the pipeline.
 
@@ -147,7 +147,7 @@ pip install apache-iceberg==1.5.2
 
 Use the exact package versions supported by your Spark runtime and cluster topology. Do not mix incompatible Spark, Delta, and Iceberg combinations.
 
-=== Configure Airflow and the Repository
+=== 7.5.4 Configure Airflow and the Repository
 
 From the cloned repository root, initialize the Airflow metadata database and verify that the DAG files are visible to Airflow.
 
@@ -170,7 +170,7 @@ The workspace includes the Airflow configuration file and DAGs needed for the va
 # airflow webserver
 ----
 
-=== Required Connectivity and Secret Configuration
+=== 7.5.5 Required Connectivity and Secret Configuration
 
 Before running the pipeline, confirm that the following resources are reachable from the Airflow host:
 
@@ -182,7 +182,7 @@ Before running the pipeline, confirm that the following resources are reachable 
 
 Store credentials in Airflow Connections, Variables, or a secrets backend rather than embedding them in shell history or DAG code. Set the required access keys, endpoints, and profile mappings before triggering a pipeline run.
 
-=== Verify the Installation
+=== 7.5.6 Verify the Installation
 
 A successful installation is confirmed when the Airflow scheduler and DAGs are running and the example pipeline can be listed and triggered without configuration errors.
 

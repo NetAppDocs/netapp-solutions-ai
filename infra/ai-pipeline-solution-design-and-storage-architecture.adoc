@@ -5,7 +5,7 @@ keywords:
 summary: 
 ---
 
-= Solution Design and Storage Architecture Detail
+= 5. Solution Design and Storage Architecture Detail
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -14,11 +14,11 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
-== Design Principles
+== 5.1 Design Principles
 
 Configuration over code changes; explicit stage boundaries with typed contracts; consistent artifact routing; fail-fast validation with actionable errors; storage-tier neutrality.
 
-== Stage Design Summary
+== 5.2 Stage Design Summary
 
 [width="100%",cols="50%,50%",options="header",]
 |===
@@ -33,15 +33,15 @@ Configuration over code changes; explicit stage boundaries with typed contracts;
 |Archival |`model++_++training` archives core trained models immediately; `inferencing` waits for predictions and archives the full result set; optional XCP-input inclusion and raw-folder cleanup
 |===
 
-== Configuration-Driven Philosophy
+== 5.3 Configuration-Driven Philosophy
 
 All storage, credential, engine, and behavioral selections are `dag++_++run.conf` parameters — switching between S3 and LustreFS, or Python and Spark, requires no code modification.
 
-== Storage Architecture Detail
+== 5.4 Storage Architecture Detail
 
 The storage architecture separates the AI lifecycle into purpose-built tiers: StorageGRID holds raw and archival objects, the ONTAP NAS bucket holds prepared and run-stamped datasets, and ONTAP S3 or LustreFS provides the selected active training tier. This separation keeps source data, prepared data, model artifacts, and archived evidence independently manageable while preserving lineage through the shared `run++_++stamp`.
 
-=== Storage Layout Diagrams
+=== 5.4.1 Storage Layout Diagrams
 
 [width="100%",cols="34%,33%,33%",options="header",]
 |===
@@ -57,7 +57,7 @@ This diagram maps the logical bucket and prefix layout for a single pipeline run
 
 image::ai-pipeline-storage-layout.png[ "Logical Storage Layout for a Single Pipeline Run", pdfwidth=90% ]
 
-=== Storage Sizing Guidance
+=== 5.4.2 Storage Sizing Guidance
 
 Size each tier independently according to its role and retention policy. The ONTAP NAS and selected XCP destination must accommodate concurrent active runs, whereas StorageGRID capacity is driven primarily by raw-data and archival retention. Include temporary working capacity and growth headroom when planning peak pipeline concurrency.
 
@@ -70,6 +70,6 @@ Size each tier independently according to its role and retention policy. The ONT
 |Archival bucket |Retention policy × archive stage selection (model++_++training = smaller; inferencing = larger)
 |===
 
-=== Storage Performance Considerations
+=== 5.4.3 Storage Performance Considerations
 
 The XCP destination is selected per run with `xcp++_++copy++_++destination`, allowing storage performance to match the workload instead of forcing every workload onto one tier. Select LustreFS for high-row-count datasets, many concurrent readers, or I/O-intensive training. Select ONTAP S3 for cost-conscious, elastic-access workloads whose performance requirements do not demand a parallel filesystem. In either case, XCP keeps data and model artifacts aligned with the selected training tier.

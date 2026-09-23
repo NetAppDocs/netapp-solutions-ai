@@ -5,7 +5,7 @@ keywords:
 summary:
 ---
 
-= NetApp Differentiation and Competitive Positioning, Appendices
+= 11. NetApp Differentiation and Competitive Positioning, Appendices
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -16,7 +16,7 @@ Karthikeyan Nagalingam, NetApp
 
 This combined section positions the architecture against common alternatives and provides the shared reference material used by operators and reviewers. The differentiator is not a single storage endpoint; it is the policy-controlled combination of StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, XCP, and Airflow that lets each AI lifecycle phase use an appropriate tier without rebuilding the workflow.
 
-== NetApp Differentiation and Competitive Positioning
+== 11.1 NetApp Differentiation and Competitive Positioning
 
 This comparison positions the architecture against common alternatives. Its differentiator is not a single storage endpoint; it is the policy-controlled combination of StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, XCP, and Airflow that lets each AI lifecycle phase use an appropriate tier without rebuilding the workflow.
 
@@ -29,11 +29,11 @@ This comparison positions the architecture against common alternatives. Its diff
 |Full retraining on every update |High recurring compute cost |Incremental fine-tuning via `partial++_++fit`
 |===
 
-== Appendices
+== 11.2 Appendices
 
 The appendices provide shared terminology and document-control context for readers who operate, review, or adapt this NVA. Keep the revision history current when changing documented behavior, parameters, storage layouts, or validation evidence.
 
-=== 15.1 Glossary
+=== 11.2.1 Glossary
 
 These definitions establish consistent meanings for the architecture’s storage, orchestration, and lineage terms.
 
@@ -49,7 +49,7 @@ These definitions establish consistent meanings for the architecture’s storage
 |Manifest |JSON record describing a stage’s inputs, outputs, and configuration
 |===
 
-=== 15.2 Revision History
+=== 11.2.2 Revision History
 
 Record each published change to preserve the document’s review and approval trail.
 
@@ -59,7 +59,7 @@ Record each published change to preserve the document’s review and approval tr
 |1.0 |2026-09-25 |Solution Architecture Team |Initial publication-ready NVA with full parameter tables and diagrams
 |===
 
-=== 15.3 Contact Us and Software Requests
+=== 11.2.3 Contact Us and Software Requests
 
 To request the software package, automation DAGs, deployment scripts, or validation artifacts to deploy and validate this architecture, or to provide feedback and technical inquiries, contact the NetApp AI & Data Mobility team:
 

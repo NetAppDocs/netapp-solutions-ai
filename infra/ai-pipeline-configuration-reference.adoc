@@ -5,7 +5,7 @@ keywords:
 summary:
 ---
 
-= Configuration Reference
+= 8. Configuration Reference
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -18,11 +18,9 @@ The configuration reference describes the runtime parameters that control data i
 
 ''''
 
-=== 10. Configuration Reference
-
 All runtime behavior is supplied through `dag++_++run.conf`, allowing the same DAG to serve different source systems, transformation engines, storage destinations, recovery policies, and archive scopes. Configure only the parameter groups required for the selected workflow, keep credentials in Airflow Connections or a secrets backend, and use the examples as non-production templates rather than as credential values.
 
-==== 10.1 Ingestion Parameters
+== 8.1 Ingestion Parameters
 
 Use these settings to select and configure the upstream ingestion mechanism. `s3++_++direct` uses the StorageGRID raw-data objects configured in the data-preparation group; Airbyte and NiFi settings are needed only when those respective ingestion tools are selected.
 
@@ -39,7 +37,7 @@ Use these settings to select and configure the upstream ingestion mechanism. `s3
 |`nifi++_++timeout++_++secs` |`30` |No |NiFi timeout |`60`
 |===
 
-==== 10.2 Data Preparation Parameters
+== 8.2 Data Preparation Parameters
 
 These settings control raw-data access, prepared-data output, input discovery, and transformation behavior. The `s3++_++raw++_*++` parameters refer to StorageGRID, while the code-compatible `s3++_++formatted++_*++` parameters identify the ONTAP NAS bucket where prepared, run-stamped data and manifests are written.
 
@@ -108,7 +106,7 @@ These settings apply only to `transformation++_++engine=spark`. They control Spa
 |`spark++_++iceberg++_++catalog` |`local` |Iceberg catalog name |`"local"`
 |===
 
-==== 10.3 XCP and Training Destination Parameters
+== 8.3 XCP and Training Destination Parameters
 
 Use this group when `enable++_++xcp=true` to validate the ONTAP NAS NFS source, invoke the XCP host, and choose the active training tier. `xcp++_++copy++_++destination` is the controlling switch: it selects either the ONTAP S3-specific or LustreFS-specific settings below, and downstream model stages use the same selected tier.
 
@@ -167,7 +165,7 @@ These options control how the three text datasets are found after XCP mobility. 
 |`xcp++_++text++_++infer++_++key` |Auto |Explicit inference-text location |`".../text++_++infer.json"`
 |===
 
-==== 10.4 Model Training Parameters
+== 8.4 Model Training Parameters
 
 These settings select the local or XCP-delivered source, limit training volume, and preserve reproducible data ordering. When XCP is enabled, training reads the selected ONTAP S3 or LustreFS tier and publishes the baseline artifacts back to that same destination.
 
@@ -182,7 +180,7 @@ These settings select the local or XCP-delivered source, limit training volume, 
 
 Produces: `regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json`.
 
-==== 10.5 Fine-Tuning Parameters
+== 8.5 Fine-Tuning Parameters
 
 Fine-tuning materializes the baseline text artifacts from the selected XCP destination, applies incremental learning to the fine-tuning dataset, and republishes the tuned classifier and its metrics. Keep its XCP settings consistent with model training to maintain artifact provenance.
 
@@ -195,7 +193,7 @@ Fine-tuning materializes the baseline text artifacts from the selected XCP desti
 
 Consumes: `text++_++vectorizer.bin`, `text++_++classifier.bin`, `text++_++finetune.json`. Produces: `text++_++classifier++_++tuned.bin`, `fine++_++tune++_++metrics.json`.
 
-==== 10.6 Inference Parameters
+== 8.6 Inference Parameters
 
 These flags control the scope of scoring after the tuned model is materialized from the selected training tier. Enable either option when validation or business requirements call for outputs beyond the default inference split and inference text input.
 
@@ -208,7 +206,7 @@ These flags control the scope of scoring after the tuned model is materialized f
 
 Consumes: `regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier++_++tuned.bin`. Produces: `tabular++_++predictions.csv`, `text++_++predictions.json`.
 
-==== 10.7 Checkpoint Parameters
+== 8.7 Checkpoint Parameters
 
 Checkpointing is scoped to `model++_++training`. These settings determine whether the training completion record is created, where it is stored, how upload failures are handled, and whether a later run verifies or reuses a valid completed training result.
 
@@ -222,7 +220,7 @@ Checkpointing is scoped to `model++_++training`. These settings determine whethe
 |`checkpoint++_++reuse++_++mode` |`off` |Backward-compatible alias |`"verify++_++only"`
 |===
 
-==== 10.8 Manual Archive Parameters
+== 8.8 Manual Archive Parameters
 
 Use this group to enable StorageGRID archival, identify the destination bucket and credentials, and choose the archival point. The selected `manual++_++archive++_++stage` controls both the archive timing and whether the archive contains only baseline training artifacts or the complete inference result set.
 
@@ -242,7 +240,7 @@ Use this group to enable StorageGRID archival, identify the destination bucket a
 
 Aliases: `fabricpool++_++archive++_*++` for all `manual++_++archive++_*++` parameters.
 
-===== 10.8.1 Manual Archive Stage Decision
+=== 8.8.1 Manual Archive Stage Decision
 
 The `route++_++manual++_++archive++_++stage` branch task reads `manual++_++archive++_++stage` once per DAG run. The selected value determines both when archival runs and which artifacts are uploaded to the StorageGRID archival bucket. Archive objects are stored under `s3://++<++manual++_++archive++_++bucket++>++/++<++manual++_++archive++_++prefix++>++/++<++stage++>++/++<++run++_++stamp++>++/`.
 
@@ -255,11 +253,11 @@ The `route++_++manual++_++archive++_++stage` branch task reads `manual++_++archi
 
 For either selection, set `manual++_++archive++_++include++_++xcp++_++inputs=true` to add locally materialized XCP training inputs when present. Set `manual++_++archive++_++enabled=false` to skip the archival task without changing the training and inference workflow.
 
-==== 10.9 Complete Sample Configuration
+== 8.9 Complete Sample Configuration
 
 This catalog provides starting configurations for the principal deployment and test paths. Every example assumes raw data is in StorageGRID and prepared data is written to the ONTAP NAS bucket. Replace bucket names, endpoint addresses, filesystem paths, and profile names with values from the target environment. Do not place production access keys or secrets in `CONF++_++JSON`; configure them through Airflow Connections, Variables, or a secrets backend.
 
-===== 10.9.1 XCP to LustreFS with Spark and Delta Lake
+=== 8.9.1 XCP to LustreFS with Spark and Delta Lake
 
 Use this full-throughput example for distributed preparation and high-performance LustreFS model I/O. It processes all eligible tabular files under `s3++_++raw++_++prefix`, writes Delta tables during preparation, persists the training checkpoint to the ONTAP NAS prepared-data bucket, and archives the complete inference result set.
 
@@ -307,7 +305,7 @@ Use this full-throughput example for distributed preparation and high-performanc
 }
 ----
 
-===== 10.9.2 No XCP with Python Preparation
+=== 8.9.2 No XCP with Python Preparation
 
 Use this baseline configuration for a lightweight functional run. Preparation uses the local Python engine and downstream stages use the pipeline’s local prepared-data and artifact paths; XCP, Spark, table formats, checkpoint reuse, and archival are disabled.
 
@@ -329,7 +327,7 @@ Use this baseline configuration for a lightweight functional run. Preparation us
 }
 ----
 
-===== 10.9.3 Python Preparation with Two Explicit Input Files
+=== 8.9.3 Python Preparation with Two Explicit Input Files
 
 Use this focused test when validating the pipeline against two known StorageGRID CSV objects. `s3++_++tabular++_++object++_++keys` disables automatic tabular-file discovery; the text inputs still use their expected locations under the raw prefix.
 
@@ -354,7 +352,7 @@ Use this focused test when validating the pipeline against two known StorageGRID
 }
 ----
 
-===== 10.9.4 Python Preparation with Automatic All-File Discovery
+=== 8.9.4 Python Preparation with Automatic All-File Discovery
 
 Omit `s3++_++tabular++_++object++_++keys` and `s3++_++tabular++_++object++_++key` to process every eligible tabular object under the StorageGRID raw prefix. This example is suitable for an all-files functional or scale test using the Python preparation engine.
 
@@ -376,7 +374,7 @@ Omit `s3++_++tabular++_++object++_++keys` and `s3++_++tabular++_++object++_++key
 
 `sample++_++count: 0` means that data preparation uses all available rows. Set a positive value for a bounded test run.
 
-===== 10.9.5 XCP to ONTAP S3 with Python Preparation
+=== 8.9.5 XCP to ONTAP S3 with Python Preparation
 
 Use this configuration when prepared data must be copied from the ONTAP NAS NFS export to an ONTAP S3 training bucket. Model training, fine-tuning, and inference materialize and publish artifacts through that same ONTAP S3 destination.
 
@@ -409,7 +407,7 @@ Use this configuration when prepared data must be copied from the ONTAP NAS NFS 
 }
 ----
 
-===== 10.9.6 XCP to ONTAP S3 with Spark and Iceberg
+=== 8.9.6 XCP to ONTAP S3 with Spark and Iceberg
 
 Use this configuration for distributed preparation with Iceberg table output and ONTAP S3 as the active training destination. Set `spark++_++required` and `table++_++format++_++required` to `true` when a run must fail rather than fall back if Spark or Iceberg is unavailable.
 
@@ -443,7 +441,7 @@ Use this configuration for distributed preparation with Iceberg table output and
 }
 ----
 
-===== 10.9.7 Scenario Selection Summary
+=== 8.9.7 Scenario Selection Summary
 
 [width="99%",cols="20%,16%,16%,16%,16%,16%",options="header",]
 |===
@@ -456,7 +454,7 @@ Use this configuration for distributed preparation with Iceberg table output and
 |10.9.6 |ONTAP S3 |Spark |Iceberg |All discovered files |`inferencing`
 |===
 
-===== 10.9.8 Execution Walkthroughs
+=== 8.9.8 Execution Walkthroughs
 
 Run the examples from the Airflow workspace. The trigger script generates a unique `manual++__<++UTC timestamp++>++` run ID, waits for completion, and returns a nonzero exit code for a failed or timed-out run. The following full configurations use the same `CONF++_++JSON="$(python3 - ++<<++'PY' ...)"` pattern as the operational examples. Set the referenced secret environment variables through the shell environment, a secure CI/CD secret store, or an Airflow secrets backend before running them; do not add secret values to this document or shell history.
 

@@ -5,7 +5,7 @@ keywords:
 summary: 
 ---
 
-= NetApp , Third-Party and Open Source Technology Components
+= 4. NetApp, Third-Party and Open Source Technology Components
 :hardbreaks:
 :nofooter:
 :icons: font
@@ -27,11 +27,11 @@ Karthikeyan Nagalingam, NetApp
 |ONTAP Snapshot/Backup |Point-in-time protection for prepared data in the ONTAP NAS tier, independent of pipeline
 |===
 
-== NetApp XCP — Core Value
+== 4.1 NetApp XCP — Core Value
 
 XCP is the mobility layer that decouples data location from compute location. A single configuration switch (`xcp++_++copy++_++destination`) determines whether prepared data and model artifacts land in NetApp ONTAP S3 or a LustreFS high-performance tier, with `model++_++training`, `fine++_++tuning`, and `inferencing` automatically reading from and writing to the same destination.
 
-== Third-Party and Open Source Technology Components
+== 4.2 Third-Party and Open Source Technology Components
 
 [width="100%",cols="50%,50%",options="header",]
 |===
