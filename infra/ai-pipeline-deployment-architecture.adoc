@@ -120,7 +120,7 @@ git checkout main
 ls -la
 ----
 
-If you are already working from the local workspace in this environment, the project is present under `/root/airflow` and can be used directly without another download.
+If you already cloned the repository under `/opt/netapp-ai/<your-repo>`, continue from that working directory instead of downloading another copy.
 
 === 7.5.3 Create the Python Environment
 
@@ -128,9 +128,10 @@ Create a dedicated virtual environment and install the base dependencies for Air
 
 [source,bash]
 ----
-cd /root/airflow
-python3 -m venv /root/airflow_venv
-source /root/airflow_venv/bin/activate
+export REPO_ROOT=/opt/netapp-ai/<your-repo>
+cd "$REPO_ROOT"
+python3 -m venv "$REPO_ROOT/.venv"
+source "$REPO_ROOT/.venv/bin/activate"
 
 python -m pip install --upgrade pip setuptools wheel
 pip install "apache-airflow>=2.8,<3.0" boto3 scikit-learn
@@ -153,7 +154,8 @@ From the cloned repository root, initialize the Airflow metadata database and ve
 
 [source,bash]
 ----
-export AIRFLOW_HOME=/root/airflow
+export AIRFLOW_HOME="$REPO_ROOT/.airflow"
+export AIRFLOW__CORE__DAGS_FOLDER="$REPO_ROOT"
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
 
 airflow db init

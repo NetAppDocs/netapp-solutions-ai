@@ -30,7 +30,7 @@ Enterprise AI programs are stalling — not because of model or compute limitati
 
 == 1.4 NetApp Solution Summary
 
-The solution orchestrates ingestion, preparation, data mobility, training, fine-tuning, inference, and archival as an Apache Airflow DAG(Directed Acyclic Graph). StorageGRID anchors the raw-data and long-term archival object tiers. Data preparation writes run-stamped datasets and manifests to an ONTAP NAS bucket, exposed by NFS as the XCP source. NetApp XCP then moves the prepared data to a runtime-selectable training destination — NetApp ONTAP S3 or LustreFS — with no code changes required to switch tiers.
+The solution orchestrates ingestion, preparation, data mobility, training, fine-tuning, inference, and archival as an Apache Airflow DAG (Directed Acyclic Graph). StorageGRID anchors the raw-data and long-term archival object tiers. Data preparation writes run-stamped datasets and manifests to an ONTAP NAS bucket, exposed by NFS as the XCP source. NetApp XCP then moves the prepared data to a runtime-selectable training destination — NetApp ONTAP S3 or LustreFS — with no code changes required to switch tiers.
 
 [NOTE]
 ====
@@ -43,7 +43,7 @@ This pipeline is a concrete implementation of the broader *NetApp AI Storage Arc
 * *ONTAP (AFF/AFX):* High-performance active storage for training, fine-tuning, inference, vector/RAG workloads, and selected data preparation use cases, with FAS and NAS bucket support.
 * *StorageGRID:* Scalable S3-compatible object storage for data ingestion, governance, and long-term retention.
 
-Data movement across tiers is fully automated via Apache Airflow combined with NetApp XCP, FlexCache, and FabricPool — eliminating manual operations from the critical path entirely.
+Data movement across tiers is fully automated via Apache Airflow and NetApp XCP, eliminating manual operations from the critical path entirely.
 
 The NetApp storage architecture helps enterprises support distributed data preparation, model training, fine-tuning, inferencing, and lifecycle governance without forcing all data into a single centralized lake. By reducing unnecessary data movement, it is a natural fit for hybrid AI workflows.
 

@@ -16,15 +16,14 @@ Karthikeyan Nagalingam, NetApp
 
 This validated architecture presents a governed, storage-tier-aware AI data pipeline orchestrated by Apache Airflow. The solution ingests raw tabular and text data from NetApp StorageGRID, prepares deterministic datasets and manifests on an ONTAP NAS bucket, and uses NetApp XCP to move prepared data to either NetApp ONTAP S3 or LustreFS according to runtime configuration. It then trains and incrementally fine-tunes scikit-learn models, generates predictions, checkpoints successful training outputs, and archives models, metrics, manifests, and prediction evidence to StorageGRID. The architecture provides reproducible execution, configurable storage placement, failure guardrails, checkpoint-based recovery, and auditable lineage across the AI lifecycle. It is intended for architects, data engineers, ML engineers, and infrastructure teams who need a repeatable deployment and validation pattern for AI pipelines across NetApp storage tiers.
 
-'''''
+'''
 === Table of Contents
 
 [arabic]
 . link:ai-pipeline-executive-summary.html[Executive Summary]
 . link:ai-pipeline-solution-overview.html[Solution Overview, Business Value and Customer Benefits]
 . link:ai-pipeline-architecture.html[Architecture Overview]
-. link:ai-pipeline-netapp-components.html[NetApp Technology Components]
-. link:ai-pipeline-netapp-components.html[Third-Party and Open Source Technology Components]
+. link:ai-pipeline-netapp-components.html[NetApp, Third-Party and Open Source Technology Components]
 . link:ai-pipeline-solution-design-and-storage-architecture.html[Solution Design and Storage Architecture Detail]
 . link:ai-pipeline-data-mobility.html[Data Mobility with NetApp XCP]
 . link:ai-pipeline-deployment-architecture.html[Deployment Architecture]

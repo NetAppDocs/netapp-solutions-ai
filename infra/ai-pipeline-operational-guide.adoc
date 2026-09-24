@@ -32,7 +32,7 @@ Use this table to connect common task failures to the first corrective action. R
 |===
 |Symptom |Likely Cause |Resolution
 |`Could not resolve XCP S3 credentials` |Missing/incorrect `xcp++_++s3++_++profile` in `xcp++_++s3++_++profiles` |Verify profile name and credentials map
-|`no readable Lustre source directory` |LustreFS not mounted or wrong `xcp++_++lustrefs++_++dest++_++path` |Verify mount with `df`; correct path
+|`no readable Lustre source directory` |LustreFS not mounted or wrong `xcp++_++lustrefs++_++dest++_++path` |Verify the filesystem type with `findmnt -T /mnt/lustre/client -o FSTYPE,TARGET -n`; correct path
 |`Missing required text dataset files` |Text JSONs absent in raw S3 prefix |Upload `text++_++base.json`, `text++_++finetune.json`, `text++_++infer.json`
 |Preflight exit code 1 |SSH unreachable |Verify `ssh++_++default` connection and host/user
 |Preflight exit code 2 |NFS path not exported/visible |Verify export with `xcp show ++<++ip++>++`

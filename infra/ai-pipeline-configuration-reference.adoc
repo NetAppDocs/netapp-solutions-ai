@@ -16,7 +16,7 @@ Karthikeyan Nagalingam, NetApp
 
 The configuration reference describes the runtime parameters that control data ingestion, data preparation, XCP mobility, training, checkpointing, and archival. The ONTAP NAS bucket is used primarily as the prepared-data and XCP staging layer for supportability and portability. In real-time production use, the same prepared data can also be consumed through direct RDMA-capable access paths when that better matches the workload and latency requirements.
 
-''''
+'''
 
 All runtime behavior is supplied through `dag++_++run.conf`, allowing the same DAG to serve different source systems, transformation engines, storage destinations, recovery policies, and archive scopes. Configure only the parameter groups required for the selected workflow, keep credentials in Airflow Connections or a secrets backend, and use the examples as non-production templates rather than as credential values.
 
@@ -456,7 +456,7 @@ Use this configuration for distributed preparation with Iceberg table output and
 
 === 8.9.8 Execution Walkthroughs
 
-Run the examples from the Airflow workspace. The trigger script generates a unique `manual++__<++UTC timestamp++>++` run ID, waits for completion, and returns a nonzero exit code for a failed or timed-out run. The following full configurations use the same `CONF++_++JSON="$(python3 - ++<<++'PY' ...)"` pattern as the operational examples. Set the referenced secret environment variables through the shell environment, a secure CI/CD secret store, or an Airflow secrets backend before running them; do not add secret values to this document or shell history.
+Run the examples from the Airflow workspace. The trigger script generates a unique `manual++__<++UTC timestamp++>++` run ID, waits for completion, and returns a nonzero exit code for a failed or timed-out run. The following full configurations use the same `CONF++_++JSON="$(python3 - ++<<++'PY' ...)"` pattern as the operational examples. Configure the referenced Airflow-managed connections, XCP profiles, and archive profiles in your secrets backend before running them, and keep `CONF++_++JSON` limited to non-secret bucket, endpoint, path, and profile identifiers.
 
 The valid table format name is `iceberg`. Do not use `icerberg`, which is not a supported value.
 
@@ -466,7 +466,6 @@ The valid table format name is `iceberg`. Do not use `icerberg`, which is not a 
 ----
 CONF_JSON="$(python3 - <<'PY'
 import json
-import os
 
 print(json.dumps({
     "ingestion_tool": "s3_direct",
@@ -477,15 +476,11 @@ print(json.dumps({
     "s3_raw_bucket": "bucket1",
     "s3_raw_prefix": "example_ai_pipeline/raw",
     "s3_raw_endpoint_url": "https://storagegrid.example.com",
-    "s3_raw_access_key_id": os.environ["STORAGEGRID_RAW_ACCESS_KEY_ID"],
-    "s3_raw_secret_access_key": os.environ["STORAGEGRID_RAW_SECRET_ACCESS_KEY"],
     "s3_raw_region": "us-east-1",
 
     "s3_formatted_bucket": "prepnasbucket",
     "s3_formatted_prefix": "example_ai_pipeline/formatted",
     "s3_formatted_endpoint_url": "https://ontap-nas.example.com",
-    "s3_formatted_access_key_id": os.environ["ONTAP_NAS_ACCESS_KEY_ID"],
-    "s3_formatted_secret_access_key": os.environ["ONTAP_NAS_SECRET_ACCESS_KEY"],
     "s3_formatted_region": "us-east-1",
 
     "xcp_nfs_source_ip": "10.63.150.159",
@@ -518,25 +513,10 @@ print(json.dumps({
     "manual_archive_endpoint": "https://storagegrid.example.com",
     "manual_archive_cleanup_raw": True,
     "manual_archive_include_xcp_inputs": True,
-
-    "xcp_s3_profiles": {
-        "ontaps3": {
-            "access_key_id": os.environ["ONTAP_S3_ACCESS_KEY_ID"],
-            "secret_access_key": os.environ["ONTAP_S3_SECRET_ACCESS_KEY"],
-            "region": "us-east-1",
-        },
-    },
-    "manual_archive_profiles": {
-        "sgdlocal": {
-            "access_key_id": os.environ["STORAGEGRID_ARCHIVE_ACCESS_KEY_ID"],
-            "secret_access_key": os.environ["STORAGEGRID_ARCHIVE_SECRET_ACCESS_KEY"],
-            "region": "us-east-1",
-        },
-    },
 }, separators=(",", ":")))
 PY
 )"
-CONF_JSON="$CONF_JSON" AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
+CONF_JSON="$CONF_JSON" AIRFLOW_BIN=./.venv/bin/airflow INGESTION_TOOL=s3_direct \
   ./trigger_and_wait_ai_pipeline_sklearn.sh
 ----
 
@@ -546,7 +526,6 @@ CONF_JSON="$CONF_JSON" AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL
 ----
 CONF_JSON="$(python3 - <<'PY'
 import json
-import os
 
 print(json.dumps({
     "ingestion_tool": "s3_direct",
@@ -559,15 +538,11 @@ print(json.dumps({
     "s3_raw_bucket": "bucket1",
     "s3_raw_prefix": "example_ai_pipeline/raw",
     "s3_raw_endpoint_url": "https://storagegrid.example.com",
-    "s3_raw_access_key_id": os.environ["STORAGEGRID_RAW_ACCESS_KEY_ID"],
-    "s3_raw_secret_access_key": os.environ["STORAGEGRID_RAW_SECRET_ACCESS_KEY"],
     "s3_raw_region": "us-east-1",
 
     "s3_formatted_bucket": "prepnasbucket",
     "s3_formatted_prefix": "example_ai_pipeline/formatted",
     "s3_formatted_endpoint_url": "https://ontap-nas.example.com",
-    "s3_formatted_access_key_id": os.environ["ONTAP_NAS_ACCESS_KEY_ID"],
-    "s3_formatted_secret_access_key": os.environ["ONTAP_NAS_SECRET_ACCESS_KEY"],
     "s3_formatted_region": "us-east-1",
 
     "xcp_nfs_source_ip": "10.63.150.159",
@@ -598,22 +573,14 @@ print(json.dumps({
     "manual_archive_endpoint": "https://storagegrid.example.com",
     "manual_archive_cleanup_raw": True,
     "manual_archive_include_xcp_inputs": True,
-
-    "manual_archive_profiles": {
-        "sgdlocal": {
-            "access_key_id": os.environ["STORAGEGRID_ARCHIVE_ACCESS_KEY_ID"],
-            "secret_access_key": os.environ["STORAGEGRID_ARCHIVE_SECRET_ACCESS_KEY"],
-            "region": "us-east-1",
-        },
-    },
 }, separators=(",", ":")))
 PY
 )"
-AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
+AIRFLOW_BIN=./.venv/bin/airflow INGESTION_TOOL=s3_direct \
   ./trigger_and_wait_ai_pipeline_sklearn.sh
 ----
 
-For LustreFS mode, the `xcp++_++s3++_++profiles` map is intentionally omitted because the training route does not resolve ONTAP S3 credentials. For both examples, omitting `s3++_++tabular++_++object++_++keys` and setting `sample++_++count` to `0` requests automatic discovery of all eligible tabular files and use of all available rows.
+For ONTAP S3 mode, pass only the non-secret `xcp++_++s3++_++profile` name in `CONF++_++JSON` and define the corresponding credentials on the XCP host or through Airflow-managed secret storage before the run. For LustreFS mode, the `xcp++_++s3++_++profiles` map is intentionally omitted because the training route does not resolve ONTAP S3 credentials. In both examples, define the StorageGRID raw-data, ONTAP NAS prepared-data, and archive credentials through Airflow-managed secret storage rather than inline JSON. Omitting `s3++_++tabular++_++object++_++keys` and setting `sample++_++count` to `0` requests automatic discovery of all eligible tabular files and use of all available rows.
 
 *Python, no XCP, two-file test:*
 
@@ -641,4 +608,4 @@ CONF_JSON='{"enable_xcp":true,"xcp_copy_destination":"s3","xcp_nfs_source_ip":"1
 
 Before an XCP run, verify the configured ONTAP NAS NFS path and destination accessibility from the XCP host. After a successful run, review task logs for `++[++data++_++prep++]++ effective++_++config`, `++[++xcp++_++copy++]++ effective++_++config`, `++[++model++_++training++]++ effective++_++config`, and `++[++manual++_++archive++]++` to confirm the selected engine, input scope, destination, and archive stage.
 
-'''''
+'''

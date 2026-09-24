@@ -41,10 +41,11 @@ This test area validates end-to-end data and artifact routing when `enable++_++x
 * *Objective:* Verify that data preparation, XCP mobility, model training, fine-tuning, and inference consistently use the selected XCP destination (`s3` or `lustrefs`).
 * *Test Procedure:* Triggered DAG runs with `xcp++_++copy++_++destination="s3"` and `xcp++_++copy++_++destination="lustrefs"`. Inspected XCom outputs, effective-config logs, and storage locations.
 * *Validation Outcome:*
-** In `data++_++prep`, formatted tabular splits and text files were staged to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/data/` on the chosen destination.
+** In `data++_++prep`, formatted tabular splits and text files were staged to the ONTAP NAS prepared-data tier under `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/data/`.
+** In `xcp++_++copy`, that prepared dataset was transferred to the chosen XCP destination for downstream model stages.
 ** In `model++_++training`, model inputs were loaded from the XCP destination, and baseline artifacts (`regression++_++model.bin`, `text++_++vectorizer.bin`, `text++_++classifier.bin`, `train++_++metrics.json`) were published back to `++<++xcp++_++prefix++>++/formatted/++<++run++_++stamp++>++/artifacts/`.
 ** In `fine++_++tuning`, base vectorizer/classifier artifacts were materialized from the XCP destination, incrementally tuned, and published back as `text++_++classifier++_++tuned.bin` and `fine++_++tune++_++metrics.json`.
-** In `inferencing`, all three tuned artifacts were materialized from the XCP destination to generate predictions.
+** In `inferencing`, the tuned text classifier plus the baseline regression model and vectorizer were materialized from the XCP destination to generate predictions.
 
 === 10.2.2 Local Fallback and Non-XCP Execution Validation
 

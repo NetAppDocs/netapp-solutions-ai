@@ -58,8 +58,8 @@ Use this path when `xcp++_++copy++_++destination=lustrefs`. XCP copies prepared 
 
 [source,bash]
 ----
-df <xcp_lustrefs_source_path>   # mount validation
-df <xcp_lustrefs_dest_path>     # mount validation
+findmnt -T <xcp_lustrefs_source_path> -o FSTYPE,TARGET -n | grep -E '^nfs[0-9]* '  # source mount type
+findmnt -T <xcp_lustrefs_dest_path> -o FSTYPE,TARGET -n | grep -E '^lustre '   # destination mount type
 xcp copy -newid <run_stamp> \
   file://<xcp_lustrefs_source_path> \
   file://<xcp_lustrefs_dest_path>
@@ -69,15 +69,15 @@ xcp copy -newid <run_stamp> \
 
 [source,bash]
 ----
-df /prepnasbucket/example_ai_pipeline
-df /mnt/lustre/client
+findmnt -T /prepnasbucket/example_ai_pipeline -o FSTYPE,TARGET -n | grep -E '^nfs[0-9]* '
+findmnt -T /mnt/lustre/client -o FSTYPE,TARGET -n | grep -E '^lustre '
 
 /usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
     file:///prepnasbucket/example_ai_pipeline \
     file:///mnt/lustre/client
 ----
 
-The two `df` commands verify that the source and destination mounts are available on the XCP host before the copy starts. With `xcp++_++lustrefs++_++training++_++subpath=example++_++ai++_++pipeline`, training reads the run-stamped data under `/mnt/lustre/client/example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
+The two `findmnt` commands verify that the source path is mounted through NFS and the destination path is mounted through LustreFS on the XCP host before the copy starts. With `xcp++_++lustrefs++_++training++_++subpath=example++_++ai++_++pipeline`, training reads the run-stamped data under `/mnt/lustre/client/example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`.
 
 == 6.5 XCP Destination Decision Flow
 
@@ -87,13 +87,13 @@ image::ai-pipeline-xcp-destination-decision.png[ "XCP Destination Decision Flow"
 
 == 6.6 XCP Failure Handling and Guardrails
 
-These guardrails make configuration and infrastructure failures observable at the earliest practical point. Preflight failures prevent an invalid transfer, LustreFS checks validate mount availability, and S3 credential validation applies only when ONTAP S3 is the selected XCP destination.
+These guardrails make configuration and infrastructure failures observable at the earliest practical point. Preflight failures prevent an invalid transfer, filesystem-type checks validate the ONTAP NAS and LustreFS mounts, and S3 credential validation applies only when ONTAP S3 is the selected XCP destination.
 
 [width="100%",cols="50%,50%",options="header",]
 |===
 |Condition |Guard Behavior
 |Unsupported `xcp++_++copy++_++destination` value |Pipeline rejects the value before any data movement
-|LustreFS mount not present |`df` fails; copy halted before data movement
+|LustreFS mount not present |Filesystem-type validation fails; copy halted before data movement
 |SSH unreachable |Preflight exits with code 1 before any copy
 |NFS path not visible |Preflight exits with code 2 before any copy
 |Missing XCP S3 credentials (S3 mode only) |`model++_++training`/artifact sync raises explicit `ValueError`

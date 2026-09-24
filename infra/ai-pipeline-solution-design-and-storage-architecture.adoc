@@ -35,7 +35,7 @@ Configuration over code changes; explicit stage boundaries with typed contracts;
 
 == 5.3 Configuration-Driven Philosophy
 
-All storage, credential, engine, and behavioral selections are `dag++_++run.conf` parameters — switching between S3 and LustreFS, or Python and Spark, requires no code modification.
+All non-secret storage, engine, and behavioral selections are `dag++_++run.conf` parameters — switching between S3 and LustreFS, or Python and Spark, requires no code modification, while Airflow-managed secret storage resolves the required credentials.
 
 == 5.4 Storage Architecture Detail
 
