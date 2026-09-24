@@ -199,4 +199,4 @@ If the installation is correct, the DAG should be present in Airflow and ready f
 ./trigger_and_wait_ai_pipeline_sklearn.sh
 ----
 
-At this point, the environment is ready for the configuration examples in Section 10 and the deployment scenarios described in the operational guide.
+At this point, the environment is ready for the configuration examples in Section 8 and the deployment scenarios described in the operational guide.
