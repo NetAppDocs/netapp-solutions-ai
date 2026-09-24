@@ -92,7 +92,7 @@ These guardrails make configuration and infrastructure failures observable at th
 [width="100%",cols="50%,50%",options="header",]
 |===
 |Condition |Guard Behavior
-|Unsupported `xcp++_++copy++_++destination` value |Defaults to `s3` with warning
+|Unsupported `xcp++_++copy++_++destination` value |Pipeline rejects the value before any data movement
 |LustreFS mount not present |`df` fails; copy halted before data movement
 |SSH unreachable |Preflight exits with code 1 before any copy
 |NFS path not visible |Preflight exits with code 2 before any copy
