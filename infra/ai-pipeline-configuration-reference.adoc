@@ -536,7 +536,7 @@ print(json.dumps({
 }, separators=(",", ":")))
 PY
 )"
-AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
+CONF_JSON="$CONF_JSON" AIRFLOW_BIN=/root/airflow_venv/bin/airflow INGESTION_TOOL=s3_direct \
   ./trigger_and_wait_ai_pipeline_sklearn.sh
 ----
 
