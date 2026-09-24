@@ -84,7 +84,7 @@ image:ai-edge-007.png["Figure showing input/output dialog or representing writte
 * 670K IOPs (random reads)
 
 [NOTE]
-For more information, see the https://www.netapp.com/pdf.html?item=/media/19339-DS-4082.pdf[NetApp EF-Series NetApp EF-Series all-flash arrays EF600, F300, EF570, and EF280 datasheet^].
+For more information, see the https://www.netapp.com/pdf.html?item=/media/19339-ds-4082.pdf[NetApp EF-Series NetApp EF-Series all-flash arrays EF600, F300, EF570, and EF280 datasheet^].
 
 == NetApp ONTAP 9
 
