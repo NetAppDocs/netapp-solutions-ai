@@ -61,7 +61,7 @@ This test area validates pipeline behavior when XCP data mobility is disabled (`
 
 This test area evaluates I/O latency, discovery overhead, and training throughput between ONTAP S3 object storage and LustreFS parallel filesystem tiers.
 
-* *Objective:* Quantify performance characteristics of E-Series (LustreFS) versus ONTAP ( (AFF/AFX) / ONTAP S3) active training tiers.
+* *Objective:* Quantify performance characteristics of E-Series with LustreFS versus ONTAP AFF/AFX with ONTAP S3 active training tiers.
 * *Test Procedure:* Measured file discovery time, training dataset load latency, and artifact publish/materialize duration across identical dataset sizes (14,400{plus} rows, multi-file text/tabular inputs).
 * *Validation Outcome:*
 ** *LustreFS Tier:* Demonstrated lower file-discovery overhead and faster random-access read latency during model training, making it ideal for high-file-count, GPU-intensive parallel training workloads.
