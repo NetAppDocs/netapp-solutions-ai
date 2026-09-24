@@ -103,7 +103,7 @@ This workflow helps customers evaluate whether the design fits their AI pipeline
 
 [width="100%",cols="25%,25%,25%,25%",options="header"]
 |===
-| Evaluaton Step | Example Workflow | Sizing Assumption / Decision | Validation Metrics and Acceptance Evidence 
+| Evaluation Step | Example Workflow | Sizing Assumption / Decision | Validation Metrics and Acceptance Evidence 
 
 | 1. Establish a baseline | Run the Python preparation path with `enable_xcp=false` on a bounded sample. | Use the reference validation environment in Section 7.1.1 as an initial functional baseline. | Successful DAG completion; input-row and output-split counts; model metrics; task duration; CPU, memory, and local-disk utilization. 
 | 2. Validate data sovereignty | Keep raw data, prepared data, active training data, and archives in approved storage endpoints and regions. Review credentials and retention policies per tier. | Define the allowed locations, access roles, encryption requirements, and retention policy before moving data. | Endpoint, bucket, prefix, and region recorded in the effective configuration and manifests; least-privilege access verification; archive and deletion-policy evidence. 
