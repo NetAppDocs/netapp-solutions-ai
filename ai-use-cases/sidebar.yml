@@ -2,6 +2,34 @@ section: ai-use-cases
 title: "AI use cases"
 url: /ai-use-cases/index.html
 entries:
+  - title: "Streamlining AI Pipeline Across NetApp Storage Platforms"
+    pdf-filename: "Streamlining AI Pipeline Across NetApp Storage Platforms"
+    entries:
+      - title: "Overview"
+        url: /infra/ai-pipeline-overview.html
+      - title: "Executive summary"
+        url: /infra/ai-pipeline-executive-summary.html
+      - title: "Solution overview, Business Value and Customer Benefits"
+        url: /infra/ai-pipeline-solution-overview.html
+      - title: "Architecture overview"
+        url: /infra/ai-pipeline-architecture.html
+      - title: "NetApp, third-party and open source technology components"
+        url: /infra/ai-pipeline-netapp-components.html
+      - title: "Solution design and storage architecture detail"
+        url: /infra/ai-pipeline-solution-design-and-storage-architecture.html
+      - title: "Data mobility with NetApp XCP"
+        url: /infra/ai-pipeline-data-mobility.html
+      - title: "Deployment architecture"
+        url: /infra/ai-pipeline-deployment-architecture.html
+      - title: "Configuration reference"
+        url: /infra/ai-pipeline-configuration-reference.html
+      - title: "Operational guide"
+        url: /infra/ai-pipeline-operational-guide.html
+      - title: "Security considerations, validation and testing"
+        url: /infra/ai-pipeline-security-considerations-validation-testing.html
+      - title: "NetApp differentiation and competitive positioning, appendices"
+        url: /infra/ai-pipeline-differentiation-appendices.html
+#
   - title: "KV Cache Offloading with NetApp"
     pdf-filename: "KV Cache Offloading with NetApp"
     url: /software/ai-kv-cache-offloading-netapp.html
