@@ -1,0 +1,67 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-solution-overview.html
+keywords: 
+summary: 
+---
+
+= 2. Solution Overview, Business Value and Customer Benefits
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+== 2.1 Solution Description
+
+The pipeline is implemented as the Airflow DAG `example++_++ai++_++pipeline++_++sklearn`, composed of the tasks `ingestion`, `data++_++prep`, `xcp++_++preflight++_++source`, `xcp++_++copy++_++prep++_++to++_++training`, `model++_++training`, `fine++_++tuning`, `inferencing`, `checkpoint++_++model++_++training`, `route++_++manual++_++archive++_++stage`, and `manual++_++archive`.
+
+== 2.2 Use Case and Problem Statement
+
+Customers must train and periodically refresh tabular regression and text classification models using raw data sourced from StorageGRID. The pipeline prepares that data in an ONTAP NAS bucket, then uses NetApp XCP to deliver it to either ONTAP S3 or LustreFS for training, based on the per-run destination selection.
+
+== 2.3 Target Customer Profile and Industry Applicability
+
+Financial services (risk/fraud models), manufacturing (predictive maintenance), healthcare (classification/triage), retail (demand forecasting) — any enterprise requiring governed, repeatable ML training on NetApp infrastructure.
+
+== 2.4 Solution Scope and Boundaries
+
+*In scope:* ingestion gating, data preparation (Python/Spark), XCP data mobility (S3/LustreFS), scikit-learn training and incremental fine-tuning, inference, checkpointing, manual archival. *Out of scope:* real-time model serving APIs, streaming ingestion, GPU-based deep learning frameworks.
+
+== 2.5 Assumptions and Prerequisites
+
+* StorageGRID S3-compatible endpoint reachable from Airflow for raw-data access and archival.
+* ONTAP NAS bucket reachable from Airflow for prepared-data writes and exposed through NFS to the XCP host.
+* NetApp ONTAP S3-compatible endpoint reachable from Airflow and XCP when ONTAP S3 is selected as the training destination.
+* NetApp XCP installed and reachable via SSH (Airflow connection `ssh++_++default`).
+* LustreFS client mounted on the XCP host when LustreFS is selected.
+* Airflow 2.x with `boto3`, `scikit-learn`; optional PySpark {plus} Delta/Iceberg packages.
+
+== 2.6 Business Drivers
+
+Reduce time-to-model, lower infrastructure cost via incremental training, eliminate one-off scripting risk.
+
+== 2.7 Value Proposition Summary
+
+StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, and XCP combined with Airflow orchestration deliver a storage-tier-aware, observable, resilient AI pipeline.
+
+== 2.8 Stakeholder Benefits
+
+[width="100%",cols="50%,50%",options="header",]
+|===
+|Stakeholder |Benefit
+|Data Engineering |Declarative, parameter-driven prep; automatic file discovery; Spark/Delta/Iceberg support
+|Data Science/ML |Incremental fine-tuning; consistent artifact source across stages; reproducible splits
+|IT Operations |Runtime storage selection; guard/effective-config logs; checkpoint-based recovery
+|Compliance/Governance |Manifests and archival records provide auditable lineage; configurable retention stage
+|===
+
+== 2.9 TCO Considerations
+
+Incremental fine-tuning and checkpoint resume reduce recurring compute cost; storage-tier flexibility avoids over-provisioning high-performance storage for all workloads.
+
+== 2.10 ROI Considerations
+
+Faster model refresh cycles, reduced manual maintenance, reduced recovery time per failure event.
