@@ -28,7 +28,7 @@ https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf
 
 * NetApp Product Documentation
 +
-https://www.netapp.com/us/documentation/index.aspx
+https://docs.netapp.com/
 
 
 // NetApp Solutions restructuring (jul 2025) - renamed from data-analytics/bda-ai-where-to-find-additional-information.adoc
