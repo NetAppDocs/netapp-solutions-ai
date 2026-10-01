@@ -1,0 +1,47 @@
+---
+sidebar: sidebar
+permalink: infra/ai-pipeline-architecture.html
+keywords: 
+summary: 
+---
+
+= 3. Architecture Overview
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+Karthikeyan Nagalingam, NetApp
+
+This section presents the logical workflow, component interactions, physical deployment, and data lineage for the validated AI pipeline. Together, the diagrams show how Apache Airflow orchestrates data movement from StorageGRID through ONTAP NAS, optionally uses NetApp XCP to place data on ONTAP S3 or LustreFS for model execution, and returns governed results to StorageGRID archival storage.
+
+== 3.1 High-Level Three-Tier AI Storage Architecture
+
+The NetApp AI storage architecture places data on the storage tier that best matches each lifecycle phase. StorageGRID is used for scalable, cost-optimized raw-data ingestion and governed archival. ONTAP NAS and ONTAP S3 are used as the active preparation, data mobility staging, and object-based training workflows. E-Series with LustreFS is used when high-throughput, parallel training I/O is required. Apache Airflow orchestrates the lifecycle, while NetApp XCP moves prepared data from the ONTAP NAS tier to the selected active training tier.
+
+image::ai-pipeline-three-tier-storage-arch.png[ "High-Level Three-Tier AI Storage Architecture", pdfwidth=90% ]
+
+== 3.2 High-Level Solution Architecture
+
+This workflow diagram shows the Airflow-controlled lifecycle from raw StorageGRID data through preparation, optional XCP mobility, model execution, checkpointing, and archival. `enable++_++xcp` determines whether prepared data is copied from the ONTAP NAS bucket to ONTAP S3 or LustreFS before training. The archive branches are independent: `manual++_++archive++_++stage=model++_++training` archives the baseline immediately after training, while `manual++_++archive++_++stage=inferencing` archives the complete outcome after predictions are generated.
+
+image::ai-pipeline-overview.png[ "High-level solution architecture", pdfwidth=90% ]
+
+== 3.3 Component Interaction Diagram
+
+This sequence diagram identifies which platform component performs each exchange. Airflow reads raw objects from StorageGRID and writes prepared data to the ONTAP NAS bucket; it then invokes XCP over SSH. XCP reads the ONTAP NAS NFS export and writes to the configured training tier. The final conditional block shows that StorageGRID archival content depends on the selected manual archive stage.
+
+image::ai-pipeline-component-interaction.png[ "Component Interaction Diagram", pdfwidth=90% ]
+
+== 3.4 Physical / Deployment Architecture
+
+This deployment diagram shows the required hosts, storage endpoints, and network interfaces. The Airflow host uses S3 APIs for StorageGRID, the ONTAP NAS bucket, and the selected ONTAP S3 destination, and uses SSH to control the XCP host. The XCP host accesses the prepared-data source through NFS and writes to either ONTAP S3 or the LustreFS mount; when LustreFS is selected, the Airflow host must also mount it to read training data and materialize artifacts.
+
+image::ai-pipeline-physical-deployment.png[ "Physical / Deployment Architecture", pdfwidth=90% ]
+
+== 3.5 Data Flow Overview
+
+This compact flow summarizes data and artifact provenance. Each run receives a unique `run++_++stamp`, which keeps prepared data, XCP output, model artifacts, predictions, and archived objects traceable to the same execution. XCP destination selection governs the training-data and model-artifact tier, while `manual++_++archive++_++stage` governs whether StorageGRID receives the baseline training package or the full inference package.
+
+image::ai-pipeline-data-flow.png[ "Data Flow Overview", pdfwidth=90% ]
