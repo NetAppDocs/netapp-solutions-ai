@@ -69,9 +69,9 @@ https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-conce
 +
 https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US[https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US^] 
 
-* BlueXP Copy and Sync
+* Copy and Sync
 +
-https://cloud.netapp.com/cloud-sync-service[https://cloud.netapp.com/cloud-sync-service^] 
+https://www.netapp.com/data-services/copy-and-sync/[https://www.netapp.com/data-services/copy-and-sync/^] 
 
 * DataOps Toolkit
 +

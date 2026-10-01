@@ -141,7 +141,7 @@ The EF80 platform supports up to twelve host ports per array when three two-port
 
 Each EF80 array also uses the dedicated slot 4 I/O module for inter-controller mirroring. Cable controller A port 4a to controller B port 4a, and controller A port 4b to controller B port 4b. These connections provide cache mirroring and I/O shipping and are not used for host NVMe-oF traffic. See link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections[Cable the EF50 and EF80 inter-controller mirroring connections^].
 
-For full EF-Series specifications across all models, see the link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
+For full EF-Series specifications across all models, see the link:https://www.netapp.com/pdf.html?item=/media/19339-ds-4082.pdf[NetApp EF-Series all-flash array datasheet^].
 
 === Drive layout (24 drives per array)
 
