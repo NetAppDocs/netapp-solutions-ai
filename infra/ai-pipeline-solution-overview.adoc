@@ -12,10 +12,8 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
-Karthikeyan Nagalingam, NetApp
-
 [.lead]
-The AI data pipeline solution ingests raw data, prepares it, moves it between storage tiers with NetApp XCP, and trains and fine-tunes models.
+Karthikeyan Nagalingam, NetApp
 
 == 2.1 Solution Description
 
