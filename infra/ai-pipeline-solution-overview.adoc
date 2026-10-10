@@ -14,6 +14,9 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
+The AI data pipeline solution ingests raw data, prepares it, moves it between storage tiers with NetApp XCP, and trains and fine-tunes models.
+
 == 2.1 Solution Description
 
 The pipeline is implemented as the Airflow DAG `example++_++ai++_++pipeline++_++sklearn`, composed of the tasks `ingestion`, `data++_++prep`, `xcp++_++preflight++_++source`, `xcp++_++copy++_++prep++_++to++_++training`, `model++_++training`, `fine++_++tuning`, `inferencing`, `checkpoint++_++model++_++training`, `route++_++manual++_++archive++_++stage`, and `manual++_++archive`.

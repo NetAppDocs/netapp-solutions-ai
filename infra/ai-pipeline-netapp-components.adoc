@@ -14,6 +14,9 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
+The AI data pipeline solution uses NetApp, third-party, and open source components.
+
 [width="100%",cols="50%,50%",options="header",]
 |===
 |Component |Role in Solution

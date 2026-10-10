@@ -14,6 +14,9 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
+This executive summary describes the purpose, audience, business challenge, and NetApp solution for the AI data pipeline.
+
 == 1.1 Purpose of this Document
 
 This NetApp Validated Architecture (NVA) documents a production-grade AI data pipeline that ingests raw data, prepares it for machine learning, moves it at high speed between storage tiers using NetApp XCP, trains and incrementally fine-tunes models, generates predictions, and archives results for governance and reproducibility. It is intended to guide architects and infrastructure teams through design rationale, deployment, configuration, and operations.
