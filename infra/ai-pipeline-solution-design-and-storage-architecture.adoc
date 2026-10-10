@@ -12,10 +12,8 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
-Karthikeyan Nagalingam, NetApp
-
 [.lead]
-The AI data pipeline solution is designed around configuration-driven stages and a tiered storage architecture.
+Karthikeyan Nagalingam, NetApp
 
 == 5.1 Design Principles
 
