@@ -14,6 +14,7 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
 This guide covers routine execution, monitoring, incident triage, training recovery, archive verification, capacity tuning, and data protection. Use it with the configuration scenarios in Section 8 to operate the same pipeline consistently across local, ONTAP S3, and LustreFS training modes.
 
 == 9.1 Execution Walkthrough
