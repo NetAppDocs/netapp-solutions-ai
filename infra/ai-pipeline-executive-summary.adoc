@@ -12,10 +12,8 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
-Karthikeyan Nagalingam, NetApp
-
 [.lead]
-This executive summary describes the purpose, audience, business challenge, and NetApp solution for the AI data pipeline.
+Karthikeyan Nagalingam, NetApp
 
 == 1.1 Purpose of this Document
 
