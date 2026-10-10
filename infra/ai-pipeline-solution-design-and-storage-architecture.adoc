@@ -14,6 +14,9 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
+The AI data pipeline solution is designed around configuration-driven stages and a tiered storage architecture.
+
 == 5.1 Design Principles
 
 Configuration over code changes; explicit stage boundaries with typed contracts; consistent artifact routing; fail-fast validation with actionable errors; storage-tier neutrality.
