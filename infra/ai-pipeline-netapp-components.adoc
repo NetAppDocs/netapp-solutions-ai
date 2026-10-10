@@ -12,10 +12,10 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
-[.lead]
-The AI data pipeline solution uses NetApp, third-party, and open source components. The following table lists each component and its role in the solution.
-
 Karthikeyan Nagalingam, NetApp
+
+[.lead]
+The AI data pipeline solution uses NetApp, third-party, and open source components.
 
 [width="100%",cols="50%,50%",options="header",]
 |===
