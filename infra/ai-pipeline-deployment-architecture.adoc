@@ -14,6 +14,7 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
 This section defines the infrastructure placement, software dependencies, and network connectivity required to operate the pipeline. The deployment separates Airflow orchestration from the XCP data-mobility host while connecting both components to StorageGRID, ONTAP NAS, and the selected ONTAP S3 or LustreFS training destination.
 
 == 7.1 Reference Infrastructure Requirements

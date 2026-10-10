@@ -14,6 +14,7 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
 This combined section positions the architecture against common alternatives and provides the shared reference material used by operators and reviewers. The differentiator is not a single storage endpoint; it is the policy-controlled combination of StorageGRID, ONTAP NAS, ONTAP S3, LustreFS, XCP, and Airflow that lets each AI lifecycle phase use an appropriate tier without rebuilding the workflow.
 
 == 11.1 NetApp Differentiation and Competitive Positioning

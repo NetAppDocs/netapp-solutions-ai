@@ -14,6 +14,7 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
 The configuration reference describes the runtime parameters that control data ingestion, data preparation, XCP mobility, training, checkpointing, and archival. The ONTAP NAS bucket is used primarily as the prepared-data and XCP staging layer for supportability and portability. In real-time production use, the same prepared data can also be consumed through direct RDMA-capable access paths when that better matches the workload and latency requirements.
 
 '''
