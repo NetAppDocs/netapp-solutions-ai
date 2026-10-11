@@ -12,6 +12,7 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
+[.lead]
 Karthikeyan Nagalingam, NetApp
 
 == 2.1 Solution Description
