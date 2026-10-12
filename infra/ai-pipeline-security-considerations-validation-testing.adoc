@@ -14,6 +14,7 @@ summary:
 
 Karthikeyan Nagalingam, NetApp
 
+[.lead]
 This combined section addresses the controls required to operate the AI pipeline securely and the validation activities used to prove the design behaves as expected in representative environments. The same storage-tier separation, least-privilege access model, checkpoint logic, and run-scoped lineage used in the pipeline also inform the validation plan and operational guardrails.
 
 == 10.1 Security Considerations

@@ -12,6 +12,7 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
+[.lead]
 Karthikeyan Nagalingam, NetApp
 
 == 1.1 Purpose of this Document
