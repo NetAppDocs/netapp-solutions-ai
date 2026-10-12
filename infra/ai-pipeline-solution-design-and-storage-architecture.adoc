@@ -12,6 +12,7 @@ summary:
 :linkattrs:
 :imagesdir: ../media/
 
+[.lead]
 Karthikeyan Nagalingam, NetApp
 
 == 5.1 Design Principles
