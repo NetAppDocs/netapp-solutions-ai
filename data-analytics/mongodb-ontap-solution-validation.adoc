@@ -47,14 +47,15 @@ MongoDB uses the WiredTiger storage engine in this solution. For our testing, we
 [NOTE]
 The WiredTiger storage engine does not require an `fsync` and write lock on every shard, and it does not require you to unlock the databases afterward. If you use the MMAPv1 storage engine, you must perform an `fsync` and lock on every shard for writes, and then unlock them. MongoDB 4.2 and later do not include MMAPv1.
 
+[[snap-creator-backup]]
 === Snap Creator backup
 
-Snap Creator is a flexible framework that can run MongoDB-specific quiesce and unquiesce scripts before and after it creates the NetApp Snapshot backup. The size of the database does not affect the NetApp Snapshot backup, which takes only seconds to create.
+Snap Creator is a flexible framework that can run MongoDB-specific quiesce and unquiesce commands before and after it creates the NetApp Snapshot backup. The size of the database does not affect the NetApp Snapshot backup, which takes only seconds to create.
 
 We followed this procedure to configure Snap Creator for our testing:
 
 . Install the Snap Creator server in the Snap Creator VM.
-. Install the Snap Creator agent on the MongoDB router or application server. The Snap Creator server communicates with the MongoDB database through the Snap Creator agent, which communicates with MongoDB as a client. The same mechanism runs the Python scripts for the quiesce and unquiesce operations on the MongoDB database.
+. Install the Snap Creator agent and `mongosh` on the MongoDB router or application server that you will configure as the agent. The Snap Creator server runs the commands below through the agent, which connects to MongoDB as a client.
 . In the Snap Creator UI, create the MongoDB profile and configure the following settings:
 .. Set the plug-in type to *None*.
 .. Configure the Snap Creator agent on one of the MongoDB application servers.
@@ -75,17 +76,17 @@ We followed this procedure to configure Snap Creator for our testing:
 .. Provide the application quiesce command:
 +
 ----
-APP_QUIESCE_CMD01=/usr/bin/python2.7 /usr/local/bin/wait-for-cleared-locks.py mdb-ms-1 27017
+APP_QUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.stopBalancer()'
 ----
 .. Provide the application unquiesce command:
 +
 ----
-APP_UNQUIESCE_CMD01=/usr/bin/python2.7 /usr/local/bin/start-balancer.py mdb-ms-1 27017
+APP_UNQUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
 ----
 .. Provide the pre-exit command:
 +
 ----
-PRE_EXIT_CMD01=/usr/bin/python2.7 /usr/local/bin/wait-for-cleared-locks.py mdb-ms-1 27017
+PRE_EXIT_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
 ----
 
 The following figure shows the Snap Creator backup operation for the MongoDB database.
@@ -180,8 +181,8 @@ image:mongodb-ontap-009.png[VMware datastore created from a cloned database volu
 -rw------- 1 root root 475 Nov 22 17:51 mdb-srv-1.vmdk
 [root@stlrx300s8-9:/vmfs/volumes/24631f70-b7e80cce/mdb-srv-1] rm -fr .lck-be546*
 ----
-. Power on the cloned VMs.
-. Change the IP addresses of the cloned hosts and update `/etc/hosts`. NetApp recommends that cloned VMs use the same host names with different IP addresses.
+. Before powering on any cloned VM, attach its network adapter to an isolated port group that cannot reach the production MongoDB hosts.
+. Power on the cloned VMs and use the VM console to assign new IP addresses and update `/etc/hosts` for all cloned members before starting MongoDB. Retain the host names only within the isolated clone network.
 . Restart the MongoDB config, application, and replica set or sharding servers with the new IP addresses from the cloned VMs.
 
 This procedure creates a working cloned copy of the production MongoDB database. The clone is isolated, so you can use it for writes, troubleshooting, development, or test. Because its storage is based on FlexClone technology, the process uses no additional storage.
@@ -221,7 +222,7 @@ To validate disaster recovery:
 .. Create a FlexClone volume from the destination volume.
 .. Mount the primary and secondary database volumes on the appropriate operating system instances.
 .. Start the config servers, the primary and secondary sharding servers, and the application or query server `mongod` and `mongos` processes by using the init script or CLI commands.
-.. Verify that the database and documents are present up to the SnapMirror break point, and that the new disaster recovery database is still writable.
+.. Verify that the database and documents are present up to the last successfully replicated Snapshot copy, and that the new disaster recovery database is still writable. Record the last transfer time to determine the recovery point.
 
 == Performance and certification validation
 

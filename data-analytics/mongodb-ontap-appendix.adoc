@@ -18,15 +18,15 @@ This appendix lists the Snap Creator quiesce and balancer scripts and the MongoD
 [[quiesce-and-balancer-commands]]
 == Quiesce and balancer commands
 
-The validation used Python 2.7 scripts on the MongoDB application servers (copied to `/usr/local/bin`) as Snap Creator quiesce, unquiesce, and pre-exit commands. The scripts used an early PyMongo release that provides the `Connection` class. Python 2 and `Connection` are no longer supported. For current MongoDB releases, port the scripts to Python 3 and `MongoClient`, or use the following `mongosh` commands directly:
+The validation used Python 2.7 scripts on the MongoDB application servers as Snap Creator quiesce, unquiesce, and pre-exit commands; those scripts are not included. To avoid that dependency, configure the hooks with the `mongosh` commands in xref:mongodb-ontap-solution-validation.html#snap-creator-backup[Snap Creator backup]. Install `mongosh` on the Snap Creator agent host, and adapt the host, port, and authentication options for your deployment. The validation scripts used an early PyMongo release that provides the `Connection` class; Python 2 and `Connection` are no longer supported.
 
 [cols="35%,65%",options="header"]
 |===
 |Script used in the validation |Operation
 |`wait-for-cleared-locks.py` |Wait for the balancer lock to clear, and then stop the balancer. In `mongosh`, run `sh.stopBalancer()`, which also waits for any in-progress balancing round to finish.
 |`start-balancer.py` |Restart the balancer. In `mongosh`, run `sh.startBalancer()`.
-|`fsync-lock.py` |Flush writes to disk and block new writes. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncLock()`.
-|`fsync-unlock.py` |Release the write lock. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncUnlock()`.
+|`fsync-lock.py` |Flush writes to disk and block new writes when the backup requires quiescing, including WiredTiger data and journal on separate volumes without a consistency-group Snapshot. In `mongosh`, run `db.fsyncLock()` on each member being backed up.
+|`fsync-unlock.py` |Release each write lock acquired for the backup, including after a failure. In `mongosh`, run `db.fsyncUnlock()`.
 |===
 
 
@@ -46,11 +46,11 @@ The following operations configure the sharded cluster and add two shards to it.
 +
 ----
 [root@mdb-srv-1 ~]# mkdir -p /mongodb/data
-[root@mdb-srv-1 ~]# mkdir -p /data/db
+[root@mdb-srv-1 ~]# mkdir -p /data/db_wt
 [root@mdb-srv-1 ~]# chown -R mongodb:mongodb /mongodb
 [root@mdb-srv-1 ~]# chown -R mongodb:mongodb /data
 [root@mdb-srv-1 ~]# chmod -R 700 /mongodb
-[mongodb@mdb-srv-1 ~]$ mongod --replSet shard1/mdb-srv-10,mdb-srv-11 --journal --rest --shardsvr --fork --logpath /mongodb/data/mongod.log
+[mongodb@mdb-srv-1 ~]$ mongod --replSet shard1/mdb-srv-10,mdb-srv-11 --journal --rest --shardsvr --fork --storageEngine wiredTiger --dbpath /data/db_wt --logpath /mongodb/data/mongod.log --directoryperdb
 ----
 . Start the config servers (`mdb-cfg-1`, `mdb-cfg-2`, and `mdb-cfg-3`) on port 27019. Create `/mongodb/data/configdb` with `mongodb` ownership and 700 permissions first:
 +
@@ -66,6 +66,7 @@ The following operations configure the sharded cluster and add two shards to it.
 +
 ----
 [mongodb@mdb-ms-1 ~]$ mongo mdb-srv-1:27018/admin
+> var cfg = { _id: "shard1", members: [ { _id: 0, host: "mdb-srv-1:27018" }, { _id: 1, host: "mdb-srv-10:27018" }, { _id: 2, host: "mdb-srv-11:27018" } ] };
 > rs.initiate(cfg);
 ----
 . Check the replica set status from the shard member:
