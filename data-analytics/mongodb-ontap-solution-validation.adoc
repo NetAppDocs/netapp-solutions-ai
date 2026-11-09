@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap-solution-validation.html
 keywords: mongodb, snap creator, snapshot, flexclone, snapmirror, disaster recovery, ycsb, deduplication, compression, certification
-summary: This page describes how the solution was validated: cluster build, backup and restore, cloning, replication and disaster recovery, YCSB performance, and inline efficiency.
+summary: This page describes how the solution was validated, including the cluster build, backup and restore, cloning, replication and disaster recovery, YCSB performance, and inline efficiency.
 ---
 
 = Solution validation

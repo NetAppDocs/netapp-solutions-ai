@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap-use-cases.html
 keywords: mongodb, atlas, ops manager, digital advisor, snapcenter, use cases
-summary: This page describes two customer use cases: serving Digital Advisor from MongoDB Atlas, and enterprise MongoDB backup and recovery with Ops Manager and NetApp SnapCenter.
+summary: This page describes two customer use cases, serving Digital Advisor from MongoDB Atlas and enterprise MongoDB backup and recovery with Ops Manager and NetApp SnapCenter.
 ---
 
 = Customer use cases
