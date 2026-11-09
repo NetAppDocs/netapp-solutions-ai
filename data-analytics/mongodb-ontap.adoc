@@ -781,11 +781,11 @@ The following operations configure the sharded cluster and add two shards to it.
 +
 ----
 [root@mdb-srv-1 ~]# mkdir -p /mongodb/data
-[root@mdb-srv-1 ~]# mkdir -p /data/db
+[root@mdb-srv-1 ~]# mkdir -p /data/db_wt
 [root@mdb-srv-1 ~]# chown -R mongodb:mongodb /mongodb
 [root@mdb-srv-1 ~]# chown -R mongodb:mongodb /data
 [root@mdb-srv-1 ~]# chmod -R 700 /mongodb
-[mongodb@mdb-srv-1 ~]$ mongod --replSet shard1/mdb-srv-10,mdb-srv-11 --journal --rest --shardsvr --fork --logpath /mongodb/data/mongod.log
+[mongodb@mdb-srv-1 ~]$ mongod --replSet shard1/mdb-srv-10,mdb-srv-11 --journal --rest --shardsvr --fork --storageEngine wiredTiger --dbpath /data/db_wt --logpath /mongodb/data/mongod.log --directoryperdb
 ----
 . Start the config servers (`mdb-cfg-1`, `mdb-cfg-2`, and `mdb-cfg-3`) on port 27019. Create `/mongodb/data/configdb` with `mongodb` ownership and 700 permissions first:
 +
