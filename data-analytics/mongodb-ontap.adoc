@@ -188,12 +188,12 @@ The WiredTiger storage engine does not require an `fsync` and write lock on ever
 
 ==== Snap Creator backup
 
-Snap Creator is a flexible framework that can run MongoDB-specific quiesce and unquiesce scripts before and after it creates the NetApp Snapshot backup. The size of the database does not affect the NetApp Snapshot backup, which takes only seconds to create.
+Snap Creator is a flexible framework that can run MongoDB-specific quiesce and unquiesce commands before and after it creates the NetApp Snapshot backup. The size of the database does not affect the NetApp Snapshot backup, which takes only seconds to create.
 
 We followed this procedure to configure Snap Creator for our testing:
 
 . Install the Snap Creator server in the Snap Creator VM.
-. Install the Snap Creator agent on the MongoDB router or application server. The Snap Creator server communicates with the MongoDB database through the Snap Creator agent, which communicates with MongoDB as a client. The same mechanism runs the Python scripts for the quiesce and unquiesce operations on the MongoDB database.
+. Install the Snap Creator agent and `mongosh` on the MongoDB router or application server that you will configure as the agent. The Snap Creator server runs the commands below through the agent, which connects to MongoDB as a client.
 . In the Snap Creator UI, create the MongoDB profile and configure the following settings:
 .. Set the plug-in type to *None*.
 .. Configure the Snap Creator agent on one of the MongoDB application servers.
@@ -214,17 +214,17 @@ We followed this procedure to configure Snap Creator for our testing:
 .. Provide the application quiesce command:
 +
 ----
-APP_QUIESCE_CMD01=/usr/bin/python2.7 /usr/local/bin/wait-for-cleared-locks.py mdb-ms-1 27017
+APP_QUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.stopBalancer()'
 ----
 .. Provide the application unquiesce command:
 +
 ----
-APP_UNQUIESCE_CMD01=/usr/bin/python2.7 /usr/local/bin/start-balancer.py mdb-ms-1 27017
+APP_UNQUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
 ----
 .. Provide the pre-exit command:
 +
 ----
-PRE_EXIT_CMD01=/usr/bin/python2.7 /usr/local/bin/start-balancer.py mdb-ms-1 27017
+PRE_EXIT_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
 ----
 
 The following figure shows the Snap Creator backup operation for the MongoDB database.
@@ -755,7 +755,7 @@ This report also describes two customer use cases: serving Digital Advisor from 
 
 == Appendix: Quiesce and balancer commands
 
-The validation used Python 2.7 scripts on the MongoDB application servers (copied to `/usr/local/bin`) as Snap Creator quiesce, unquiesce, and pre-exit commands. The scripts used an early PyMongo release that provides the `Connection` class. Python 2 and `Connection` are no longer supported. For current MongoDB releases, port the scripts to Python 3 and `MongoClient`, or use the following `mongosh` commands directly:
+The validation used Python 2.7 scripts on the MongoDB application servers as Snap Creator quiesce, unquiesce, and pre-exit commands; those scripts are not included. To avoid that dependency, configure the hooks with the `mongosh` commands in <<Snap Creator backup>>. Install `mongosh` on the Snap Creator agent host, and adapt the host, port, and authentication options for your deployment. The validation scripts used an early PyMongo release that provides the `Connection` class; Python 2 and `Connection` are no longer supported.
 
 [cols="35%,65%",options="header"]
 |===
