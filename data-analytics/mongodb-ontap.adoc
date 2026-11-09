@@ -360,7 +360,7 @@ To validate disaster recovery:
 .. Create a FlexClone volume from the destination volume.
 .. Mount the primary and secondary database volumes on the appropriate operating system instances.
 .. Start the config servers, the primary and secondary sharding servers, and the application or query server `mongod` and `mongos` processes by using the init script or CLI commands.
-.. Verify that the database and documents are present up to the SnapMirror break point, and that the new disaster recovery database is still writable.
+.. Verify that the database and documents are present up to the last successfully replicated Snapshot copy, and that the new disaster recovery database is still writable. Record the last transfer time to determine the recovery point.
 
 == Performance and certification validation
 
