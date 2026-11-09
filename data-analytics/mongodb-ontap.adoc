@@ -319,8 +319,8 @@ image:mongodb-ontap-009.png[VMware datastore created from a cloned database volu
 -rw------- 1 root root 475 Nov 22 17:51 mdb-srv-1.vmdk
 [root@stlrx300s8-9:/vmfs/volumes/24631f70-b7e80cce/mdb-srv-1] rm -fr .lck-be546*
 ----
-. Power on the cloned VMs.
-. Change the IP addresses of the cloned hosts and update `/etc/hosts`. NetApp recommends that cloned VMs use the same host names with different IP addresses.
+. Before powering on any cloned VM, attach its network adapter to an isolated port group that cannot reach the production MongoDB hosts.
+. Power on the cloned VMs and use the VM console to assign new IP addresses and update `/etc/hosts` for all cloned members before starting MongoDB. Retain the host names only within the isolated clone network.
 . Restart the MongoDB config, application, and replica set or sharding servers with the new IP addresses from the cloned VMs.
 
 This procedure creates a working cloned copy of the production MongoDB database. The clone is isolated, so you can use it for writes, troubleshooting, development, or test. Because its storage is based on FlexClone technology, the process uses no additional storage.
