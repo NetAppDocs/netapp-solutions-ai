@@ -1,0 +1,62 @@
+---
+sidebar: sidebar
+permalink: data-analytics/mongodb-ontap-solution-design.html
+keywords: mongodb, sharded cluster, mongos, config server, storage layout, aff-a30
+summary: This page describes the MongoDB sharded-cluster architecture, the validated architecture, and the storage layout on NetApp AFF.
+---
+
+= Solution design
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This page describes the MongoDB architecture, including its components and layout, followed by the validated architecture and the storage architecture used in this solution.
+
+== MongoDB architecture
+
+Sharding, or horizontal scaling, divides a dataset and distributes it across multiple servers, or shards. Each shard is an independent database, and together the shards make up a single logical database. The following figure shows how the shards of a collection can be spread across multiple servers.
+
+.Shards spread across multiple servers
+image:mongodb-ontap-002.png[Diagram showing a collection divided into shards that are spread across multiple servers.]
+
+Shards store the data. In a production sharded cluster, each shard is a replica set, which provides high availability and data consistency.
+
+Query routers, or `mongos` instances, interface with client applications and direct operations to the appropriate shard or shards. A client sends requests to a `mongos`, which routes the operations to the shards and returns the results to the client. A sharded cluster can contain more than one `mongos` to divide the client request load, and most sharded clusters have more than one.
+
+Configuration servers (config servers) store the cluster's metadata, which maps the cluster's dataset to the shards. The query router uses this metadata to target operations to specific shards, as the following figure shows.
+
+.Query routers (mongos instances) using metadata to route data to shards
+image:mongodb-ontap-003.png[Diagram showing mongos query routers using config server metadata to route operations to shards.]
+
+[NOTE]
+Starting in MongoDB 3.2, config servers for sharded clusters can be deployed as a replica set, which must run the WiredTiger storage engine. MongoDB 3.4 removed mirrored config servers, so current MongoDB versions require config servers to be deployed as a replica set.
+
+== Validated architecture
+
+This solution uses a MongoDB sharded cluster that is virtualized on VMware vSphere 6. Following the MongoDB recommendation for a production setup, we deployed a sharded cluster of two shards during testing. Each shard holds a subset of a collection's data, and each shard is a replica set. The cluster also uses three config servers and two query routers (`mongos` instances), and MongoDB is configured with the WiredTiger storage engine. WiredTiger manages how data is stored, both in memory and on disk, and creates the data files in the `--dbpath` or `storage.dbPath` location.
+
+For more information, see the MongoDB documentation for link:https://www.mongodb.com/docs/manual/core/wiredtiger/[WiredTiger Storage Engine^] and link:https://docs.mongodb.org/manual/core/sharded-cluster-architectures-production/[Production Cluster Architecture^].
+
+== Storage architecture
+
+Six NFS datastores, which are NetApp volumes accessed through the NFS protocol, are provisioned on the NetApp AFF-A30 all-flash array. The NetApp Virtual Storage Console (VSC) plug-in for VMware vCenter is used to host the various components of the architecture. The following table lists these components.
+
+.Components of the solution architecture
+[cols="10%,35%,20%,15%,20%",options="header"]
+|===
+|Serial number |NetApp volume |MongoDB role |Number of servers with this role |VMware provisioning
+|1 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Query/router servers |2 |Eager zero thick (.vmdk)
+|2 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Config servers |3 |Eager zero thick (.vmdk)
+|3 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Primary shard servers |2 |Eager zero thick (.vmdk)
+|4 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Secondary shard servers |4 |Eager zero thick (.vmdk)
+|5 |Primary databases volumes (for example, `vol_mdbdata_p_01` and `vol_mdbdata_p_02`) |Primary shard database servers |2 |Eager zero thick (.vmdk)
+|6 |Secondary databases volumes (for example, `vol_mdbdata_s_01` for the first sharding secondary servers and `vol_mdbdata_s_02` for the second sharding secondary servers) |Secondary shard database servers |4 |Eager zero thick (.vmdk)
+|===
+
+The following figure shows the storage layout.
+
+.Storage layout on NetApp AFF-A30
+image:mongodb-ontap-004.png[Diagram of the volume and datastore layout for the MongoDB VMs and databases on the AFF-A30.]

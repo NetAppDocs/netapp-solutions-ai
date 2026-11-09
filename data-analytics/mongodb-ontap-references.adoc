@@ -1,0 +1,53 @@
+---
+sidebar: sidebar
+permalink: data-analytics/mongodb-ontap-references.html
+keywords: mongodb, references, acknowledgements, additional information
+summary: This page acknowledges the contributors to this report and lists references and additional information.
+---
+
+= Acknowledgements and references
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This page acknowledges the contributors to this report and lists where to find additional information.
+
+== Acknowledgements
+
+The authors thank the following people for their contributions to this report:
+
+* Sheena Badani, Director, Technology and VAR Partners, MongoDB
+* Nilesh Bagad, Senior Product Manager, Big Data Analytics, NetApp
+* Scott Lane, Senior Manager, Workload Engineering, NetApp
+* Chris Lemmons, Director, DSG Technical Marketing for Business Processing Workloads, NetApp
+* Sathish Thyagarajan, Technical Marketing Engineer, AI/Data Pipeline Team, NetApp
+* Kevin Hoke, Director, Solutions Engineering, NetApp
+* Saji Joseph, Director, SW Engineering, NetApp
+* Ross Ackerman, Sr Director of Customer Experience, NetApp
+* Mark Kwasnick, Software Architect, Active IQ Analytics, NetApp
+* Dinaharan Ayyalusamy, Senior DevOps Engineer, Developer Platform Engineering, NetApp
+* Jeffrey Gonzales, Principal Solutions Engineer, NetApp
+* AJ Mahajan, Senior Director, Solutions Engineering, NetApp
+* Rodrigo Nascimento, Technical Director, Vortex TI
+
+== References
+
+To learn more about the information described in this document, review the following documents and websites:
+
+* link:https://www.mongodb.com/docs/manual/core/introduction/[Introduction to MongoDB^]
+* link:https://www.mongodb.com/docs/manual/[The MongoDB Manual^]
+* link:https://www.mongodb.com/docs/manual/core/wiredtiger/[WiredTiger Storage Engine^]
+* link:https://docs.mongodb.org/manual/core/sharded-cluster-architectures-production/[Production Cluster Architecture^]
+* link:https://docs.mongodb.org/manual/reference/program/mongoperf/[mongoperf^]
+* link:https://www.mongodb.com/partners/netapp[MongoDB NetApp partner page^]
+* link:https://github.com/brianfrankcooper/YCSB/wiki[YCSB^]
+* link:http://www.netapp.com/us/products/storage-systems/all-flash-fas/[NetApp AFF^]
+* link:http://www.netapp.com/us/products/management-software/snapcreator-framework.aspx[Snap Creator Framework^]
+* link:http://www.netapp.com/us/media/ds-3618.pdf[NetApp ONTAP Cloud for Amazon Web Services^]
+* link:https://library.netapp.com/ecm/ecm_download_file/ECMP1547469[Clustered Data ONTAP 8.3 Cluster Peering Express Guide^]
+* link:http://mysupport.netapp.com/[NetApp Support^]
+
+Refer to the link:http://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)^] to validate that the exact product and feature versions described in this document are supported for your specific environment. The NetApp IMT defines the product components and versions that can be used to construct configurations that are supported by NetApp. Specific results depend on each customer's installation in accordance with published specifications.

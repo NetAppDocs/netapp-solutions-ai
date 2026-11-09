@@ -1,0 +1,94 @@
+---
+sidebar: sidebar
+permalink: data-analytics/mongodb-ontap-appendix.html
+keywords: mongodb, quiesce, balancer, sharding, commands, appendix
+summary: This appendix lists the Snap Creator quiesce and balancer scripts and the MongoDB cluster commands used in the validation.
+---
+
+= Appendix
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This appendix lists the Snap Creator quiesce and balancer scripts and the MongoDB commands used in the validation.
+
+[[quiesce-and-balancer-commands]]
+== Quiesce and balancer commands
+
+The validation used Python 2.7 scripts on the MongoDB application servers (copied to `/usr/local/bin`) as Snap Creator quiesce, unquiesce, and pre-exit commands. The scripts used an early PyMongo release that provides the `Connection` class. Python 2 and `Connection` are no longer supported. For current MongoDB releases, port the scripts to Python 3 and `MongoClient`, or use the following `mongosh` commands directly:
+
+[cols="35%,65%",options="header"]
+|===
+|Script used in the validation |Operation
+|`wait-for-cleared-locks.py` |Wait for the balancer lock to clear, and then stop the balancer. In `mongosh`, run `sh.stopBalancer()`, which also waits for any in-progress balancing round to finish.
+|`start-balancer.py` |Restart the balancer. In `mongosh`, run `sh.startBalancer()`.
+|`fsync-lock.py` |Flush writes to disk and block new writes. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncLock()`.
+|`fsync-unlock.py` |Release the write lock. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncUnlock()`.
+|===
+
+
+[[mongodb-operations]]
+== MongoDB operations
+
+The following operations configure the sharded cluster and add two shards to it. The commands and output were captured with MongoDB 3.0.7 and the legacy `mongo` shell. On current MongoDB releases, use `mongosh`, deploy the config servers as a replica set (start them with `--configsvr` and `--replSet`, and pass the replica set name to `mongos` with `--configdb`), and omit the removed `--rest` option.
+
+. Check the mounted partitions for the MongoDB database on each shard member (`mdb-srv-1`, `mdb-srv-10`, `mdb-srv-11`, `mdb-srv-2`, `mdb-srv-20`, and `mdb-srv-21`). Each member mounts an XFS file system on `/data`:
++
+----
+[mongodb@mdb-srv-1 db_wt]$ df -h /data
+[mongodb@mdb-srv-1 db_wt]$ cat /etc/fstab | grep sdb
+/dev/sdb1 /data xfs defaults 0 0
+----
+. On each shard member, create the required folders, set ownership and permissions, and start `mongod`. For the first shard, the members are `mdb-srv-1`, `mdb-srv-10`, and `mdb-srv-11`. For example, on `mdb-srv-1`:
++
+----
+[root@mdb-srv-1 ~]# mkdir -p /mongodb/data
+[root@mdb-srv-1 ~]# mkdir -p /data/db
+[root@mdb-srv-1 ~]# chown -R mongodb:mongodb /mongodb
+[root@mdb-srv-1 ~]# chown -R mongodb:mongodb /data
+[root@mdb-srv-1 ~]# chmod -R 700 /mongodb
+[mongodb@mdb-srv-1 ~]$ mongod --replSet shard1/mdb-srv-10,mdb-srv-11 --journal --rest --shardsvr --fork --logpath /mongodb/data/mongod.log
+----
+. Start the config servers (`mdb-cfg-1`, `mdb-cfg-2`, and `mdb-cfg-3`) on port 27019. Create `/mongodb/data/configdb` with `mongodb` ownership and 700 permissions first:
++
+----
+[mongodb@mdb-cfg-3 ~]$ mongod --configsvr --dbpath /mongodb/data/configdb --port 27019 --fork --logpath /mongodb/data/arbiter.log
+----
+. Start the `mongos` process on each application server (`mdb-ms-1` and `mdb-ms-2`), and verify that it is listening on port 27017:
++
+----
+[mongodb@mdb-ms-1 ~]$ mongos --configdb mdb-cfg-1:27019,mdb-cfg-2:27019,mdb-cfg-3:27019 --logpath /mongodb/data/mongos.log --fork --port 27017
+----
+. Connect to the shard primary (`mdb-srv-1`) from the application server, and initiate the replica set with `rs.initiate(cfg)`:
++
+----
+[mongodb@mdb-ms-1 ~]$ mongo mdb-srv-1:27018/admin
+> rs.initiate(cfg);
+----
+. Check the replica set status from the shard member:
++
+----
+[mongodb@mdb-srv-1 ~]$ mongo --host mdb-srv-1 --port 27018
+shard1:PRIMARY> rs.printReplicationInfo()
+PRIMARY> rs.status()
+----
+. Add the first shard from the application server. If you add the same shard again from another application server, MongoDB reports that the shard already exists:
++
+----
+[mongodb@mdb-ms-1 ~]$ mongo mdb-ms-1:27017/admin
+mongos> db.adminCommand( { addShard : "shard1/mdb-srv-1:27018,mdb-srv-10:27018,mdb-srv-11:27018" } )
+----
+. Check the sharding status:
++
+----
+mongos> sh.status();
+----
+. Add the second shard. Prepare `mdb-srv-2`, `mdb-srv-20`, and `mdb-srv-21` the same way as the first shard, initiate its replica set, and add it:
++
+----
+mongos> db.adminCommand( { addShard : "shard2/mdb-srv-2:27018,mdb-srv-20:27018,mdb-srv-21:27018" } )
+----
+. Run `sh.status()` again to confirm that both shards (`shard1` and `shard2`) are listed. The databases that you load are then spread across the sharded cluster.
