@@ -224,7 +224,7 @@ APP_UNQUIESCE_CMD01=/usr/bin/python2.7 /usr/local/bin/start-balancer.py mdb-ms-1
 .. Provide the pre-exit command:
 +
 ----
-PRE_EXIT_CMD01=/usr/bin/python2.7 /usr/local/bin/wait-for-cleared-locks.py mdb-ms-1 27017
+PRE_EXIT_CMD01=/usr/bin/python2.7 /usr/local/bin/start-balancer.py mdb-ms-1 27017
 ----
 
 The following figure shows the Snap Creator backup operation for the MongoDB database.
