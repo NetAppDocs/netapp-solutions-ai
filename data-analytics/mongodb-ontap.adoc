@@ -762,8 +762,8 @@ The validation used Python 2.7 scripts on the MongoDB application servers as Sna
 |Script used in the validation |Operation
 |`wait-for-cleared-locks.py` |Wait for the balancer lock to clear, and then stop the balancer. In `mongosh`, run `sh.stopBalancer()`, which also waits for any in-progress balancing round to finish.
 |`start-balancer.py` |Restart the balancer. In `mongosh`, run `sh.startBalancer()`.
-|`fsync-lock.py` |Flush writes to disk and block new writes. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncLock()`.
-|`fsync-unlock.py` |Release the write lock. Required only for the MMAPv1 storage engine. In `mongosh`, run `db.fsyncUnlock()`.
+|`fsync-lock.py` |Flush writes to disk and block new writes when the backup requires quiescing, including WiredTiger data and journal on separate volumes without a consistency-group Snapshot. In `mongosh`, run `db.fsyncLock()` on each member being backed up.
+|`fsync-unlock.py` |Release each write lock acquired for the backup, including after a failure. In `mongosh`, run `db.fsyncUnlock()`.
 |===
 
 == Appendix: MongoDB operations
