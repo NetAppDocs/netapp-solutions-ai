@@ -92,4 +92,4 @@ mongos> sh.status();
 ----
 mongos> db.adminCommand( { addShard : "shard2/mdb-srv-2:27018,mdb-srv-20:27018,mdb-srv-21:27018" } )
 ----
-. Run `sh.status()` again to confirm that both shards (`shard1` and `shard2`) are listed. The databases that you load are then spread across the sharded cluster.
+. Run `sh.status()` again to confirm that both shards (`shard1` and `shard2`) are listed. Adding shards does not automatically distribute collection data. For the MongoDB 3.0.7 configuration shown here, enable sharding on the database with `sh.enableSharding()`, select an appropriate shard key and create any required index, and shard each intended collection with `sh.shardCollection()`.
