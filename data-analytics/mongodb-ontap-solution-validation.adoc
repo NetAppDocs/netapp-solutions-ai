@@ -185,7 +185,7 @@ image:mongodb-ontap-009.png[VMware datastore created from a cloned database volu
 . Power on the cloned VMs and use the VM console to assign new IP addresses and update `/etc/hosts` for all cloned members before starting MongoDB. Retain the host names only within the isolated clone network.
 . Restart the MongoDB config, application, and replica set or sharding servers with the new IP addresses from the cloned VMs.
 
-This procedure creates a working cloned copy of the production MongoDB database. The clone is isolated, so you can use it for writes, troubleshooting, development, or test. Because its storage is based on FlexClone technology, the process uses no additional storage.
+This procedure creates a working cloned copy of the production MongoDB database. The clone is isolated, so you can use it for writes, troubleshooting, development, or test. FlexClone shares unchanged blocks with the parent Snapshot copy, avoiding an initial full data copy. New and modified blocks consume additional storage, so reserve capacity for clone growth.
 
 == Replicate to ONTAP in AWS for disaster recovery
 
