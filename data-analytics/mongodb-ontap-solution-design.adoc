@@ -36,27 +36,29 @@ Starting in MongoDB 3.2, config servers for sharded clusters can be deployed as 
 
 == Validated architecture
 
-This solution uses a MongoDB sharded cluster that is virtualized on VMware vSphere 6. Following the MongoDB recommendation for a production setup, we deployed a sharded cluster of two shards during testing. Each shard holds a subset of a collection's data, and each shard is a replica set. The cluster also uses three config servers and two query routers (`mongos` instances), and MongoDB is configured with the WiredTiger storage engine. WiredTiger manages how data is stored, both in memory and on disk, and creates the data files in the `--dbpath` or `storage.dbPath` location.
+This solution uses a MongoDB sharded cluster that is virtualized on VMware vSphere. Following the MongoDB recommendation for a production setup, we deployed a sharded cluster of two shards during testing. Each shard holds a subset of a collection's data, and each shard is a replica set. The cluster also uses three config servers and two query routers (`mongos` instances), and MongoDB is configured with the WiredTiger storage engine. WiredTiger manages how data is stored, both in memory and on disk, and creates the data files in the `--dbpath` or `storage.dbPath` location.
 
 For more information, see the MongoDB documentation for link:https://www.mongodb.com/docs/manual/core/wiredtiger/[WiredTiger Storage Engine^] and link:https://docs.mongodb.org/manual/core/sharded-cluster-architectures-production/[Production Cluster Architecture^].
 
 == Storage architecture
 
-Six NFS datastores, which are NetApp volumes accessed through the NFS protocol, are provisioned on the NetApp AFF-A30 all-flash array. The NetApp Virtual Storage Console (VSC) plug-in for VMware vCenter is used to host the various components of the architecture. The following table lists these components.
+Six NFS datastores, which are NetApp volumes accessed through NFS version 3 (NFSv3), are provisioned on the NetApp AFF-A30 all-flash array. The NetApp SnapCenter Plug-in for VMware vSphere (SCV) is used to host the various components of the architecture. The following table lists these components.
 
 .Components of the solution architecture
 [cols="10%,35%,20%,15%,20%",options="header"]
 |===
-|Serial number |NetApp volume |MongoDB role |Number of servers with this role |VMware provisioning
-|1 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Query/router servers |2 |Eager zero thick (.vmdk)
-|2 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Config servers |3 |Eager zero thick (.vmdk)
-|3 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Primary shard servers |2 |Eager zero thick (.vmdk)
-|4 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Secondary shard servers |4 |Eager zero thick (.vmdk)
-|5 |Primary databases volumes (for example, `vol_mdbdata_p_01` and `vol_mdbdata_p_02`) |Primary shard database servers |2 |Eager zero thick (.vmdk)
-|6 |Secondary databases volumes (for example, `vol_mdbdata_s_01` for the first sharding secondary servers and `vol_mdbdata_s_02` for the second sharding secondary servers) |Secondary shard database servers |4 |Eager zero thick (.vmdk)
+|Serial number |NetApp volume |MongoDB role |Number of servers with this role |Virtual disk format used in validation
+|1 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Query/router servers |2 |Eager zeroed thick (.vmdk)
+|2 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Config servers |3 |Eager zeroed thick (.vmdk)
+|3 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Primary shard servers |2 |Eager zeroed thick (.vmdk)
+|4 |Operating system images volumes (for example, `vol_vmOS_01` and `vol_vmOS_02`), shared by all operating systems |Secondary shard servers |4 |Eager zeroed thick (.vmdk)
+|5 |Primary databases volumes (for example, `vol_mdbdata_p_01` and `vol_mdbdata_p_02`) |Primary shard database servers |2 |Eager zeroed thick (.vmdk)
+|6 |Secondary databases volumes (for example, `vol_mdbdata_s_01` for the first sharding secondary servers and `vol_mdbdata_s_02` for the second sharding secondary servers) |Secondary shard database servers |4 |Eager zeroed thick (.vmdk)
 |===
 
-The following figure shows the storage layout.
+The validation used eager zeroed thick virtual disks, which allocate and zero the full disk when it is created instead of on the first write. This avoids first-write latency while the MongoDB data files grow and keeps write latency consistent. The format is not a MongoDB requirement. On ONTAP, storage efficiency keeps the space cost of zeroed blocks low, and you can evaluate thin provisioning for your environment.
+
+The following figure shows the storage layout. NFS datastore traffic runs over two Ethernet switches for redundancy. For new deployments, use 25GbE or faster networking.
 
 .Storage layout on NetApp AFF-A30
 image:mongodb-ontap-004.png[Diagram of the volume and datastore layout for the MongoDB VMs and databases on the AFF-A30.]

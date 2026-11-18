@@ -15,6 +15,9 @@ summary: This page describes how the solution was validated, including the clust
 [.lead]
 This page describes how we validated the end-to-end solution, focusing on the key benefits listed in the xref:mongodb-ontap.html[Introduction].
 
+[NOTE]
+We validated the backup, restore, and cloning procedures on this page with NetApp Snap Creator. NetApp SnapCenter is the recommended tool for new deployments, and the same ONTAP Snapshot, SnapRestore, FlexClone, and SnapMirror operations apply. Adapt the steps if you use the SnapCenter MongoDB plug-in or ONTAP REST API scripts. For more information, see xref:mongodb-ontap-solution-overview.html#snapcenter[NetApp SnapCenter].
+
 == Build the MongoDB sharded cluster
 
 Deploying the MongoDB sharded cluster involves the following tasks:
@@ -155,6 +158,9 @@ Snap Creator enables you to build preproduction or development environments from
 
 The following example clones all databases across all shard servers into new shard servers. In this example, the operating system volumes are also cloned.
 
+[NOTE]
+The VMware screenshots and menu paths in this procedure come from an earlier VMware vSphere and ESXi release. The screens and menu names are different in current VMware vSphere and ESXi releases. The steps are the same, so follow the VMware documentation for your version.
+
 . Create the Snap Creator profile for the database volumes and for the operating system volumes.
 +
 image:mongodb-ontap-007.png[Snap Creator profile for the database and operating system volumes.]
@@ -187,22 +193,22 @@ image:mongodb-ontap-009.png[VMware datastore created from a cloned database volu
 
 This procedure creates a working cloned copy of the production MongoDB database. The clone is isolated, so you can use it for writes, troubleshooting, development, or test. FlexClone shares unchanged blocks with the parent Snapshot copy, avoiding an initial full data copy. New and modified blocks consume additional storage, so reserve capacity for clone growth.
 
-== Replicate to ONTAP in AWS for disaster recovery
+== Replicate to Amazon FSx for NetApp ONTAP for disaster recovery
 
-NetApp ONTAP Cloud for AWS is a software-only storage appliance that runs the NetApp clustered Data ONTAP operating system in the cloud. ONTAP Cloud manages general-purpose Amazon Elastic Block Store (GP2 EBS) volumes with ONTAP and adds enterprise-class features on top of EBS. This configuration provides NFS, CIFS, and iSCSI protocol support and a rich feature set that improves the management and efficiency of your storage. It also gives you access to industry-leading technologies such as NetApp SnapMirror and NetApp SnapVault data replication, which provide seamless connectivity for hybrid cloud resources.
+Amazon FSx for NetApp ONTAP is a fully managed AWS service that runs NetApp ONTAP. AWS operates the file system and the underlying infrastructure, and you get the same ONTAP data management that the on-premises AFF array provides. FSx for ONTAP supports NFS, SMB, and iSCSI access, and it includes Snapshot copies, FlexClone volumes, storage efficiency, and SnapMirror replication. Because it is ONTAP, you can replicate the MongoDB volumes from the on-premises AFF array to FSx for ONTAP with SnapMirror and use it as the disaster recovery target.
 
-In the original validation, ONTAP Cloud was launched and managed through NetApp OnCommand Cloud Manager, a web front end for deploying and managing the AWS public cloud resources associated with ONTAP Cloud. It provides an interface for activities such as deploying ONTAP Cloud working environments, allocating additional AWS EBS storage, and creating NetApp flexible volumes.
+You create and manage the file system by using the AWS Management Console, the AWS CLI, or the AWS API. You manage the ONTAP resources, such as storage virtual machines, volumes, and SnapMirror relationships, with the ONTAP CLI, ONTAP REST API, ONTAP System Manager, or NetApp Console.
 
 [NOTE]
-ONTAP Cloud is now Cloud Volumes ONTAP, and OnCommand Cloud Manager is now NetApp Console (formerly BlueXP). The screens and steps in this section reflect the original validation. See xref:mongodb-ontap-solution-overview.html#cloud-volumes-ontap-and-fsx[Cloud Volumes ONTAP and Amazon FSx for NetApp ONTAP] and xref:mongodb-ontap-solution-overview.html#netapp-console[NetApp Console] for the current products.
+The screenshots in this section come from the original validation, which used a software-based ONTAP instance in AWS and its web console. The SnapMirror steps are the same with FSx for ONTAP, but the screens are different. For more information, see xref:mongodb-ontap-solution-overview.html#amazon-fsx-for-ontap[Amazon FSx for NetApp ONTAP].
 
 == Disaster recovery validation to the cloud
 
-This solution protects MongoDB data by using SnapMirror to replicate it into ONTAP in the cloud. Replication requires the following tasks:
+This solution protects MongoDB data by using SnapMirror to replicate it to Amazon FSx for NetApp ONTAP. Network connectivity between the on-premises cluster and the VPC, such as a VPN or AWS Direct Connect, must allow intercluster traffic. Replication requires the following tasks:
 
-. In the management console, record the IP address of the intercluster LIF for the cloud ONTAP instance.
+. In the Amazon FSx console, open the file system and record the intercluster endpoint IP addresses.
 . Create a cluster peer relationship on the on-premises ONTAP cluster.
-. Create the peer relationship on the cloud ONTAP instance.
+. Create the peer relationship on the FSx for ONTAP file system.
 . Configure and initialize a SnapMirror relationship.
 
 The following figures show the replicated MongoDB database as viewed from NetApp OnCommand System Manager and from the cloud management console.
@@ -217,8 +223,8 @@ To validate disaster recovery:
 
 . Verify that the SnapMirror status is `snapmirrored` and the relationship status is `healthy`.
 . Enable disaster recovery for the SnapMirror relationship:
-.. Build a Linux operating system VM instance on AWS and install the MongoDB database on it, just as on the production database.
-.. In the cloud ONTAP storage, quiesce and break the SnapMirror relationship.
+.. Build a Linux operating system instance on Amazon EC2 and install the MongoDB database on it, just as on the production database.
+.. On the FSx for ONTAP file system, quiesce and break the SnapMirror relationship.
 .. Create a FlexClone volume from the destination volume.
 .. Mount the primary and secondary database volumes on the appropriate operating system instances.
 .. Start the config servers, the primary and secondary sharding servers, and the application or query server `mongod` and `mongos` processes by using the init script or CLI commands.
@@ -232,9 +238,15 @@ To validate the interoperability of NetApp storage with MongoDB, we completed th
 
 With this configuration, the NetApp storage system passed all MongoDB certification tests and was listed as a MongoDB certified platform at the time of testing. For more information, see the link:https://www.mongodb.com/partners/netapp[MongoDB NetApp partner page^]. Check that page for the current certification status.
 
+[NOTE]
+The certification used a physical server connected to the AFF-A30 over Fibre Channel, which is block storage. It does not cover the NFS datastore design that hosts the MongoDB VMs in the xref:mongodb-ontap-solution-design.html[solution design].
+
 In addition to certification testing, we validated MongoDB performance with NetApp storage by using the YCSB test framework.
 
 === Performance validation with YCSB
+
+[NOTE]
+The YCSB tests ran on three physical servers that use Fibre Channel LUNs, not on the virtualized, NFS-based configuration in the xref:mongodb-ontap-solution-design.html[solution design]. The results show what the AFF-A30 can deliver to MongoDB under heavy load, and they are not a measurement of the NFS datastore design. Test your own configuration and protocol to size a deployment.
 
 Yahoo! Cloud Serving Benchmark (YCSB) is a framework and a common set of workloads for evaluating the performance of different key-value and cloud serving stores. It has two components:
 

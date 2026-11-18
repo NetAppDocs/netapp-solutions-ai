@@ -46,7 +46,6 @@ To learn more about the information described in this document, review the follo
 * link:https://github.com/brianfrankcooper/YCSB/wiki[YCSB^]
 * link:http://www.netapp.com/us/products/storage-systems/all-flash-fas/[NetApp AFF^]
 * link:http://www.netapp.com/us/products/management-software/snapcreator-framework.aspx[Snap Creator Framework^]
-* link:http://www.netapp.com/us/media/ds-3618.pdf[NetApp ONTAP Cloud for Amazon Web Services^]
 * link:https://library.netapp.com/ecm/ecm_download_file/ECMP1547469[Clustered Data ONTAP 8.3 Cluster Peering Express Guide^]
 * link:http://mysupport.netapp.com/[NetApp Support^]
 

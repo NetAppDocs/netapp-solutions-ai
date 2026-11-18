@@ -19,18 +19,18 @@ This page describes two use cases that show how the MongoDB and NetApp pattern i
 
 === Overview
 
-NetApp Digital Advisor turns AutoSupport telemetry from ONTAP, E-Series, and StorageGRID systems into risks, capacity forecasts, and upgrade advice. NetApp serves that information to customers, partners, and NetApp staff from a MongoDB Atlas database on AWS. Heavy analytics stay on-premises. Prepared results are copied into Atlas, and an API layer reads them with access rules applied to every query.
+Digital Advisor serves risk, capacity, and upgrade advice to customers, partners, and NetApp staff from MongoDB Atlas on AWS. Because Atlas holds pre-built documents with the access rules on each one, pages load without waiting on analytics, each audience sees only its own data, and user actions survive a node failure.
 
-=== Problem and requirements
+=== Why MongoDB
 
-.Challenges and requirements for serving Digital Advisor from MongoDB Atlas
-[cols="31%,35%,34%",options="header"]
+.What MongoDB provides to Digital Advisor
+[cols="40%,60%",options="header"]
 |===
-|Challenge |Requirement |Value to the customer
-|*Latency.* Analytics stores are built for batch work, so nothing on the request path may depend on them. |*Fast reads.* Join systems, clusters, volumes, and risks in one round trip. |Dashboards load without waiting on analytics.
-|*Many data sources.* Dozens of feeds describe one system, on different schedules. |*Many writers, one document.* Each job updates only its own fields. |Each source refreshes on its own schedule.
-|*Access control.* Customers, partners, and staff must each see only their own scope. |*Entitlement on every query,* built into query construction. |Each audience sees the right data.
-|*User state.* Acknowledgements and preferences exist only in the serving store. |*Durability.* Majority writes, backups, and point-in-time recovery. |An action made today survives a failover.
+|MongoDB capability |What Digital Advisor gets
+|Flexible documents with indexes |Fast reads that join systems, volumes, and risks in one query.
+|Upserts into one collection from many jobs |Each source refreshes on its own schedule.
+|Access fields on each document |A scoped view for each audience.
+|Majority writes and point-in-time recovery |Acknowledgements and mitigations persist through a failover.
 |===
 
 === Solution
@@ -41,53 +41,18 @@ image:mongodb-ontap-025.png[Architecture of the Digital Advisor serving layer on
 The data flows through the following steps:
 
 . Installed systems upload AutoSupport telemetry to NetApp.
-. The data is prepared in an on-premises data lake and exposed as virtual datasets.
-. Scheduled refresh jobs read one dataset each and bulk-upsert into one Atlas collection with majority write concern.
+. An on-premises data lake prepares the data and exposes it as virtual datasets.
+. Scheduled refresh jobs bulk-upsert each dataset into one Atlas collection with majority write concern.
 . An API layer on AWS reads Atlas, adds the access filter to every query, and serves Digital Advisor users.
 . A separate authorizer service reads only the role, user, and token collections to build the user profile.
 
-Three planes keep ownership clear:
-
-* The *control plane* is one reviewed code repository that defines validators, indexes, and views.
-* The *write plane* fills the database, and each writer sets only the fields it owns.
-* The *read plane* serves the data and enforces access rules.
-
-Every collection uses the same document envelope: keys, configuration attributes (including access fields), parent references for joins, and source metadata. Most collections are projections that the refresh jobs can rebuild. A smaller set is user state that exists only in Atlas.
-
-=== Benefits to the customer
-
-.Benefits for people using Digital Advisor
-[cols="26%,74%",options="header"]
-|===
-|Benefit |What changes for the person using Digital Advisor
-|*Speed* |Pages read pre-built documents, so response time does not depend on analytic load.
-|*Trust* |Access fields sit on each document, so each audience gets a scoped view.
-|*Quality* |Strict schema validation keeps bad records away from customer screens.
-|*Continuity* |Acknowledgements and mitigations persist when a node fails.
-|*Freshness* |A slow feed never holds back capacity or risk data.
-|===
-
-=== NetApp values in this design
-
-* *Customer insight first.* Every design choice serves the screen that shows a customer's risks, capacity, and upgrade advice.
-* *Data protection and stewardship.* Workloads have their own identities, and access fields are required on every document.
-* *Trusted, governed data.* Schema changes need both reader and writer review and run through automation, not by hand.
-* *Hybrid cloud by design.* Analytics stay on-premises next to the data, and the serving layer runs in the cloud.
-
 === Best practices
 
-* *Deploy in order: validator, writer, reader.* Add a field to the validator before any writer sends it.
-* *Backfill before requiring a field.* Making a field required breaks updates to documents that lack it.
+* *Use majority and retryable writes* for every writer.
 * *Declare every index in code.* Indexes added by hand can be dropped by the next deployment.
 * *Set only the leaf paths you own.* Setting a parent object erases fields that other jobs own.
-* *Upsert on the fields of a unique index,* and use `$set` for the rest.
-* *Use majority and retryable writes* for every writer.
-* *Do not let a rejected write look like success.* Fail the job above a threshold and alert on rejections.
-* *Read your own writes* from the primary or a causally consistent session when a user must see an action immediately.
 * *Page by key, not by offset,* and project only the fields you need.
 * *Back up what cannot be rebuilt,* confirm that point-in-time recovery covers user state, and test a single-collection restore.
-* *Give each writer least privilege,* and tag every client with an application name.
-* *Choose a lifecycle for every collection:* TTL, stale removal, or none with a stated reason.
 
 == Enterprise MongoDB backup and recovery with Ops Manager
 
@@ -178,7 +143,7 @@ The following table describes three ways to deploy SnapCenter. Start with patter
 
 *Recovery objectives.* A restored member that rejoins the live replica set catches up to its current state; its recovery point is not the Snapshot time. An isolated Snapshot restore recovers the captured state, whereas an Ops Manager point-in-time restore uses the snapshot and oplog to reach a chosen time. SnapRestore avoids copying data, whereas an Ops Manager restore streams the snapshot, so the recovery times differ. This report gives no measured values, so measure both paths on your own data.
 
-*Constraints.* Confirm that a MongoDB plug-in is available for your SnapCenter version, as described in xref:mongodb-ontap-solution-overview.html#snapcenter-and-snap-creator[NetApp SnapCenter and Snap Creator Framework]. If it is not, script the same operations through the ONTAP REST API. SnapCenter does not protect Kubernetes persistent volumes directly. Use NetApp Trident protect for those, and keep Ops Manager as the backup path for them.
+*Constraints.* SnapCenter protects MongoDB through the NetApp supported MongoDB plug-in, as described in xref:mongodb-ontap-solution-overview.html#snapcenter[NetApp SnapCenter]. Confirm that your MongoDB topology and versions are supported. If they are not, script the same operations through the ONTAP REST API. SnapCenter does not protect Kubernetes persistent volumes directly. Use NetApp Trident protect for those, and keep Ops Manager as the backup path for them.
 
 === Benefits to the customer
 

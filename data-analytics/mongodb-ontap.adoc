@@ -15,11 +15,9 @@ summary: This technical report describes a validated reference architecture for 
 Karthikeyan Nagalingam, NetApp
 
 [.lead]
-This reference architecture presents an end-to-end solution for efficiently deploying and protecting virtualized MongoDB on NetApp storage controllers. The solution combines NetApp storage technology with VMware vSphere: a scale-out NetApp AFF array hosts the MongoDB virtual machines and databases. The architecture delivers very high performance with consistently low latency and excellent inline storage efficiency. NetApp SnapCenter backup software creates instant, space-efficient copies of the MongoDB environment for testing, development, QA, backup, and recovery. The reference architecture also demonstrates remote replication to NetApp ONTAP in the cloud and describes two customer use cases.
+This reference architecture shows how to deploy and protect a virtualized, sharded MongoDB database on NetApp ONTAP with VMware vSphere. It gives MongoDB teams consistent low-latency performance, instant space-efficient copies for backup, recovery, dev/test and QA, and disaster recovery to ONTAP in the cloud. A scale-out NetApp AFF array hosts the MongoDB virtual machines (VMs) and databases. NetApp SnapCenter manages NetApp Snapshot copies of the MongoDB environment, and SnapMirror replicates them to the cloud. The report also describes two customer use cases: serving NetApp Digital Advisor from MongoDB Atlas, and enterprise MongoDB backup and recovery with Ops Manager.
 
 MongoDB is a popular open-source, scale-out NoSQL database. It powers modern data lake applications that require low latency for reads and writes, high availability, and advanced data management. Key use cases for MongoDB include real-time analytics, product catalogs, content management, and mobile applications.
-
-This reference architecture describes a validated, end-to-end design for deploying a virtualized, scale-out MongoDB NoSQL database on NetApp storage controllers and VMware vSphere. In this solution, the scale-out NetApp All Flash FAS (AFF) array hosts the MongoDB virtual machines (VMs) and databases. Backup and disaster recovery services are provided by NetApp ONTAP software-defined storage in Amazon AWS. The report also covers two customer use cases.
 
 The NetApp solution offers the following key benefits for deploying mission-critical MongoDB applications:
 
@@ -30,4 +28,4 @@ The NetApp solution offers the following key benefits for deploying mission-crit
 * Scalability from the scale-up and scale-out AFF array, which scales storage modularly with MongoDB.
 * Nondisruptive operations with high availability, delivering maximum uptime and consistent performance, specifically during drive failure.
 * Deployment of MongoDB in a heterogeneous environment, providing flexibility and additional cost savings.
-* Single-interface management by using Snap Creator with the MongoDB plug-in.
+* Single-interface management of backup, restore, and cloning with NetApp SnapCenter.
