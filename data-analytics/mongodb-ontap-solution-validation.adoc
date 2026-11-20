@@ -258,7 +258,7 @@ Amazon FSx for NetApp ONTAP is a fully managed AWS service that runs NetApp ONTA
 You create and manage the file system by using the AWS Management Console, the AWS CLI, or the AWS API. You manage the ONTAP resources, such as storage virtual machines, volumes, and SnapMirror relationships, with the ONTAP CLI, ONTAP REST API, ONTAP System Manager, or NetApp Console.
 
 [NOTE]
-The screenshots in this section come from the original validation, which used a software-based ONTAP instance in AWS and its web console. The SnapMirror steps are the same with FSx for ONTAP, but the screens are different. For more information, see xref:mongodb-ontap-solution-overview.html#amazon-fsx-for-ontap[Amazon FSx for NetApp ONTAP].
+The original validation used a software-based ONTAP instance in AWS and its web console. The SnapMirror steps are the same with FSx for ONTAP, but the management screens are different. For more information, see xref:mongodb-ontap-solution-overview.html#amazon-fsx-for-ontap[Amazon FSx for NetApp ONTAP].
 
 == Disaster recovery validation to the cloud
 
@@ -269,13 +269,15 @@ This solution protects MongoDB data by using SnapMirror to replicate it to Amazo
 . Create the peer relationship on the FSx for ONTAP file system.
 . Configure and initialize a SnapMirror relationship.
 
-The following figures show the replicated MongoDB database in System Manager and in the cloud management console.
+In the original validation, the SnapMirror relationship and the replication status showed the following:
 
-.Replicated MongoDB database in System Manager
-image:mongodb-ontap-010.png[System Manager view of the SnapMirror relationship that replicates the MongoDB volumes.]
+* One volume relationship, from the `n1_mdbdata_p_01` volume on the on-premises AFF cluster to a mirror volume (`mongodb_n1_mdbdata_p_01_mirror`) on the ONTAP instance in AWS.
+* A healthy relationship in the SnapMirrored state, with an idle transfer status, the `MirrorLatest` policy, and the `mongodbbackup` transfer schedule.
+* 559GB of replicated capacity, with no transfers in progress and no failed relationships.
+* The last transfer was an update with no errors, and the lag time showed how far the destination was behind the source.
+* Two environments, the on-premises AFF cluster and the ONTAP instance in AWS, with the capacity allocated on each side.
 
-.Replicated MongoDB database in the cloud management console
-image:mongodb-ontap-011.png[Cloud management console view of the replicated MongoDB volumes on ONTAP in AWS.]
+You can check the same information in the AWS console, ONTAP System Manager, or NetApp Console for your FSx for ONTAP file system.
 
 To validate disaster recovery:
 
