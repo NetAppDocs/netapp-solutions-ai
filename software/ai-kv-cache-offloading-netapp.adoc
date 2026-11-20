@@ -15,9 +15,7 @@ summary: Learn how KV cache offloading to CPU memory and shared NetApp StorageGR
 [.lead]
 The first wave of enterprise AI investment focused on model training and fine-tuning building capability, not serving it at scale. As organizations move from experimentation to production, the center of gravity shifts to real-time inference: search assistants, chatbots, copilots, and agent workflows that users interact with continuously. In these environments, GPU utilization rises quickly not because every request runs a full training pass, but because every follow-up question, every new turn in a conversation, and every concurrent user adds load to the inference stack.
 
-== Introduction
-
-A pattern soon becomes visible: the GPU is doing a surprising amount of repeated work, recomputing attention over tokens it has already processed. That repetition is not a tuning issue alone; it is a memory architecture issue. The industry’s response is a tiered memory strategy built around the KV cache.
+This guide explains how to take that load off the GPU by offloading the KV cache to a tiered memory design, and how to place the durable tier on NetApp storage. The shared tier can be StorageGRID S3, an ONTAP pNFS mount, or a NetApp Novus pNFS mount. The serving stack can be vLLM, with its built-in offloading connector or with LMCache, or SGLang with HiCache. The architecture is the same in every case. You choose the engine and the storage platform, then point the offload path at that platform.
 
 === What is KV Cache?
 
@@ -53,7 +51,7 @@ With this architecture, KV cache blocks can be staged from the shared tier into 
 --
 
 - *Economics of inference, not just speed*
-  From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows. That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
+  From a production perspective, the importance of shared storage is not only latency. It is control over memory, concurrency, and cost.Serving engines like vLLM manage KV cache efficiently inside one node. KV cache offload frameworks like LMCache turn KV cache into a portable, shareable asset that can move across CPU memory and storage. Shared storage platforms like NetApp ONTAP, NetApp Novus and StorageGRID provide the durable tier that makes that sharing practical across multiple instances. With LMCache connected to shared storage, multiple vLLM instances can access the same offloaded KV cache entries, improving throughput and reducing redundant computation as concurrency grows. That reduces wasted GPU cycles on repeated prefill directly relevant for chatbots, search assistants, agents, and any workload with multi-turn threads, shared system prompts, or recurring context patterns.
 
 - *Boost Inference Performance and GPU investment* +
 This benchmark compares inference performance as conversation length and concurrent load increase. When KV cache is kept only in GPU memory, available headroom is exhausted quickly and throughput drops (orange line). With a three-tier design (GPU for active work, CPU for fast staging, and shared storage for durable, shareable cache), the platform sustains more sessions and avoids the same steep performance decline. In practice, tiering helps you get more work from the same GPUs by reducing repeated prefill computation.
@@ -77,13 +75,25 @@ Shared storage is important, but not all shared storage is created equal. NetApp
 --
 ** *StorageGRID S3*
 ** *NFS / pNFS for ONTAP NAS*
+** *pNFS for NetApp Novus*
 
 No custom proprietary inference client is required. Operations teams can use the same storage protocols they already operate for other data services, with familiar data protection, security, and multicloud mobility behind them.
 --
 
 == Deploy KV cache offloading
 
-Shared storage extends KV cache capacity and enables reuse across serving instances. To use that tier in production, you configure an inference engine and a KV cache offloading framework. The following sections describe how to implement this stack using common tooling options.
+Shared storage extends KV cache capacity and enables reuse across serving instances. To use that tier in production, you configure an inference engine and a KV cache offloading framework.
+
+The implementation options in this section are peers. Choose the one that matches the engine your run:
++
+--
+** *LMCache in-process mode with vLLM*
+** *vLLM's native offloading connector*
+** *LMCache multiprocess mode with vLLM*
+** *SGLang HiCache*
+
+Every pNFS instruction in these options works with either ONTAP pNFS or Novus pNFS. Mount points at /mnt/kvcache, or mount Novus at /mnt/novus, and uses that path as the shared-tier directory to offload kv cache blocks. 
+--
 
 === vLLM
 
@@ -95,7 +105,7 @@ LMCache is a popular open-source KV cache offloading framework. This section des
 
 In a default setup, vLLM keeps KV cache only in GPU memory. As system load grows, that becomes the bottleneck. In this solution, vLLM is paired with LMCache where vLLM serves the model, while LMCache offloads and reuses cache across CPU and shared NetApp storage. LMCache connects to vLLM through a connector; you enable it at startup with vLLM’s --kv-transfer-config flag, so vLLM and LMCache save cache to storage and reload it on a cache hit.
 
-In-process mode is the original method of running LMCache with vLLM. When you use in-process mode, LMCache runs inside the vLLM process. Later LMCache versions added multiprocess mode, which is the currently recommended approach for better feature support and performance. This section covers in-process mode, which is marked as deprecated in current LMCache documentation. For new deployments, consider using multiprocess mode instead.
+In-process mode is the original method of running LMCache with vLLM. When you use in-process mode, LMCache runs inside the vLLM process. Later LMCache versions added multiprocess mode, which is the currently recommended approach for better feature support and performance. This section covers both in-process mode and multi-process mode.
 
 For this deployment, you will:
 
@@ -117,13 +127,20 @@ For this deployment, you will:
 - Network connectivity from the GPU server to the S3 endpoint
 - Virtual hosted-style S3 requests enabled
 
-==== ONTAP pNFS/NFS backend
+==== ONTAP or Novus pNFS backend
 
-- ONTAP volume exported to the GPU server(s)
-- Mount path created (for example, /mnt/kvcache) on *each* server that runs vLLM. Example mount command for high-performance pNFS over RDMA (RoCE):
+- An ONTAP volume or Novus export path, made available to the GPU server(s).
+- A mount path on each server that runs vLLM. This guide uses /mnt/kvcache for ONTAP and /mnt/novus for Novus export path.
+
+ Example mount command for high-performance pNFS over RDMA (RoCE):
 [source,cli]
 ----
 mount -o vers=4.1,proto=rdma,trunkdiscovery,write=eager,rsize=262144,wsize=262144 my_storage.my_company.net:/kvcache /mnt/kvcache
+----
+For Novus export path, the following mount point should be used.
+[source,cli]
+----
+mount -t nfs4 -o nfsvers=4.2,proto=tcp,rsize=1048576,wsize=1048576,port=<nfs_port> <novus_tenant_vip>:/mnt/novus
 ----
 
 === 1. Install vLLM and LMCache
@@ -178,7 +195,7 @@ extra_config:
   save_chunk_meta: false
 ----
 
-Mount the ONTAP export using your site’s NFS/pNFS procedure before Step 3.
+Mount the ONTAP or Novus export using your site’s NFS/pNFS procedure before Step 3.
 
 === 3. Run two vLLM instances (shared cache across servers)
 
@@ -257,10 +274,173 @@ curl -s http://localhost:8000/v1/chat/completions \
 - Send a similar request again - second request should show faster prefill or cache-hit behavior in logs.
 - Repeat through the router so traffic may hit the other instance.
 
+=== vLLM native offloading connector
+
+vLLM includes an offloading connector, so this path does not add a separate cache process. The connector keeps a CPU tier and writes the shared tier to the Novus directory.
+
+These instructions work with either ONTAP pNFS or Novus pNFS. Set `root_dir` to `/mnt/kvcache` for ONTAP or `/mnt/novus` for Novus. 
+
+The sample uses the Novus path.
+
+`cpu_bytes_to_use` is in bytes. The value below is 100 GB. `block_size` is 256. Increase it if you serve very long prompts.
+
+[source,cli]
+----
+PYTHONHASHSEED=0 \
+  vllm serve \
+  Qwen/Qwen3-8B \
+  --tensor-parallel-size 1 \
+  --kv-transfer-config '{
+    "kv_connector": "OffloadingConnector",
+    "kv_role": "kv_both",
+    "kv_connector_extra_config": {
+      "spec_name": "TieringOffloadingSpec",
+      "cpu_bytes_to_use": 100000000000,
+      "block_size": 256,
+      "eviction_policy": "lru",
+      "offload_prompt_only": false,
+      "secondary_tiers": [
+        {
+          "type": "fs",
+          "root_dir": "/mnt/novus",
+          "n_read_threads": 32,
+          "n_write_threads": 16
+        }
+      ]
+    }
+  }' \
+  --port 8000
+----
+For each vLLM instance on the same host, use a different CUDA_VISIBLE_DEVICES value and a distinct port. Keep PYTHONHASHSEED and root_dir the same across all vLLM instances.
+
+=== LMCache multiprocess mode
+
+LMCache multiprocess (MP) mode is the recommended way to run LMCache with vLLM. LMCache runs as a standalone service outside the vLLM process, and vLLM attaches to it with `LMCacheMPConnector`. The validated L2 backends on pNFS are `nixl_store_dynamic` and `fs_native`.
+
+These instructions work with either ONTAP pNFS or Novus pNFS. Set `file_path` or `base_path` to `/mnt/kvcache` for ONTAP or `/mnt/novus` for Novus. 
+
+The samples use the Novus path.
+
+`chunk_size` is 256. Tune it if you serve very long prompts. `--l1-size-gb 100` is the CPU tier.
+
+Start one of the two LMCache servers, then start vLLM.
+
+*Option 1: `nixl_store_dynamic` with GPUDirect Storage*
+
+Use this when the GPU servers have GPUDirect Storage available and the storage system that supports GDS.
+
+[source,cli]
+----
+PYTHONHASHSEED=0 \
+  lmcache server \
+  --host localhost \
+  --port 5555 \
+  --http-port 8080 \
+  --max-workers 8 \
+  --l1-size-gb 100 \
+  --eviction-policy LRU \
+  --l2-prefetch-max-in-flight 128 \
+  --l2-adapter '{
+    "type": "nixl_store_dynamic",
+    "backend": "GDS",
+    "backend_params": {
+      "file_path": "/mnt/novus",
+      "use_direct_io": "true",
+      "max_capacity_gb": "10000"
+    }
+  }' \
+  --chunk-size 256
+----
+
+*Option 2: fs_native. This backend uses the mounted filesystem through LMCache’s native filesystem adapter.*
+
+[source,cli]
+----
+PYTHONHASHSEED=0 \
+  lmcache server \
+  --host localhost \
+  --port 5555 \
+  --http-port 8080 \
+  --max-workers 8 \
+  --l1-size-gb 100 \
+  --eviction-policy LRU \
+  --l2-prefetch-max-in-flight 128 \
+  --l2-adapter '{
+    "type": "fs_native",
+    "base_path": "/mnt/novus",
+    "num_workers": 128
+  }' \
+  --chunk-size 256
+----
+
+Start vLLM and point the MP connector at the LMCache server:
+
+[source,cli]
+----
+PYTHONHASHSEED=0 \
+  vllm serve \
+  Qwen/Qwen3-8B \
+  --tensor-parallel-size 1 \
+  --kv-transfer-config '{
+    "kv_connector": "LMCacheMPConnector",
+    "kv_connector_module_path": "lmcache.integration.vllm.lmcache_mp_connector",
+    "kv_role": "kv_both",
+    "kv_connector_extra_config": {
+      "lmcache.mp.host": "localhost",
+      "lmcache.mp.port": 5555
+    }
+  }' \
+  --port 8000
+----
+
+On one GPU server, additional vLLM processes can use the same LMCache server at localhost:5555. Across servers, run LMCache and vLLM on each server, mount the same ONTAP volume or Novus export on each, and keep PYTHONHASHSEED=0. The shared directory is what makes a block written on one server readable on another.
+
+=== SGLang HiCache
+
+HiCache is the KV cache framework built into SGLang. Its NIXL backend enables the same three-tier design: GPU memory, a CPU tier, and the shared pNFS directory.
+
+These instructions work with either ONTAP pNFS or Novus pNFS. Set `SGLANG_HICACHE_NIXL_BACKEND_STORAGE_DIR` to `/mnt/kvcache` for ONTAP or `/mnt/novus` for Novus. 
+
+The sample uses the Novus path.
+
+Install SGLang from the current SGLang documentation, including the HiCache NIXL storage backend. The NIXL backend uses GPUDirect Storage. The sample plugin block enables the multi-threaded GDS plugin.
+
+`page-size` is 256. Tune it if you serve very long prompts. `--hicache-size 100` is the CPU tier, in gigabytes.
+
+Create `nixl_backend_config.toml`:
+
+[source,cli]
+----
+[plugin.gds_mt]
+thread_count = 32
+active = true
+----
+
+Start the server:
+[source,cli]
+----
+PYTHONHASHSEED=0 \
+  SGLANG_HICACHE_NIXL_BACKEND_STORAGE_DIR=/mnt/novus \
+  python3 -m sglang.launch_server \
+  --model-path "Qwen/Qwen3-8B" \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --page-size 256 \
+  --enable-hierarchical-cache \
+  --hicache-size 100 \
+  --hicache-write-policy write_through \
+  --hicache-storage-prefetch-policy wait_complete \
+  --hicache-storage-backend nixl \
+  --hicache-storage-backend-extra-config "@nixl_backend_config.toml"
+----
+
+Review the SGLang HiCache documentation for the architecture of the hierarchical cache. To share the cache across SGLang servers, mount the same ONTAP volume or Novus export on each server, point the storage directory at that mount, and set PYTHONHASHSEED=0 on each server.
+
 == Conclusion
 
 Deploying a tiered KV cache architecture moves KV cache from GPU memory to CPU memory and shared NetApp storage, so inference can scale with users and context length without wasting GPU cycles on repeated prefill. Shared storage turns cache into reusable infrastructure across serving instances and helps you get more value from your existing GPU investment.
 
-NetApp storage is a strong fit for this tier because it delivers what production inference needs beyond raw capacity: standard access over S3 and NFS/pNFS, shared cache that multiple serving engine instances can use at the same time, and enterprise data services you already rely on for durability, protection, and governance. You do not need a proprietary client; KV cache offloading frameworks connect to StorageGRID S3 or an ONTAP NAS mount using familiar protocols.
+Novus represents an architectural shift in how NetApp scales for AI factories, but from a KV cache offloading perspective, it is a direct extension of what you already do with traditional ONTAP. Because both architectures rely on standard pNFS, your inference stack doesn't change you simply point the offload path at the Novus mount. Whether you continue with LMCache, switch to vLLM's native connector, or deploy SGLang HiCache, the underlying storage tier behaves the same way, letting you scale out inference capacity without re-architecting your application stack.
 
 NetApp gives you a familiar storage foundation for KV cache offloading without changing how you run inference or how your teams manage data.
+
