@@ -2,7 +2,7 @@
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap-appendix.html
 keywords: mongodb, quiesce, balancer, sharding, commands, appendix
-summary: This appendix lists the Snap Creator quiesce and balancer scripts and the MongoDB cluster commands used in the validation.
+summary: This appendix lists the quiesce and balancer commands and the MongoDB cluster commands used in the validation.
 ---
 
 = Appendix
@@ -13,12 +13,12 @@ summary: This appendix lists the Snap Creator quiesce and balancer scripts and t
 :imagesdir: ../media/
 
 [.lead]
-This appendix lists the Snap Creator quiesce and balancer scripts and the MongoDB commands used in the validation.
+This appendix lists the quiesce and balancer commands and the MongoDB commands used in the validation.
 
 [[quiesce-and-balancer-commands]]
 == Quiesce and balancer commands
 
-The validation used Python 2.7 scripts on the MongoDB application servers as Snap Creator quiesce, unquiesce, and pre-exit commands; those scripts are not included. To avoid that dependency, configure the hooks with the `mongosh` commands in xref:mongodb-ontap-solution-validation.html#snap-creator-backup[Snap Creator backup]. Install `mongosh` on the Snap Creator agent host, and adapt the host, port, and authentication options for your deployment. The validation scripts used an early PyMongo release that provides the `Connection` class; Python 2 and `Connection` are no longer supported.
+The validation used Python 2.7 scripts on the MongoDB application servers as quiesce, unquiesce, and pre-exit commands; those scripts are not included. To avoid that dependency, configure the hooks with the `mongosh` commands in xref:mongodb-ontap-solution-validation.html#snapcenter-backup[Back up with SnapCenter]. Install `mongosh` on the host that runs the commands, and adapt the host, port, and authentication options for your deployment. The validation scripts used an early PyMongo release that provides the `Connection` class; Python 2 and `Connection` are no longer supported.
 
 [cols="35%,65%",options="header"]
 |===

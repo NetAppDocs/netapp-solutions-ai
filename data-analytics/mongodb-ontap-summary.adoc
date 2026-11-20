@@ -13,7 +13,7 @@ summary: This page summarizes the benefits validated for MongoDB on NetApp ONTAP
 :imagesdir: ../media/
 
 [.lead]
-This reference architecture provides an end-to-end solution for efficiently deploying a virtualized, scale-out MongoDB NoSQL database on NetApp intelligent data infrastructure. In the tested architecture, which combined NetApp storage technology with VMware vSphere, the MongoDB VMs and databases were hosted on a scale-out NetApp AFF array. We created backups with Snap Creator and handled disaster recovery with NetApp ONTAP software-defined storage in AWS.
+This reference architecture provides an end-to-end solution for efficiently deploying a virtualized, scale-out MongoDB NoSQL database on NetApp intelligent data infrastructure. In the tested architecture, which combined NetApp storage technology with VMware vSphere, the MongoDB VMs and databases were hosted on a scale-out NetApp AFF array. NetApp SnapCenter manages the backups, and SnapMirror replicates them to Amazon FSx for NetApp ONTAP in AWS for disaster recovery.
 
 This solution validated the following key benefits:
 

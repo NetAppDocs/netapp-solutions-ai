@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap-solution-overview.html
-keywords: mongodb, ontap, aff, snapcenter, snap creator, fsx for ontap, netapp console
+keywords: mongodb, ontap, aff, snapcenter, fsx for ontap, netapp console
 summary: This page describes the end-to-end MongoDB solution on NetApp intelligent data infrastructure and the NetApp products used in it.
 ---
 
@@ -55,7 +55,7 @@ The original validation used a software-based ONTAP instance in AWS. Confirm siz
 [[netapp-console]]
 == NetApp Console
 
-NetApp Console, formerly BlueXP, provides a single control plane for managing data across on-premises and cloud ONTAP environments. It is used to discover and manage Amazon FSx for NetApp ONTAP and on-premises ONTAP systems.
+NetApp Console provides a single control plane for managing data across on-premises and cloud ONTAP environments. It is used to discover and manage Amazon FSx for NetApp ONTAP and on-premises ONTAP systems.
 
 NetApp Console provides the following key features:
 

@@ -45,8 +45,8 @@ To learn more about the information described in this document, review the follo
 * link:https://www.mongodb.com/partners/netapp[MongoDB NetApp partner page^]
 * link:https://github.com/brianfrankcooper/YCSB/wiki[YCSB^]
 * link:http://www.netapp.com/us/products/storage-systems/all-flash-fas/[NetApp AFF^]
-* link:http://www.netapp.com/us/products/management-software/snapcreator-framework.aspx[Snap Creator Framework^]
-* link:https://library.netapp.com/ecm/ecm_download_file/ECMP1547469[Clustered Data ONTAP 8.3 Cluster Peering Express Guide^]
+* link:https://docs.netapp.com/us-en/snapcenter/protect-nsp/netapp_supported_plugins_overview.html[NetApp SnapCenter plug-ins for NetApp supported applications^]
+* link:https://docs.netapp.com/us-en/ontap/peering/index.html[ONTAP cluster and SVM peering^]
 * link:http://mysupport.netapp.com/[NetApp Support^]
 
 Refer to the link:http://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)^] to validate that the exact product and feature versions described in this document are supported for your specific environment. The NetApp IMT defines the product components and versions that can be used to construct configurations that are supported by NetApp. Specific results depend on each customer's installation in accordance with published specifications.

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap.html
-keywords: mongodb, ontap, aff, snapcenter, snap creator, snapmirror, flexclone, ycsb, atlas, ops manager, tr-4492, tr4492
+keywords: mongodb, ontap, aff, snapcenter, snapmirror, flexclone, ycsb, atlas, ops manager, tr-4492, tr4492
 summary: This technical report describes a validated reference architecture for deploying and protecting a virtualized, sharded MongoDB database on NetApp ONTAP storage with VMware vSphere, including backup, restore, cloning, disaster recovery to the cloud, performance results, and two customer use cases.
 ---
 

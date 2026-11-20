@@ -100,7 +100,7 @@ image:mongodb-ontap-026.png[Architecture showing the MongoDB Enterprise Operator
 Ops Manager protects MongoDB at the application level. NetApp SnapCenter adds a second layer at the storage level, with ONTAP Snapshot, SnapRestore, SnapMirror, and FlexClone technology. The layers complement each other, and the recommended design runs both, as the following figure shows.
 
 [NOTE]
-This section is design guidance to be evaluated. The procedures validated in this report used Snap Creator Framework, and the same Snapshot, SnapMirror, and FlexClone workflow applies to SnapCenter.
+This section is design guidance to be evaluated. It uses the same Snapshot, SnapMirror, and FlexClone workflow as the SnapCenter procedures in xref:mongodb-ontap-solution-validation.html[Solution validation].
 
 .Layered protection with Ops Manager and NetApp SnapCenter
 image:mongodb-ontap-027.png[Layered protection design with Ops Manager providing application-level backup and SnapCenter providing storage-level Snapshot copies and replication.]
@@ -110,13 +110,13 @@ The following table divides the work between the two layers.
 .Division of responsibilities between Ops Manager and SnapCenter
 [cols="22%,39%,39%",options="header"]
 |===
-|Capability |Ops Manager |SnapCenter or Snap Creator
+|Capability |Ops Manager |SnapCenter
 |Backup unit |A snapshot of the replica set from a backup cursor, plus a continuous copy of the oplog. |A Snapshot copy of the ONTAP volumes that hold the data files and the journal.
 |Point-in-time recovery |Yes. Restore a snapshot and replay the oplog to a chosen time. |To the time of the Snapshot copy. Combine it with oplog replay from Ops Manager for finer recovery.
 |Recovery speed |The snapshot streams from the store to the target server. |SnapRestore returns the volume without copying the data. Measure the result on your own data.
 |Schedule and retention |Set for each project and each database. |Set by policy for each ONTAP volume.
 |Cloning |Restore to a new server. |FlexClone volumes on demand, which share blocks with the Snapshot copy.
-|Disaster recovery |Restore from replicated or remote snapshot stores. |SnapMirror to a second site or ONTAP in the cloud, as validated with Snap Creator in this report.
+|Disaster recovery |Restore from replicated or remote snapshot stores. |SnapMirror to a second site or to Amazon FSx for NetApp ONTAP in the cloud.
 |Scope |Databases on Kubernetes and VMs that Ops Manager manages. |Volumes on ONTAP. Kubernetes persistent volumes need NetApp Trident protect.
 |===
 
@@ -135,7 +135,7 @@ The following table describes three ways to deploy SnapCenter. Start with patter
 
 *Where to snapshot.* Run the SnapCenter backup against a hidden secondary member (priority 0), so that the Snapshot copy does not compete with application traffic. Schedule it so that it does not overlap with the Ops Manager backup on the same member.
 
-*Backup.* SnapCenter or Snap Creator runs the pre-command, if one is needed, and takes a Snapshot copy of the data and journal volumes according to policy. It then runs the post-command and starts a SnapMirror update to the second site or ONTAP in the cloud. Ops Manager continues its own backup of the replica set and the oplog.
+*Backup.* SnapCenter runs the pre-command, if one is needed, and takes a Snapshot copy of the data and journal volumes according to policy. It then runs the post-command and starts a SnapMirror update to the second site or to Amazon FSx for NetApp ONTAP in the cloud. Ops Manager continues its own backup of the replica set and the oplog.
 
 *Restore.* Before using this procedure, verify that the ONTAP volume is dedicated to the target member and contains no other VM or member disks. For a shared datastore, do not restore the entire volume using this single-member procedure; plan a member-specific disk restore from a FlexClone or coordinated recovery of all affected consumers instead. Stop `mongod` on the target member, and use SnapRestore to restore its volume from the chosen Snapshot copy. You can also mount a FlexClone volume first to inspect the data. Start `mongod`, and let the member rejoin the replica set. For point-in-time recovery, restore the Snapshot copy to a standalone server and apply the oplog from Ops Manager up to the chosen time. If the Snapshot copy is older than the oplog window, the member needs an initial sync from the primary.
 
@@ -164,8 +164,8 @@ The following table describes three ways to deploy SnapCenter. Start with patter
 * *Choice of storage.* Ops Manager snapshots can land on StorageGRID over S3 or on an ONTAP NFS volume, which SnapCenter can also protect.
 * *Trusted operations.* Credentials sit in a Kubernetes secret, and every change is declared in code.
 * *Hybrid by design.* The same pattern works on OpenShift, Kubernetes, and VMs, on-premises or in the cloud.
-* *Fast recovery and cloning.* SnapRestore returns a member volume from a Snapshot copy without streaming the data, and FlexClone creates dev/test copies without copying it. Snap Creator validated this workflow in this report.
-* *Disaster recovery.* SnapMirror replicates the Snapshot copies to a second site or to ONTAP in the cloud, as validated in this report with Snap Creator.
+* *Fast recovery and cloning.* SnapRestore returns a member volume from a Snapshot copy without streaming the data, and FlexClone creates dev/test copies without copying it.
+* *Disaster recovery.* SnapMirror replicates the Snapshot copies to a second site or to Amazon FSx for NetApp ONTAP in the cloud.
 
 === Best practices
 

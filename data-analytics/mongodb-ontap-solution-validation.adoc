@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar
 permalink: data-analytics/mongodb-ontap-solution-validation.html
-keywords: mongodb, snapcenter, snap creator, snapshot, flexclone, snapmirror, disaster recovery, ycsb, deduplication, compression, certification
+keywords: mongodb, snapcenter, snapshot, flexclone, snapmirror, disaster recovery, ycsb, deduplication, compression, certification
 summary: This page describes how the solution was validated, including the cluster build, backup and restore, cloning, replication and disaster recovery, YCSB performance, and inline efficiency.
 ---
 
@@ -16,7 +16,7 @@ summary: This page describes how the solution was validated, including the clust
 This page describes how we validated the end-to-end solution, focusing on the key benefits listed in the xref:mongodb-ontap.html[Introduction].
 
 [NOTE]
-We validated the backup, restore, and cloning procedures on this page with NetApp Snap Creator. NetApp SnapCenter is the recommended tool for new deployments, and the same ONTAP Snapshot, SnapRestore, FlexClone, and SnapMirror operations apply. Adapt the steps if you use the SnapCenter MongoDB plug-in or ONTAP REST API scripts. For more information, see xref:mongodb-ontap-solution-overview.html#snapcenter[NetApp SnapCenter].
+The NetApp SnapCenter procedures on this page follow the SnapCenter documentation and were not part of the validation testing in this report. They use the ONTAP Snapshot, SnapRestore, FlexClone, and SnapMirror capabilities that we validated. For more information, see xref:mongodb-ontap-solution-overview.html#snapcenter[NetApp SnapCenter].
 
 == Build the MongoDB sharded cluster
 
@@ -35,14 +35,11 @@ Deploying the MongoDB sharded cluster involves the following tasks:
 
 For the detailed MongoDB steps, see xref:mongodb-ontap-appendix.html#mongodb-operations[Appendix: MongoDB operations].
 
-== Back up and restore with NetApp Snapshot technology
+== Back up and restore with NetApp SnapCenter
 
-[IMPORTANT]
-For new deployments, NetApp recommends using the NetApp SnapCenter Plug-in for MongoDB to protect MongoDB, as described in xref:#snapcenter-backup[SnapCenter backup (recommended going forward)]. The Snap Creator procedures in this section document the approach that we used in the previous validation of this solution.
+NetApp SnapCenter uses space-efficient NetApp Snapshot technology to back up, restore, and clone the virtualized MongoDB database environment. In our testing of NetApp Snapshot technology, backups of the complete environment took less than one minute, and restoring the NetApp volumes that hosted the MongoDB database also took less than one minute.
 
-In the previous validation of this solution, we used the NetApp Snap Creator framework and space-efficient NetApp Snapshot technology to back up, restore, and clone the virtualized MongoDB database environment. In our testing, NetApp Snapshot backups of the complete environment took less than one minute, and restoring the NetApp volumes that hosted the MongoDB database also took less than one minute.
-
-MongoDB uses the WiredTiger storage engine in this solution. For our testing, we configured Snap Creator to perform the following operations:
+MongoDB uses the WiredTiger storage engine in this solution. Around each Snapshot copy, the backup performs the following operations:
 
 . Stop the balancer.
 . Perform an `fsync` and lock, if necessary.
@@ -54,9 +51,9 @@ MongoDB uses the WiredTiger storage engine in this solution. For our testing, we
 The WiredTiger storage engine does not require an `fsync` and write lock on every shard, and it does not require you to unlock the databases afterward. If you use the MMAPv1 storage engine, you must perform an `fsync` and lock on every shard for writes, and then unlock them. MongoDB 4.2 and later do not include MMAPv1.
 
 [[snapcenter-backup]]
-=== SnapCenter backup (recommended going forward)
+=== Back up with SnapCenter
 
-NetApp SnapCenter provides a central console, role-based access control, and a plug-in for MongoDB. It creates application-consistent NetApp Snapshot copies without custom scripting. For new deployments, use the SnapCenter Plug-in for MongoDB instead of Snap Creator. The SnapCenter procedures in this section follow the NetApp documentation and were not part of the validation testing in this report.
+NetApp SnapCenter provides a central console, role-based access control, and a plug-in for MongoDB that creates application-consistent NetApp Snapshot copies. The size of the database does not affect the Snapshot backup, which takes only seconds to create.
 
 The following figure shows the SnapCenter backup workflow.
 
@@ -65,7 +62,7 @@ image:mongodb-ontap-028.png[SnapCenter backup workflow. Define a backup strategy
 
 To protect the MongoDB cluster with SnapCenter:
 
-. Define the backup strategy, including the Snapshot schedule and retention. You can reuse the policies that this solution used with Snap Creator (daily 30, hourly 24, weekly 7, and monthly 12) as a starting point.
+. Define the backup strategy, including the Snapshot schedule and retention. A starting point is to retain 24 hourly, 30 daily, 7 weekly, and 12 monthly Snapshot copies.
 . Add the MongoDB resource. On the Resource Settings page, provide the custom key-value pairs in the following table. The custom key names must be in uppercase.
 +
 [cols="1,2",options="header"]
@@ -87,7 +84,14 @@ To protect the MongoDB cluster with SnapCenter:
 +
 In the `MongoDB.properties` file, you can also set `DISABLE_STARTING_STOPPING_SERVICES`. Use `N`, the default, if the plug-in starts and stops the MongoDB services. Use `Y` if you start and stop them yourself.
 . On the Provide Storage Footprint page, select the ONTAP storage system and the volumes that hold the MongoDB data. For this solution, select the four database volumes (`n1_mdbdata_p_01`, `n1_mdbdata_s_02`, `n2_mdbdata_p_02`, and `n2_mdbdata_s_01`). SnapCenter does not automatically discover storage for these resources.
-. Create a backup policy.
+. Create a backup policy. In the policy script settings, run the following command on the MongoDB router or application server before the Snapshot copy to stop the balancer, and the second command after the Snapshot copy to restart it:
++
+----
+mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.stopBalancer()'
+mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
+----
++
+Install `mongosh` on the host that runs the commands, and adapt the host, port, and authentication options for your deployment.
 . Create a resource group that contains the MongoDB resources, attach the policy, and optionally create a schedule.
 . Back up the resource or resource group, monitor the operation, and view the related backups and clones in the Topology page.
 
@@ -98,61 +102,12 @@ For the detailed steps, see the following SnapCenter documentation:
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/create_resource_groups_and_attach_policies.html[Create resource groups and attach policies^]
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/back_up_netapp_supported_plugins_resources.html[Back up NetApp supported plug-ins resources^]
 
-[[snap-creator-backup]]
-=== Snap Creator backup (previous validation)
-
-In the previous validation, we used Snap Creator to protect the MongoDB database. Snap Creator is a flexible framework that can run MongoDB-specific quiesce and unquiesce commands before and after it creates the NetApp Snapshot backup. The size of the database does not affect the NetApp Snapshot backup, which takes only seconds to create. This section is retained for reference and for environments that already use Snap Creator.
-
-We followed this procedure to configure Snap Creator for our testing:
-
-. Install the Snap Creator server in the Snap Creator VM.
-. Install the Snap Creator agent and `mongosh` on the MongoDB router or application server that you will configure as the agent. The Snap Creator server runs the commands below through the agent, which connects to MongoDB as a client.
-. In the Snap Creator UI, create the MongoDB profile and configure the following settings:
-.. Set the plug-in type to *None*.
-.. Configure the Snap Creator agent on one of the MongoDB application servers.
-.. Select the transport *https* with port 443.
-.. Select the storage virtual machine (SVM, formerly Vserver) IP and provide the SVM user name and password.
-.. Include the four MongoDB database volumes (primary and secondary):
-+
-* `n1_mdbdata_p_01`
-* `n1_mdbdata_s_02`
-* `n2_mdbdata_p_02`
-* `n2_mdbdata_s_01`
-.. Provide the Snapshot copy name and indicate the policies. The default value is monthly, but you can customize the policies to fit your requirements:
-+
-* Daily: 30
-* Hourly: 24
-* Weekly: 7
-* Monthly: 12
-.. Provide the application quiesce command:
-+
-----
-APP_QUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.stopBalancer()'
-----
-.. Provide the application unquiesce command:
-+
-----
-APP_UNQUIESCE_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
-----
-.. Provide the pre-exit command:
-+
-----
-PRE_EXIT_CMD01=mongosh --quiet --host mdb-ms-1 --port 27017 --eval 'sh.startBalancer()'
-----
-
-The following figure shows the Snap Creator backup operation for the MongoDB database.
-
-.Snap Creator backup operation
-image:mongodb-ontap-005.png[Snap Creator showing a successful backup of the MongoDB volumes.]
-
-NetApp Snapshot technology enables you to back up very large MongoDB databases in seconds. Snap Creator can also schedule the backup and notify you about the job status.
-
 [[snapcenter-restore]]
-=== SnapCenter restore (recommended going forward)
+=== Restore with SnapCenter
 
 As a database grows, backing it up and restoring it becomes harder. NetApp Snapshot technology provides the simplest and most efficient way to back up and restore a distributed database of any size. When backups are based on Snapshot copies, restoring a large database composed of multiple shards depends more on the time needed to stop and start the database processes than on restoring the data itself. Restoring from a Snapshot backup often takes only seconds, or minutes at most.
 
-For new deployments, use the SnapCenter Plug-in for MongoDB to restore the database from the Snapshot backups that SnapCenter creates. The SnapCenter procedures in this section follow the NetApp documentation and were not part of the validation testing in this report.
+Use the SnapCenter Plug-in for MongoDB to restore the database from the Snapshot backups that SnapCenter creates.
 
 The following figure shows the SnapCenter restore workflow.
 
@@ -169,8 +124,8 @@ To restore the MongoDB resource with SnapCenter:
 If you restore a complete resource, the Snapshot copies that are newer than the selected Snapshot copy on the same volumes or qtrees are deleted and cannot be recovered. Any other resource hosted on the same volumes or qtrees is also affected. SnapCenter cannot recover manually added NetApp supported plug-in resources.
 . In SnapCenter, select *Resources*, select the MongoDB plug-in, and then select the resource. In the *Manage Copies* view, select the backup to restore.
 . On the Restore Scope page, select *Complete Resource* or *File Level*.
-. On the *Pre ops* page, enter the commands to run before the restore. For this solution, stop the `mongod` processes on the shard servers and unmount the database volumes, as described in the Snap Creator restore procedure that follows.
-. On the *Post ops* page, enter the commands to run after the restore. For this solution, mount the volumes, remove the `mongod.lock` file, and start the `mongod` processes on the shard servers.
+. On the *Pre ops* page, enter the commands to run before the restore. For this solution, stop the `mongod` processes on the shard servers and unmount the database volumes, as the following example shows.
+. On the *Post ops* page, enter the commands to run after the restore. For this solution, mount the volumes, remove the `mongod.lock` file, and start the `mongod` processes on the shard servers, as the following example shows.
 . Optionally, configure email notifications, review the summary, and then select *Finish*.
 . Monitor the restore operation by selecting *Monitor* > *Jobs*, and then check the sharding status and document counts in the restored database.
 
@@ -180,12 +135,7 @@ For the detailed steps, see the following SnapCenter documentation:
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/types_of_restore_strategies_supported_for_manually_added_netapp_supported_plugins_resources.html[Types of restore strategies for manually added NetApp supported plug-in resources^]
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/restore_a_resource_backup.html[Restore a resource backup^]
 
-[[snap-creator-restore]]
-=== Snap Creator restore (previous validation)
-
-In the previous validation, we used Snap Creator to restore the MongoDB database. This section is retained for reference and for environments that already use Snap Creator.
-
-The following example from our testing removes the `c7` collection, stops all `mongod` processes across all shards, unmounts the `/data` file systems, restores the volumes by using Snap Creator, remounts the file systems, removes the lock files, and restarts all processes:
+The following example from our testing removes the `c7` collection, stops all `mongod` processes across all shards, unmounts the `/data` file systems, restores the volumes, remounts the file systems, removes the lock files, and restarts all processes:
 
 . Before the restore, check the database and its documents from one of the application servers. The `c7` collection in the `db7` database held 144,569,144 documents at the time of the backup. Drop the collection to simulate data loss, and confirm that the count is 0:
 +
@@ -206,10 +156,7 @@ mongos> db.c7.count();
 ----
 . Stop the `mongod` process on the second shard's replica set members (`mdb-srv-2`, `mdb-srv-20`, and `mdb-srv-21`) and unmount their database volumes in the same way.
 . Delete the existing virtual disks (the MongoDB database volumes) from the VMs of both shards, including the primary and secondary servers.
-. Restore all database volumes by using Snap Creator, one volume at a time. The following figure shows one volume (`n1_mdbdata_p_01`). You must restore `n1_mdbdata_s_02`, `n2_mdbdata_p_02`, and `n2_mdbdata_s_01` as well.
-+
-.Restoring a MongoDB database volume with Snap Creator
-image:mongodb-ontap-006.png[Snap Creator restore of the n1_mdbdata_p_01 volume from a Snapshot copy.]
+. Restore all four database volumes (`n1_mdbdata_p_01`, `n1_mdbdata_s_02`, `n2_mdbdata_p_02`, and `n2_mdbdata_s_01`) from the backup, one volume at a time.
 . Reconnect the restored database volumes as existing disks to the primary and secondary servers of each shard.
 . Mount the volumes.
 . Remove the `mongod.lock` file from the mounted MongoDB database volumes.
@@ -232,16 +179,16 @@ mongos> db.c7.count();
 144569144
 ----
 
-This example demonstrates that you can restore a MongoDB database by using Snap Creator with NetApp Snapshot copies and NetApp SnapRestore technology.
+This example demonstrates that you can restore a MongoDB database from NetApp Snapshot copies by using NetApp SnapRestore technology.
 
 == MongoDB cloning for dev/test and QA
 
 NetApp Snapshot backups of production MongoDB enable you to build preproduction or development environments. With NetApp FlexClone technology, you can present volumes that contain Snapshot copies to any clone host. This approach lets you build dev/test environments quickly without doubling the storage you need. FlexClone clones provide a fast, scalable, and efficient way to deliver dev/test environments on demand.
 
 [[snapcenter-clone]]
-=== SnapCenter clone (recommended going forward)
+=== Clone with SnapCenter
 
-For new deployments, use the SnapCenter Plug-in for MongoDB to clone the Snapshot backups that SnapCenter creates. You can clone from a primary or secondary backup. The SnapCenter procedures in this section follow the NetApp documentation and were not part of the validation testing in this report.
+Use the SnapCenter Plug-in for MongoDB to clone the Snapshot backups that SnapCenter creates. You can clone from a primary or secondary backup.
 
 You can use clones of MongoDB backups for the following purposes:
 
@@ -259,7 +206,7 @@ To clone a MongoDB backup with SnapCenter:
 . Make sure that you have backed up the resource or resource group, and that the aggregates that host the volumes are in the assigned aggregates list of the storage virtual machine (SVM).
 . In SnapCenter, select *Resources*, select the MongoDB plug-in, and then select the resource. In the *Manage Copies* view, select the primary or secondary backup, and then select the clone icon.
 . On the Locations page, select the clone server, which is the host where the clone is mounted and the plug-in is installed. The source host is the default. If you clone to the same host as the source, you must enter a clone suffix, such as `_clone`, so that the cloned resource is unique. Otherwise, the operation fails.
-. On the Scripts page, enter the pre-clone and post-clone commands and the mount command for the cloned volume. For this solution, use these commands to remove the `.lck` files from the cloned database volume, assign new IP addresses, update `/etc/hosts`, and restart the MongoDB processes in the isolated clone network, as described in the Snap Creator clone procedure that follows.
+. On the Scripts page, enter the pre-clone and post-clone commands and the mount command for the cloned volume. For this solution, use these commands to remove the `.lck` files from the cloned database volume, assign new IP addresses, update `/etc/hosts`, and restart the MongoDB processes in the isolated clone network, as the following example shows.
 . Optionally, configure email notifications, review the summary, and then select *Finish*.
 . Monitor the clone operation by selecting *Monitor* > *Jobs*. If required, split the clone from its parent Snapshot copy.
 
@@ -270,17 +217,9 @@ For the detailed steps, see the following SnapCenter documentation:
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/clone_netapp_supported_plugins_resource_backups.html[Clone NetApp supported plug-ins resource backups^]
 * link:https://docs.netapp.com/us-en/snapcenter-60/protect-nsp/clone_from_a_backup.html[Clone from a backup^]
 
-[[snap-creator-clone]]
-=== Snap Creator clone (previous validation)
+The following example from our testing clones all databases across all shard servers into new shard servers. In this example, the operating system volumes are also cloned.
 
-In the previous validation, we used Snap Creator to build the dev/test environment from the production NetApp Snapshot backups. This section is retained for reference and for environments that already use Snap Creator.
-
-The following example clones all databases across all shard servers into new shard servers. In this example, the operating system volumes are also cloned.
-
-. Create the Snap Creator profile for the database volumes and for the operating system volumes.
-+
-image:mongodb-ontap-007.png[Snap Creator profile for the database and operating system volumes.]
-. In Snap Creator, create FlexClone volumes for the operating system and database volumes from a specific Snapshot copy.
+. Create FlexClone volumes for the operating system and database volumes from a specific Snapshot copy.
 . Create a datastore on the VMware servers that includes the cloned operating system and database volumes.
 +
 image:mongodb-ontap-008.png[VMware datastore created from a cloned operating system volume.]
@@ -330,12 +269,12 @@ This solution protects MongoDB data by using SnapMirror to replicate it to Amazo
 . Create the peer relationship on the FSx for ONTAP file system.
 . Configure and initialize a SnapMirror relationship.
 
-The following figures show the replicated MongoDB database as viewed from NetApp OnCommand System Manager and from the cloud management console.
+The following figures show the replicated MongoDB database in System Manager and in the cloud management console.
 
-.Views of the replicated MongoDB database from NetApp OnCommand System Manager
+.Replicated MongoDB database in System Manager
 image:mongodb-ontap-010.png[System Manager view of the SnapMirror relationship that replicates the MongoDB volumes.]
 
-.Views of the replicated MongoDB database from the cloud management console
+.Replicated MongoDB database in the cloud management console
 image:mongodb-ontap-011.png[Cloud management console view of the replicated MongoDB volumes on ONTAP in AWS.]
 
 To validate disaster recovery:
