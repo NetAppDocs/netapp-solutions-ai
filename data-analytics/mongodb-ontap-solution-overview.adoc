@@ -1,0 +1,75 @@
+---
+sidebar: sidebar
+permalink: data-analytics/mongodb-ontap-solution-overview.html
+keywords: mongodb, ontap, aff, snapcenter, fsx for ontap, netapp console
+summary: This page describes the end-to-end MongoDB solution on NetApp intelligent data infrastructure and the NetApp products used in it.
+---
+
+= Solution overview
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+In the end-to-end solution shown in the following figure, virtualized MongoDB is hosted on NetApp AFF-A30 storage and VMware vSphere. The same solution applies to the latest AFF storage. The NetApp AFF array provides low latency and inline deduplication and compression to deliver high performance and reduce flash storage requirements.
+
+NetApp SnapCenter backup software provides the framework to invoke instant NetApp Snapshot copies and clones. These make zero-cost copies of the entire environment for use in backup and recovery. SnapCenter also manages remote replication of the entire environment, by using SnapMirror, to Amazon FSx for NetApp ONTAP in Amazon Web Services (AWS). The replicated data can be used for disaster recovery and in dev/test environments.
+
+.End-to-end solution for MongoDB on NetApp intelligent data infrastructure
+image:mongodb-ontap-001.png[End-to-end solution for MongoDB on NetApp intelligent data infrastructure. An on-premises MongoDB replica set runs on an AFF A-Series ONTAP HA pair, which replicates with SnapMirror to Amazon FSx for NetApp ONTAP in AWS and to a secondary AFF or FAS site, all managed from the cloud control plane.]
+
+== NetApp intelligent data infrastructure
+
+NetApp intelligent data infrastructure is NetApp's current approach to data management. It brings data storage, data services, and workload operations together across on-premises systems and the major public clouds, so organizations can manage, protect, secure, and access their data the same way wherever it lives. It builds on the NetApp Data Fabric concept used in earlier editions of this report.
+
+For MongoDB, this means that the ONTAP data management capabilities used in this report, such as Snapshot copies, clones, and replication, apply the same way to databases on physical servers, virtualized infrastructure, and cloud instances.
+
+[NOTE]
+Product names and versions in this report reflect the original validation and might differ from current NetApp offerings.
+
+== NetApp All Flash FAS
+
+NetApp All Flash FAS (AFF) is a family of enterprise all-flash storage systems that run ONTAP. The current AFF portfolio includes A-Series systems for performance-sensitive workloads and C-Series systems for capacity-optimized flash. The validation in this report used an AFF-A30, and the same ONTAP capabilities are available on current AFF models.
+
+AFF provides the following capabilities for MongoDB:
+
+* Run latency-sensitive databases on flash with predictable response times.
+* Reduce the flash capacity required by using inline data efficiency, including deduplication, compression, and compaction. Actual savings depend on the data in your deployment.
+* Scale up or scale out as a cluster and move data nondisruptively between nodes.
+* Protect data with NetApp Snapshot copies, SnapRestore, and SnapMirror replication, which are built into ONTAP.
+* Manage systems with ONTAP System Manager and automate operations through the ONTAP REST API.
+
+For more information about AFF, see the link:http://www.netapp.com/us/products/storage-systems/all-flash-fas/[NetApp AFF^] product page.
+
+[[amazon-fsx-for-ontap]]
+== Amazon FSx for NetApp ONTAP
+
+Amazon FSx for NetApp ONTAP is a fully managed AWS service built on ONTAP, so the same ONTAP data management used on the AFF array is available to MongoDB in AWS. AWS operates the file system, and you manage volumes, Snapshot copies, clones, and SnapMirror relationships with the AWS console, the ONTAP CLI, ONTAP System Manager, NetApp Console, or the ONTAP REST API.
+
+FSx for ONTAP provides the ONTAP capabilities used in this report: Snapshot copies, FlexClone volumes, SnapMirror replication, and data efficiency features such as deduplication, compression, and compaction. In this solution, FSx for ONTAP is the SnapMirror destination for backup and disaster recovery from the on-premises AFF array, and the source for dev/test clones of MongoDB in the cloud.
+
+The original validation used a software-based ONTAP instance in AWS. Confirm sizing, performance, and feature availability for your FSx for ONTAP deployment.
+
+[[netapp-console]]
+== NetApp Console
+
+NetApp Console provides a single control plane for managing data across on-premises and cloud ONTAP environments. It is used to discover and manage Amazon FSx for NetApp ONTAP and on-premises ONTAP systems.
+
+NetApp Console provides the following key features:
+
+* Simplifies discovery and management of Amazon FSx for NetApp ONTAP file systems.
+* Offers a central point of control for ONTAP systems on-premises and in the cloud.
+* Sets up and monitors SnapMirror replication between the on-premises AFF array and cloud ONTAP for backup and disaster recovery.
+* Provides backup and recovery services for ONTAP volumes.
+* Supports hybrid environments that include on-premises ONTAP and Amazon FSx for NetApp ONTAP.
+
+[[snapcenter]]
+== NetApp SnapCenter
+
+NetApp SnapCenter is NetApp's unified, scalable software for application-consistent data protection in physical and virtualized environments. It uses ONTAP Snapshot, SnapRestore, SnapMirror, and FlexClone technologies to back up, restore, and clone application data and to replicate it for disaster recovery. For virtualized MongoDB deployments, SnapCenter provides instant backup and recovery of MongoDB VMs and databases, and it can create rapid clones of the virtualized MongoDB environment for dev/test and QA use.
+
+SnapCenter protects applications through plug-ins. MongoDB is one of the NetApp supported plug-ins, together with ORASCPM (Oracle Applications), SAP ASE, SAP MaxDB, and the Storage plug-in. You install the plug-in from the Add Host page in SnapCenter, and it works on both Windows and Linux hosts. With the plug-in installed, you can use SnapCenter to back up, restore, and clone MongoDB, replicate backup sets to another volume with SnapMirror, and perform disk-to-disk backup replication with SnapVault.
+
+SnapCenter support covers the plug-in framework, the core engine, and the associated APIs. It does not cover the plug-in source code or scripts that are built on the framework. Confirm that your MongoDB topology and versions are supported before you plan a deployment. If a configuration is not supported, script ONTAP Snapshot, FlexClone, and SnapMirror operations through the ONTAP REST API to achieve the same backup, clone, and replication workflow.

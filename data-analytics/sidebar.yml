@@ -197,6 +197,25 @@ entries:
   - title: "NetApp E-Series E5700 and Splunk Enterprise"
     pdf-filename: "NetApp E-Series E5700 and Splunk Enterprise"
     url: /data-analytics/tr-4623.html
+  - title: "MongoDB on NetApp ONTAP"
+    pdf-filename: "MongoDB on NetApp ONTAP"
+    entries:
+      - title: "Introduction"
+        url: /data-analytics/mongodb-ontap.html
+      - title: "Solution overview"
+        url: /data-analytics/mongodb-ontap-solution-overview.html
+      - title: "Solution design"
+        url: /data-analytics/mongodb-ontap-solution-design.html
+      - title: "Solution validation"
+        url: /data-analytics/mongodb-ontap-solution-validation.html
+      - title: "Customer use cases"
+        url: /data-analytics/mongodb-ontap-use-cases.html
+      - title: "Summary"
+        url: /data-analytics/mongodb-ontap-summary.html
+      - title: "Appendix"
+        url: /data-analytics/mongodb-ontap-appendix.html
+      - title: "Acknowledgements and references"
+        url: /data-analytics/mongodb-ontap-references.html
   - title: "Deploy Apache Spark workload with NetApp storage"
     pdf-filename: "Apache Spark Workload with NetApp Storage Solution (Deployment Guide)"
     url: /data-analytics/nva-1157-deploy.html

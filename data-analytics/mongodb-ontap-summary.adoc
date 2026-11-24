@@ -1,0 +1,32 @@
+---
+sidebar: sidebar
+permalink: data-analytics/mongodb-ontap-summary.html
+keywords: mongodb, ontap, summary, conclusion
+summary: This page summarizes the benefits validated for MongoDB on NetApp ONTAP.
+---
+
+= Summary
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ../media/
+
+[.lead]
+This reference architecture provides an end-to-end solution for efficiently deploying a virtualized, scale-out MongoDB NoSQL database on NetApp intelligent data infrastructure. In the tested architecture, which combined NetApp storage technology with VMware vSphere, the MongoDB VMs and databases were hosted on a scale-out NetApp AFF array. NetApp SnapCenter manages the backups, and SnapMirror replicates them to Amazon FSx for NetApp ONTAP in AWS for disaster recovery.
+
+This solution validated the following key benefits:
+
+* Predictable, high performance with consistently low latency, which gives the most demanding MongoDB-based analytics applications very fast response times.
+* Inline deduplication and compression that make MongoDB on flash storage cost efficient.
+* Instant, space-efficient database cloning that speeds the setup of dev/test and QA environments without requiring new storage.
+* Backup and recovery based on space-efficient NetApp Snapshot copies and remote replication to the cloud.
+
+Beyond the validation results, NetApp AFF complements MongoDB with the following key capabilities:
+
+* A scale-up and scale-out all-flash array that lets storage scale modularly with MongoDB.
+* Nondisruptive operations that deliver maximum uptime and high availability.
+
+In YCSB performance testing, NetApp AFF delivered excellent results, demonstrating a high-performance, cost-effective all-flash array for scaling out MongoDB deployments.
+
+This report also describes two customer use cases: serving Digital Advisor from MongoDB Atlas, and enterprise backup and recovery with MongoDB Ops Manager. For Ops Manager, it gives design guidance, still to be evaluated, on adding NetApp SnapCenter for storage-level Snapshot copies, fast recovery, and disaster recovery.
